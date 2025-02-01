@@ -1,0 +1,11 @@
+import { ModeToggle } from "@/lib/ModeToggle";
+import Image from "next/image";
+
+export default function Home() {
+ return <main>
+    <div>
+
+
+    </div>
+ </main>;
+}
