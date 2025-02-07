@@ -16,7 +16,7 @@ import { ModeToggle } from "@/lib/ModeToggle";
 
 export function NavigationMenuDemo() {
   return (
-    <NavigationMenu className="m-auto py-2 container">
+    <NavigationMenu className="m-auto py-2 container ">
       <NavigationMenuList>
         {/* Home Link */}
         <NavigationMenuItem>
@@ -32,12 +32,13 @@ export function NavigationMenuDemo() {
           <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-4 w-[200px]">
+            <ListItem href="/menu" title="Products">
+              Browse all our latest products.
+              </ListItem>
               <ListItem href="/menu/hoodies" title="Hoodies">
                 Explore our latest hoodie collection.
               </ListItem>
-              <ListItem href="/menu/pants" title="Pants">
-                Find stylish and comfortable pants.
-              </ListItem>
+     
               <ListItem href="/menu/shirts" title="Shirts">
                 Browse trendy shirts for all occasions.
               </ListItem>
