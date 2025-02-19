@@ -9,10 +9,10 @@ const product = {
   href: "#",
   image: "https://bundui-images.netlify.app/products/04.jpeg",
   price: "$28",
-  category: "Clothing"
+  category: "Clothing",
 };
 
-export default function ProductCard({product}:{product:Product}) {
+export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="   space-y-4 m-auto ">
       <figure className="group-hover:opacity-90">
@@ -26,11 +26,7 @@ export default function ProductCard({product}:{product:Product}) {
       </figure>
       <div className="flex justify-between">
         <div>
-          <h3 className="text-lg">
-   
-              {product.name}
-         
-          </h3>
+          <h3 className="text-lg">{product.name}</h3>
           <p className="text-sm text-muted-foreground">{product.description}</p>
         </div>
         <p className="text-lg font-semibold">{Number(product.basePrice)}$</p>
@@ -40,7 +36,7 @@ export default function ProductCard({product}:{product:Product}) {
           <HeartIcon className="size-4" />
         </Button>
         <Button variant="ghost" className="w-full">
-          <PlusIcon className="size-4 me-1" /> Add to Card
+          <Link href={`/product/${product.id}`}>Add to Card</Link>
         </Button>
       </div>
     </div>
