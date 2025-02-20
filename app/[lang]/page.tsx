@@ -1,4 +1,6 @@
+import FeaturedProduct from "@/components/FeaturedProducts";
 import ProductCard from "@/components/productCard";
+import Slider from "@/components/ui/slider";
 import { db } from "@/lib/db";
 import { bestSellers } from "@/lib/Functions";
 import Image from "next/image";
@@ -13,9 +15,10 @@ export default async function Home({
   const products = await bestSellers();
 
   return (
-    <main>
+    <main className="container m-auto">
       {/* Hero Section */}
-      <div className="relative container flex flex-col items-center justify-center text-center mx-auto ">
+      <Slider />
+      <div className="relative container flex flex-col items-center justify-center text-center my-6 mx-auto ">
         {/* Optional: Add an image or illustration */}
         <div className="my-2 relative">
           <Image
@@ -46,6 +49,7 @@ export default async function Home({
           {lang === "ar" ? "تسوق الآن" : "Shop Now"}
         </button>
       </div>
+      <FeaturedProduct params={params} />
       {/* Product Grid */}
       <div className=" mx-auto p-6">
         <h2 className="text-4xl font-semibold text-center  mb-6">

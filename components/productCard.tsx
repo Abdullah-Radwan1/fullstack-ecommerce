@@ -17,10 +17,10 @@ export default function ProductCard({ product }: { product: Product }) {
     <div className="   space-y-4 m-auto ">
       <figure className="group-hover:opacity-90">
         <Image
-          className="w-full rounded-lg aspect-square"
+          className="w-full rounded-lg aspect-square bg-muted"
           src={product.image}
-          width={300}
-          height={500}
+          width={200}
+          height={300}
           alt={product.name}
         />
       </figure>

@@ -6,6 +6,7 @@ import { NavigationMenuDemo } from "@/components/header/Navebar";
 import { getServerSession } from "next-auth";
 import SessionProviders from "@/lib/SessionProvider";
 import { ThemeProvider } from "@/lib/ThemeProvider";
+import Footer from "@/components/footer";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -14,7 +15,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  description: "padaBeedo Ecommerce",
+  description: "Vogue Haven Ecommerce",
 };
 
 export default async function RootLayout({
@@ -27,7 +28,7 @@ export default async function RootLayout({
   const session = await getServerSession(); // Runs on the server
 
   const { lang } = await params;
-  const title = lang === "ar" ? "بادابيدو" : "padabeedo";
+  const title = lang === "ar" ? "ڤوجيه هاڤن" : "Vogue-Haven";
 
   return (
     <html
@@ -53,6 +54,7 @@ export default async function RootLayout({
             {children}
           </ThemeProvider>
         </SessionProviders>
+        <Footer params={params} />
       </body>
     </html>
   );

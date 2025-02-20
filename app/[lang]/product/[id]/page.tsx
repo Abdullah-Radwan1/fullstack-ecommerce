@@ -23,7 +23,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <main className="container mx-auto p-4">
       <Card className="mx-auto">
         <CardContent className="p-0">
           <div className="flex justify-between gap-6 flex-col sm:flex-row">
@@ -78,7 +78,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 };
 

@@ -1,0 +1,1 @@
+import "png.png" from "./pcParts/gfx1.png";
