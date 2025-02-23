@@ -30,19 +30,15 @@ export function NavigationMenuDemo() {
   return (
     <main className="flex justify-evenly items-center">
       {/* logo */}
-      <h5 className="text-2xl font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent">
+      <Link
+        href={ar ? "/" : "/en"}
+        className="text-2xl font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent"
+      >
         {lang === "ar" ? " ڤوجيه هاڤن" : "Vogue-Haven   "}
-      </h5>
+      </Link>
       <NavigationMenu dir={ar ? "rtl" : "ltr"} className="py-2 container ">
         <NavigationMenuList>
           {/* Home Link */}
-          <NavigationMenuItem>
-            <Link href={ar ? "/" : "/en/"} legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                {ar ? "الرئيسية" : "Home"}
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
 
           {/* Menu with Subcategories */}
           <NavigationMenuItem>
@@ -60,44 +56,35 @@ export function NavigationMenuDemo() {
                     : "Browse all our latest products."}
                 </ListItem>
                 <ListItem
-                  href={ar ? "/menu/hoodies" : "/en/menu/hoodies"}
-                  title={ar ? "الهوديز" : "Hoodies"}
+                  href={ar ? "/menu/labtobs" : "/en/menu/labtobs"}
+                  title={ar ? "لاب توب" : "labtobs"}
                 >
                   {ar
-                    ? "تصفح جميع مجموعة الهوديز"
-                    : "Explore our latest hoodie collection."}
+                    ? "تصفح جميع مجموعة اللاب توب"
+                    : "brosse all our latest labtobs."}
                 </ListItem>
 
                 <ListItem
-                  href={ar ? "/menu/shirts" : "/en/menu/shirts"}
-                  title={ar ? "الشيرتات" : "Shirts"}
+                  href={ar ? "/menu/accessories" : "/en/menu/accessories"}
+                  title={ar ? "الاكسسوارات" : "Accessories"}
                 >
                   {ar
-                    ? "تصفح الشيرتات الاثرية لجميع المواعيد"
-                    : "Browse trendy shirts for all occasions."}
+                    ? "تصفح جميع الاكسسوارات الاثرية لجميع المواعيد"
+                    : "Browse trendy accessories for all occasions."}
                 </ListItem>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
 
           {/* Contact and About Links - Desktop */}
-          <div className="hidden sm:flex sm:items-center">
-            <NavigationMenuItem>
-              <Link href="/contact" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {ar ? "اتصل" : "Contact"}
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
 
-            <NavigationMenuItem>
-              <Link href="/about" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {ar ? "من نحن" : "About"}
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </div>
+          <NavigationMenuItem className="hidden md:block">
+            <Link href="/about" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                {ar ? "من نحن" : "About"}
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
 
           <NavigationMenuItem>
             <ModeToggle />
@@ -107,7 +94,7 @@ export function NavigationMenuDemo() {
           </NavigationMenuItem>
         </NavigationMenuList>
         {/* Mobile Menu */}
-        <div className="sm:hidden">
+        <div className="md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="p-2">
@@ -116,23 +103,31 @@ export function NavigationMenuDemo() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <Link href="/contact">{ar ? "اتصل" : "Contact"}</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
                 <Link href="/about">{ar ? "من نحن" : "About"}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  href={ar ? "/login" : "/en/login"}
+                  className="text-base  flex gap-2 items-center  "
+                >
+                  Acount
+                  <UserCircle className="size-6" />
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </NavigationMenu>
 
-      <Link
-        href={ar ? "/login" : "/en/login"}
-        className="text-base font-medium flex gap-2 items-center"
-      >
-        Acount
-        <UserCircle className="size-6" />
-      </Link>
+      <div className="hidden md:block">
+        <Link
+          href={ar ? "/login" : "/en/login"}
+          className="text-base  flex gap-2 items-center  "
+        >
+          Acount
+          <UserCircle className="size-6" />
+        </Link>
+      </div>
     </main>
   );
 }
@@ -152,7 +147,7 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-sm  leading-none">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>

@@ -1,29 +1,32 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { HeartIcon, PlusIcon } from "lucide-react";
+import { HeartIcon} from "lucide-react";
 import { Product } from "@prisma/client";
-
-const product = {
-  name: "Red Hat",
-  href: "#",
-  image: "https://bundui-images.netlify.app/products/04.jpeg",
-  price: "$28",
-  category: "Clothing",
-};
+import { useRouter } from "next/navigation";
 
 export default function ProductCard({ product }: { product: Product }) {
+  const router = useRouter();
+
   return (
-    <div className="   space-y-4 m-auto ">
-      <figure className="group-hover:opacity-90">
+    <div className="space-y-4 m-auto max-w-sm hover:scale-105 transition duration-100 ease-in-out transform-gpu">
+      {/* Image Container */}
+      <div
+        className="w-72 h-72 relative rounded-lg bg-muted cursor-pointer"
+        onClick={() => router.push(`/product/${product.id}`)}
+      >
         <Image
-          className="w-full rounded-lg aspect-square bg-muted"
           src={product.image}
-          width={200}
-          height={300}
           alt={product.name}
+          fill
+
+          className="object-contain m-auto p-2"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority // or loading="lazy" depending on the use case
         />
-      </figure>
+      </div>
+
       <div className="flex justify-between">
         <div>
           <h3 className="text-lg">{product.name}</h3>
@@ -31,12 +34,15 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
         <p className="text-lg font-semibold">{Number(product.basePrice)}$</p>
       </div>
+
       <div className="flex gap-4">
         <Button variant="ghost" size="icon" className="flex-shrink-0">
           <HeartIcon className="size-4" />
         </Button>
         <Button variant="ghost" className="w-full">
-          <Link href={`/product/${product.id}`}>Add to Card</Link>
+          <Link href={`/product/${product.id}`} className="w-full">
+            Add to Cart
+          </Link>
         </Button>
       </div>
     </div>

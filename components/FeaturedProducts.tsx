@@ -4,20 +4,8 @@ import { ShoppingBag } from "lucide-react";
 
 const products = [
   {
-    id: 1,
-    image: "/featured-images/airpods.png",
-    title: {
-      en: "Power in Every Pixel",
-      ar: "القوة في كل بكسل",
-    },
-    description: {
-      en: "Experience the ultimate performance with our latest laptops.",
-      ar: "جرب الأداء الفائق مع أحدث أجهزة اللابتوب لدينا.",
-    },
-  },
-  {
     id: 2,
-    image: "/featured-images/lab2.png",
+    image: "/featured-images/camera.png",
     title: {
       en: "Capture Every Moment",
       ar: "التقط كل لحظة",
@@ -28,15 +16,27 @@ const products = [
     },
   },
   {
+    id: 1,
+    image: "/featured-images/lab2.png",
+    title: {
+      en: "Power in Every Pixel",
+      ar: "القوة في كل بكسل",
+    },
+    description: {
+      en: "Experience the ultimate performance with our latest laptops.",
+      ar: "جرب الأداء الفائق مع أحدث أجهزة اللابتوب لدينا.",
+    },
+  },
+  {
     id: 3,
     image: "/featured-images/screen.png",
     title: {
-      en: "Unmatched Sound Quality",
-      ar: "جودة صوت لا مثيل لها",
+      en: "blazing fast screens",
+      ar: "شاشات اوف بح",
     },
     description: {
-      en: "Immerse yourself in crystal-clear audio with premium AirPods.",
-      ar: "اغمر نفسك في صوت نقي مع AirPods المميزة.",
+      en: "Immerse yourself in crystal-clear screens with our blazing fast screens.",
+      ar: "اغمر نفسك في الوانصافيه مع شاشات اوف بح المميزة.",
     },
   },
 ];
@@ -60,23 +60,23 @@ const FeaturedProduct = async ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-14 mt-12 md:px-14 px-4">
         {products.map(({ id, image, title, description }) => (
-          <div key={id} className="relative group bg-muted">
+          <div key={id} className="relative group bg-muted ">
             <Image
               src={image}
               alt={title[lang as keyof typeof title]}
               width={500}
               height={500}
-              className="group-hover:brightness-75 transition duration-300 w-full h-auto object-cover"
+              className="group-hover:brightness-75 transition duration-300 w-full h-auto object-cover p-4"
             />
             <div
               className={`group-hover:-translate-y-4 transition duration-300 absolute bottom-8 ${
                 ar ? "right-8" : "left-8"
               } space-y-2`}
             >
-              <p className="font-medium text-xl lg:text-2xl ">
+              <p className="font-medium text-xl lg:text-2xl bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
                 {title[lang as keyof typeof title]}
               </p>
-              <p className="text-sm lg:text-base leading-5 max-w-60">
+              <p className="text-sm lg:text-base leading-5 max-w-60 bg-gradient-to-r from-blue-500 to-red-500 text-transparent bg-clip-text">
                 {description[lang as keyof typeof description]}
               </p>
               <button className=" text-white flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-blue-700 px-4 py-2 rounded ">

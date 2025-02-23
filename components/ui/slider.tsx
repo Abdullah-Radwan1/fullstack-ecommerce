@@ -86,7 +86,7 @@ const Slider = () => {
   };
 
   return (
-    <div className="overflow-hidden relative w-full">
+    <div className="overflow-hidden relative w-[90%] mx-auto rounded-xl">
       <div
         className="flex transition-transform duration-700 ease-in-out"
         style={{
