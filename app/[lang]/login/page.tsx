@@ -11,18 +11,15 @@ const Page = () => {
   const ar = lang === "ar";
 
   return (
-    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg bg-white dark:bg-gray-800">
+    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg  ">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-center mb-6 dark:text-white">
+      <h1 className="text-2xl font-bold text-center mb-6 ">
         {ar ? "تسجيل الدخول" : "Login"}
       </h1>
 
       {/* Email Input */}
       <div className="mb-4">
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium mb-1 dark:text-gray-200"
-        >
+        <label htmlFor="email" className="block text-sm font-medium mb-1 ">
           {ar ? "البريد الإلكتروني" : "Email"}
         </label>
         <Input
@@ -35,10 +32,7 @@ const Page = () => {
 
       {/* Password Input */}
       <div className="mb-6">
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium mb-1 dark:text-gray-200"
-        >
+        <label htmlFor="password" className="block text-sm font-medium mb-1 ">
           {ar ? "كلمة المرور" : "Password"}
         </label>
         <Input
@@ -50,23 +44,23 @@ const Page = () => {
       </div>
 
       {/* Login Button */}
-      <Button className="w-full from-green-500 to-blue-600 bg-gradient-to-r hover:opacity-90 transition text-white mb-4">
+      <Button className="w-full from-green-500 to-blue-600 bg-gradient-to-r hover:opacity-90 transition toast mb-4">
         {ar ? "تسجيل الدخول" : "Login"}
       </Button>
 
       {/* Divider */}
       <div className="flex items-center my-6">
-        <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+        <div className="flex-grow border-t "></div>
         <span className="mx-4 text-gray-500 dark:text-gray-400">
           {ar ? "أو" : "OR"}
         </span>
-        <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+        <div className="flex-grow border-t "></div>
       </div>
 
       {/* GitHub Login Button */}
       <Button
         onClick={() => signIn("github")}
-        className="w-full bg-gray-800 hover:bg-gray-900 text-white mb-4"
+        className="w-full bg-gray-800 text-white hover:bg-gray-900 toast mb-4"
       >
         {ar ? "تسجيل الدخول باستخدام GitHub" : "Login with GitHub"}
       </Button>

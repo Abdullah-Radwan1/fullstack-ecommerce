@@ -2,16 +2,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { HeartIcon} from "lucide-react";
+import { HeartIcon } from "lucide-react";
 import { Product } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 export default function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
-
+  console.log(product.image);
   return (
     <div className="space-y-4 m-auto max-w-sm hover:scale-105 transition duration-100 ease-in-out transform-gpu">
       {/* Image Container */}
+
       <div
         className="w-72 h-72 relative rounded-lg bg-muted cursor-pointer"
         onClick={() => router.push(`/product/${product.id}`)}
@@ -20,9 +21,7 @@ export default function ProductCard({ product }: { product: Product }) {
           src={product.image}
           alt={product.name}
           fill
-
           className="object-contain m-auto p-2"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority // or loading="lazy" depending on the use case
         />
       </div>

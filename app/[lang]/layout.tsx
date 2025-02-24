@@ -5,6 +5,7 @@ import { NavigationMenuDemo } from "@/components/header/Navebar";
 
 import { ThemeProvider } from "@/lib/ThemeProvider";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   description: "Vogue Haven Ecommerce",
@@ -43,6 +44,7 @@ export default async function RootLayout({
           <div className="sr-only ">das</div>
           <NavigationMenuDemo />
           {children}
+          <Toaster />
         </ThemeProvider>
         <Footer params={params} />
       </body>

@@ -5,10 +5,24 @@ import React from "react";
 
 const Footer = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const { lang } = await params;
-  console.log(lang);
+  type FooterTranslations = {
+    [key: string]: {
+      title: string;
+      description: string;
+      company: string;
+      home: string;
+      aboutUs: string;
+      contactUs: string;
+      privacyPolicy: string;
+      getInTouch: string;
+      phone: string;
+      email: string;
+      copyright: string;
+    };
+  };
 
   // Define translations for the content
-  const translations = {
+  const translations: FooterTranslations = {
     en: {
       title: "Vogue-Haven",
       description:

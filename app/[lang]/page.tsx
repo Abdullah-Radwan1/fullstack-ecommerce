@@ -1,8 +1,8 @@
 import FeaturedProduct from "@/components/FeaturedProducts";
 import ProductCard from "@/components/productCard";
 import Slider from "@/components/ui/slider";
-import { db } from "@/lib/db";
-import { bestSellers, first_10_products } from "@/lib/Functions";
+
+import { first_10_products } from "@/lib/Functions";
 
 import { Separator } from "@radix-ui/react-select";
 
@@ -15,7 +15,6 @@ export default async function Home({
 }) {
   const { lang } = await params;
 
-  const products = await bestSellers();
   const ten_products = await first_10_products();
   return (
     <main className="container m-auto">
@@ -60,7 +59,7 @@ export default async function Home({
           <Separator className="w-28 h-0.5 bg-gradient-to-r from-green-500 to-blue-700 mt-2 mx-auto"></Separator>
         </h2>
 
-        <div className="grid  sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid  sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-5 gap-5">
           {ten_products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

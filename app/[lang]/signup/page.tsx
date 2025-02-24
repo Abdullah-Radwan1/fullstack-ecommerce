@@ -11,18 +11,15 @@ const SignUpPage = () => {
   const ar = lang === "ar";
 
   return (
-    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg bg-white dark:bg-gray-800">
+    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg ">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-center mb-6 dark:text-white">
+      <h1 className="text-2xl font-bold text-center mb-6 ">
         {ar ? "إنشاء حساب" : "Sign Up"}
       </h1>
 
       {/* Email Input */}
       <div className="mb-4">
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium mb-1 dark:text-gray-200"
-        >
+        <label htmlFor="email" className="block text-sm font-medium mb-1 ">
           {ar ? "البريد الإلكتروني" : "Email"}
         </label>
         <Input
@@ -35,10 +32,7 @@ const SignUpPage = () => {
 
       {/* Password Input */}
       <div className="mb-6">
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium mb-1 dark:text-gray-200"
-        >
+        <label htmlFor="password" className="block text-sm font-medium mb-1 ">
           {ar ? "كلمة المرور" : "Password"}
         </label>
         <Input
@@ -53,7 +47,7 @@ const SignUpPage = () => {
       <div className="mb-6">
         <label
           htmlFor="confirmPassword"
-          className="block text-sm font-medium mb-1 dark:text-gray-200"
+          className="block text-sm font-medium mb-1 "
         >
           {ar ? "تأكيد كلمة المرور" : "Confirm Password"}
         </label>

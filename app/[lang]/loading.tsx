@@ -1,8 +1,9 @@
-import { Loader } from "lucide-react";
 import React from "react";
-
-const loading = () => {
-  return <Loader className="animate-spin m-auto text-center">loading</Loader>;
+import { Loader2 } from "lucide-react";
+export default () => {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Loader2 />
+    </div>
+  );
 };
-
-export default loading;

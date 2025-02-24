@@ -15,7 +15,7 @@ import {
 import { ModeToggle } from "@/components/header/ModeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 import { useParams } from "next/navigation";
-import { Menu, User2, UserCircle } from "lucide-react";
+import { Menu, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,7 +49,7 @@ export function NavigationMenuDemo() {
               <ul className="grid gap-3 p-2 w-[200px]">
                 <ListItem
                   href={ar ? "/menu" : "/en/menu"}
-                  title={ar ? "المنتجات" : "Products"}
+                  title={ar ? "صفحه المنتجات  " : "All Products "}
                 >
                   {ar
                     ? "تصفح جميع المنتجات الحديثة"
@@ -85,7 +85,13 @@ export function NavigationMenuDemo() {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
-
+          <NavigationMenuItem className="hidden md:block">
+            <Link href="/products" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                {ar ? "المنتجات" : "products"}
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
           <NavigationMenuItem>
             <ModeToggle />
           </NavigationMenuItem>

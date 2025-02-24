@@ -3,15 +3,40 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import Image from "next/image";
 import Link from "@/components/Link";
+import { Loader2 } from "lucide-react";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import ProductCard from "@/components/productCard";
+import { relatedProducts } from "@/lib/Functions";
+
+// Translation dictionary
+type Translations = {
+  [key: string]: {
+    productNotFound: string;
+    quantity: string;
+    addToCart: string;
+    checkout: string;
+    relatedProducts: string;
+  };
+};
+const translations: Translations = {
+  en: {
+    productNotFound: "Product not found",
+    quantity: "Quantity",
+    addToCart: "Add to Cart",
+    checkout: "Checkout",
+    relatedProducts: "Related Products",
+  },
+  ar: {
+    productNotFound: "المنتج غير موجود",
+    quantity: "الكمية",
+    addToCart: "أضف إلى السلة",
+    checkout: "الدفع",
+    relatedProducts: "منتجات ذات صلة",
+  },
+};
 
 const Page = async ({
   params,
@@ -20,32 +45,35 @@ const Page = async ({
 }) => {
   const { id, lang } = await params;
   const ar = lang === "ar";
+
+  const t = translations[lang]; // Get translations for the current language
+
   const product = await db.product.findUnique({
     where: { id: Number(id) },
   });
-
-  if (!product) {
-    return <div>المنتج غير موجود</div>; // Arabic: "Product not found"
+  if (product == null) {
+    return <Loader2 />;
   }
+  const relatedFunc = await relatedProducts(product.categoryId);
 
   return (
-    <main className="container mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
+    <main className="max-w-[80%] mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
       <Card className="mx-auto">
         <CardContent className="p-0">
           <div className="flex justify-between gap-6 flex-col sm:flex-row">
             {/* Left column - Product Image */}
-            <div className="relative flex-1">
+            <div className="relative flex-1 h-[400px]">
               <Image
                 src={product.image}
                 alt={product.name}
-                width={500}
-                height={500}
-                className="object-fill w-full h-full"
+                width={1000}
+                height={1000}
+                className="object-contain w-full h-full"
               />
             </div>
 
             {/* Right column - Product Details and Actions */}
-            <div className="p-6 space-y-8 flex-1">
+            <div className="p-6 space-y-4 flex-1">
               <div className="space-y-4">
                 <h1 className="scroll-m-20 text-4xl font-bold">
                   {product.name}
@@ -56,35 +84,22 @@ const Page = async ({
                 <p className="leading-7">{product.description}</p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">الحجم</label> {/* Arabic: "Size" */}
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر الحجم" /> {/* Arabic: "Select size" */}
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="small">صغير</SelectItem> {/* Arabic: "Small" */}
-                      <SelectItem value="medium">متوسط</SelectItem> {/* Arabic: "Medium" */}
-                      <SelectItem value="large">كبير</SelectItem> {/* Arabic: "Large" */}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">الكمية</label> {/* Arabic: "Quantity" */}
+                  <label className="text-sm font-medium">{t.quantity}</label>{" "}
+                  {/* Use translation for "Quantity" */}
                   <Input type="number" min="1" defaultValue="1" />
                 </div>
 
                 <Button className="w-full" size="lg">
-                  أضف إلى السلة {/* Arabic: "Add to Cart" */}
+                  {t.addToCart} {/* Use translation for "Add to Cart" */}
                 </Button>
                 <Link
                   className="w-full bg-muted m-auto mt-8"
                   href={ar ? "/ar/checkout" : "/en/checkout"}
                 >
                   <Button className="w-full mt-3" size="lg">
-                    الدفع {/* Arabic: "Checkout" */}
+                    {t.checkout} {/* Use translation for "Checkout" */}
                   </Button>
                 </Link>
               </div>
@@ -92,6 +107,15 @@ const Page = async ({
           </div>
         </CardContent>
       </Card>
+      <Separator />
+      {/* Related Products Section */}
+      <h2 className="text-2xl font-bold mt-6">{t.relatedProducts}</h2>{" "}
+      {/* Use translation for "Related Products" */}
+      <div className="grid grid-cols-4 gap-6 mt-6">
+        {relatedFunc.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </main>
   );
 };
