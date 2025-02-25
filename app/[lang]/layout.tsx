@@ -6,6 +6,9 @@ import { NavigationMenuDemo } from "@/components/header/Navebar";
 import { ThemeProvider } from "@/lib/ThemeProvider";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
+import SessionProvider from "@/lib/auth/SessionProvider";
+import { getServerSession } from "next-auth";
+import NavMenu from "@/components/NavMenu";
 
 export const metadata: Metadata = {
   description: "Vogue Haven Ecommerce",
@@ -20,7 +23,7 @@ export default async function RootLayout({
 }>) {
   const { lang } = await params;
   const title = lang === "ar" ? "ڤوجيه هاڤن" : "Vogue-Haven";
-
+  const session = await getServerSession();
   return (
     <html
       // Apply the font variable here
@@ -32,20 +35,22 @@ export default async function RootLayout({
         {/* Apply the dynamic title */}
         <title>{title}</title>
       </head>
+
       <body>
-        {" "}
-        {/* Apply the font class here */}
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="sr-only ">das</div>
-          <NavigationMenuDemo />
-          {children}
+          <SessionProvider session={session}>
+            <NavigationMenuDemo />
+            <NavMenu />
+            {children}
+          </SessionProvider>
           <Toaster />
         </ThemeProvider>
+
         <Footer params={params} />
       </body>
     </html>

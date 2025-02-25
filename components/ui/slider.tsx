@@ -86,9 +86,9 @@ const Slider = () => {
   };
 
   return (
-    <div className="overflow-hidden relative w-[90%] mx-auto rounded-xl">
+    <div className="overflow-hidden relative  w-full lg:w-[80%] mx-auto rounded-xl">
       <div
-        className="flex transition-transform duration-700 ease-in-out"
+        className="flex flex-1 transition-transform duration-700 ease-in-out"
         style={{
           transform: ar
             ? `translateX(${currentSlide * 100}%)`
@@ -98,7 +98,7 @@ const Slider = () => {
         {sliderData.map((slide, index) => (
           <div
             key={slide.id}
-            className="flex flex-col-reverse md:flex-row items-center justify-between bg-muted py-8 md:px-14 px-5 mt-6 rounded-xl min-w-full"
+            className="flex flex-1 flex-col-reverse lg:flex-row items-center justify-between bg-muted py-8 md:px-14 px-5 mt-6 rounded-xl min-w-full"
           >
             <div className="md:pl-8 mt-10 md:mt-0">
               <p className="md:text-base bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent pb-1">
@@ -118,13 +118,14 @@ const Slider = () => {
               </div>
             </div>
             <div className="flex items-center flex-1 justify-center">
-              <Image
-                className="md:w-72 w-48"
-                src={slide.imgSrc}
-                alt={`Slide ${index + 1}`}
-                width={500}
-                height={500}
-              />
+              <div className="relative w-72 h-72">
+                <Image
+                  className="md:w-72 w-48"
+                  src={slide.imgSrc}
+                  alt={`Slide ${index + 1}`}
+                  fill
+                />
+              </div>
             </div>
           </div>
         ))}

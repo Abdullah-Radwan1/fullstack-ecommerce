@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 const SignUpPage = () => {
-  const { lang } = useParams();
+  const { lang } = useParams() as { lang: string };
   const ar = lang === "ar";
 
   return (

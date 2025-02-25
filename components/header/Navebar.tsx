@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { ModeToggle } from "@/components/header/ModeToggle";
 import { LanguageToggle } from "./LanguageToggle";
-import { useParams } from "next/navigation";
+
 import { Menu, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
@@ -22,11 +22,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 
 export function NavigationMenuDemo() {
-  const { lang } = useParams();
+  const { lang } = useParams() as { lang: string };
   let ar = lang === "ar";
-
+  // const session = useSession();
+  // console.log(session);
   return (
     <main className="flex justify-evenly items-center">
       {/* logo */}
@@ -116,7 +119,7 @@ export function NavigationMenuDemo() {
                   href={ar ? "/login" : "/en/login"}
                   className="text-base  flex gap-2 items-center  "
                 >
-                  Acount
+                  Account
                   <UserCircle className="size-6" />
                 </Link>
               </DropdownMenuItem>

@@ -111,7 +111,7 @@ const Page = async ({
       {/* Related Products Section */}
       <h2 className="text-2xl font-bold mt-6">{t.relatedProducts}</h2>{" "}
       {/* Use translation for "Related Products" */}
-      <div className="grid grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
         {relatedFunc.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
