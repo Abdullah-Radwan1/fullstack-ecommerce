@@ -53,3 +53,14 @@ export const relatedProducts = cache(
   ["relatedProducts"],
   { revalidate: 10 }
 );
+
+export const userOrders = cache(
+  async (email: string) => {
+    return await db.order.findMany({
+      where: { userEmail: email },
+      include: { products: true },
+    });
+  },
+  ["userOrders"],
+  { revalidate: 10 }
+);

@@ -15,7 +15,7 @@ import {
 import { ModeToggle } from "@/components/header/ModeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 
-import { Menu, UserCircle } from "lucide-react";
+import { Loader2, Menu, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,8 +24,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function NavigationMenuDemo() {
+  const { data: session } = useSession();
+  console.log(session);
   const { lang } = useParams() as { lang: string };
   let ar = lang === "ar";
   // const session = useSession();
@@ -115,13 +118,33 @@ export function NavigationMenuDemo() {
                 <Link href="/about">{ar ? "من نحن" : "About"}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link
-                  href={ar ? "/login" : "/en/login"}
-                  className="text-base  flex gap-2 items-center  "
-                >
-                  Account
-                  <UserCircle className="size-6" />
-                </Link>
+                {session ? (
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={ar ? "/profile" : "/en/profile"}
+                      className="text-base  flex gap-2 items-center  "
+                    >
+                      {session.user?.name}
+                    </Link>
+                    <Avatar>
+                      <AvatarImage
+                        src={session.user?.image ?? "/avatar.png"}
+                        alt="@shadcn"
+                      />
+                      <AvatarFallback>
+                        <Loader2 className="animate-spin" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                ) : (
+                  <Link
+                    href={ar ? "/login" : "/en/login"}
+                    className="text-base  flex gap-2 items-center  "
+                  >
+                    Account
+                    <UserCircle className="size-6" />
+                  </Link>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -129,13 +152,34 @@ export function NavigationMenuDemo() {
       </NavigationMenu>
 
       <div className="hidden md:block">
-        <Link
-          href={ar ? "/login" : "/en/login"}
-          className="text-base  flex gap-2 items-center  "
-        >
-          Acount
-          <UserCircle className="size-6" />
-        </Link>
+        {session ? (
+          <div className="flex items-center gap-2">
+            <Link
+              href={ar ? "/profile" : "/en/profile"}
+              className="text-base  flex gap-2 items-center  "
+            >
+              {session.user?.name}
+
+              <Avatar>
+                <AvatarImage
+                  src={session.user?.image ?? "/avatar.png"}
+                  alt="profile photo"
+                />
+                <AvatarFallback>
+                  <Loader2 className="animate-spin" />
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          </div>
+        ) : (
+          <Link
+            href={ar ? "/login" : "/en/login"}
+            className="text-base  flex gap-2 items-center  "
+          >
+            Account
+            <UserCircle className="size-6" />
+          </Link>
+        )}
       </div>
     </main>
   );

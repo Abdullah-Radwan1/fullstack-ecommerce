@@ -8,7 +8,7 @@ import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import SessionProvider from "@/lib/auth/SessionProvider";
 import { getServerSession } from "next-auth";
-import NavMenu from "@/components/NavMenu";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export const metadata: Metadata = {
   description: "Vogue Haven Ecommerce",
@@ -23,7 +23,8 @@ export default async function RootLayout({
 }>) {
   const { lang } = await params;
   const title = lang === "ar" ? "ڤوجيه هاڤن" : "Vogue-Haven";
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
+  // console.log(session);
   return (
     <html
       // Apply the font variable here
@@ -45,7 +46,7 @@ export default async function RootLayout({
         >
           <SessionProvider session={session}>
             <NavigationMenuDemo />
-            <NavMenu />
+
             {children}
           </SessionProvider>
           <Toaster />
