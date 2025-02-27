@@ -17,10 +17,10 @@ export default async function Home({
 
   const ten_products = await first_10_products();
   return (
-    <main className="container m-auto">
+    <main className=" m-auto">
       {/* Hero Section */}
       <Slider />
-      <div className="relative container flex flex-col items-center justify-center text-center my-6 mx-auto ">
+      <div className="relative  flex flex-col items-center justify-center text-center my-6 mx-auto ">
         {/* Optional: Add an image or illustration */}
         <div className="my-2 relative">
           <Image

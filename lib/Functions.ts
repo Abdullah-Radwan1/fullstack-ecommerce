@@ -64,3 +64,7 @@ export const userOrders = cache(
   ["userOrders"],
   { revalidate: 10 }
 );
+
+// export const createCat = await db.category.create({
+//   data: { name: "thirdcat" },
+// });

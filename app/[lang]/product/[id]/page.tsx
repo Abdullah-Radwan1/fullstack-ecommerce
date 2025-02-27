@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import ProductCard from "@/components/productCard";
 import { relatedProducts } from "@/lib/Functions";
+import AddtoCart from "@/lib/AddtoCart";
 
 // Translation dictionary
 type Translations = {
@@ -47,7 +48,7 @@ const Page = async ({
   const ar = lang === "ar";
 
   const t = translations[lang]; // Get translations for the current language
-
+  console.log(lang, "in cart");
   const product = await db.product.findUnique({
     where: { id: Number(id) },
   });
@@ -55,23 +56,17 @@ const Page = async ({
     return <Loader2 />;
   }
   const relatedFunc = await relatedProducts(product.categoryId);
+  const serializableProduct = {
+    ...product,
 
+    basePrice: product.basePrice.toNumber(), // Convert Decimal to number
+  };
   return (
     <main className="max-w-[80%] mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
       <Card className="mx-auto">
         <CardContent className="p-0">
-          <div className="flex justify-between gap-6 flex-col sm:flex-row">
+          <div className="flex items-center justify-start g flex-col sm:flex-row">
             {/* Left column - Product Image */}
-            <div className="relative flex-1 h-[400px]">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={1000}
-                height={1000}
-                className="object-contain w-full h-full"
-              />
-            </div>
-
             {/* Right column - Product Details and Actions */}
             <div className="p-6 space-y-4 flex-1">
               <div className="space-y-4">
@@ -91,9 +86,14 @@ const Page = async ({
                   <Input type="number" min="1" defaultValue="1" />
                 </div>
 
-                <Button className="w-full" size="lg">
+                <AddtoCart
+                  lang={lang}
+                  item={serializableProduct}
+                  className="w-full"
+                  size="lg"
+                >
                   {t.addToCart} {/* Use translation for "Add to Cart" */}
-                </Button>
+                </AddtoCart>
                 <Link
                   className="w-full bg-muted m-auto mt-8"
                   href={ar ? "/ar/checkout" : "/en/checkout"}
@@ -103,6 +103,15 @@ const Page = async ({
                   </Button>
                 </Link>
               </div>
+            </div>
+            <div className="relative flex-1 h-[400px] bg-muted">
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={1000}
+                height={1000}
+                className="object-contain w-full h-full"
+              />
             </div>
           </div>
         </CardContent>

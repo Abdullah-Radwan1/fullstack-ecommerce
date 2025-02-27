@@ -25,6 +25,7 @@ export default async function RootLayout({
   const title = lang === "ar" ? "ڤوجيه هاڤن" : "Vogue-Haven";
   const session = await getServerSession(authOptions);
   console.log(session);
+
   return (
     <html
       // Apply the font variable here
@@ -37,7 +38,7 @@ export default async function RootLayout({
         <title>{title}</title>
       </head>
 
-      <body>
+      <body className="container m-auto">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

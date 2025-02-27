@@ -15,7 +15,7 @@ import {
 import { ModeToggle } from "@/components/header/ModeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 
-import { Loader2, Menu, UserCircle } from "lucide-react";
+import { Loader2, Menu, ShoppingCart, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import useCartStore from "@/zustand/store";
 
 export function NavigationMenuDemo() {
   const { data: session } = useSession();
@@ -32,8 +33,17 @@ export function NavigationMenuDemo() {
   const { lang } = useParams() as { lang: string };
   let ar = lang === "ar";
   console.log(session);
+
+  const itemsLength = useCartStore((state) =>
+    state.items.reduce(
+      (accumilatedQuantity, item) =>
+        accumilatedQuantity + (item?.quantity || 0),
+      0
+    )
+  );
+  console.log(itemsLength);
   return (
-    <main className="flex justify-evenly items-center">
+    <main className="flex justify-evenly items-center pt-2">
       {/* logo */}
       <Link
         href={ar ? "/" : "/en"}
@@ -41,47 +51,17 @@ export function NavigationMenuDemo() {
       >
         {lang === "ar" ? " ڤوجيه هاڤن" : "Vogue-Haven   "}
       </Link>
-      <NavigationMenu dir={ar ? "rtl" : "ltr"} className="py-2 container ">
+      <NavigationMenu dir={ar ? "rtl" : "ltr"} className="py-2  ">
         <NavigationMenuList>
-          {/* Home Link */}
-
-          {/* Menu with Subcategories */}
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>
-              {ar ? "المنيو" : "Menu"}
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid gap-3 p-2 w-[200px]">
-                <ListItem
-                  href={ar ? "/menu" : "/en/menu"}
-                  title={ar ? "صفحه المنتجات  " : "All Products "}
-                >
-                  {ar
-                    ? "تصفح جميع المنتجات الحديثة"
-                    : "Browse all our latest products."}
-                </ListItem>
-                <ListItem
-                  href={ar ? "/menu/labtobs" : "/en/menu/labtobs"}
-                  title={ar ? "لاب توب" : "labtobs"}
-                >
-                  {ar
-                    ? "تصفح جميع مجموعة اللاب توب"
-                    : "brosse all our latest labtobs."}
-                </ListItem>
-
-                <ListItem
-                  href={ar ? "/menu/accessories" : "/en/menu/accessories"}
-                  title={ar ? "الاكسسوارات" : "Accessories"}
-                >
-                  {ar
-                    ? "تصفح جميع الاكسسوارات الاثرية لجميع المواعيد"
-                    : "Browse trendy accessories for all occasions."}
-                </ListItem>
-              </ul>
-            </NavigationMenuContent>
+          {/* Products */}
+          <NavigationMenuItem className="hidden md:block">
+            <Link href="/products" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                {ar ? "المنتجات" : "products"}
+              </NavigationMenuLink>
+            </Link>
           </NavigationMenuItem>
-
-          {/* Contact and About Links - Desktop */}
+          {/* About Links  */}
 
           <NavigationMenuItem className="hidden md:block">
             <Link href="/about" legacyBehavior passHref>
@@ -90,10 +70,17 @@ export function NavigationMenuDemo() {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem className="hidden md:block">
-            <Link href="/products" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                {ar ? "المنتجات" : "products"}
+
+          {/* cart*/}
+          <NavigationMenuItem className="">
+            <Link className="relative" href="/cart" legacyBehavior passHref>
+              <NavigationMenuLink
+                className={`${navigationMenuTriggerStyle()} relative`}
+              >
+                <ShoppingCart />
+                <div className="absolute  -right-1 -top-1 rounded-full w-4 h-4 border p-2 text-xs flex items-center justify-center">
+                  {itemsLength}
+                </div>
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
