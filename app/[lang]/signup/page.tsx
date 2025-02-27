@@ -1,68 +1,144 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React from "react";
-import { useParams } from "next/navigation";
+import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 const SignUpPage = () => {
   const { lang } = useParams() as { lang: string };
+  const router = useRouter();
   const ar = lang === "ar";
 
+  // State for form inputs
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Basic validation
+    if (password !== confirmPassword) {
+      setError(ar ? "كلمة المرور غير متطابقة" : "Passwords do not match");
+      return;
+    }
+
+    // Call the signIn function with credentials
+    const result = await signIn("credentials", {
+      redirect: false, // Prevent automatic redirect
+      name: username,
+      email,
+      password,
+      isSignUp: "true", // Indicate sign-up
+      callbackUrl: ar ? "/ar" : "/en", // Redirect after successful sign-up
+    });
+
+    // Handle the result
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      // Redirect to the dashboard or any other route
+      router.push(ar ? "/ar" : "/en");
+    }
+  };
+
   return (
-    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg ">
+    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-center mb-6 ">
+      <h1 className="text-2xl font-bold text-center mb-6">
         {ar ? "إنشاء حساب" : "Sign Up"}
       </h1>
 
-      {/* Email Input */}
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium mb-1 ">
-          {ar ? "البريد الإلكتروني" : "Email"}
-        </label>
-        <Input
-          id="email"
-          type="email"
-          placeholder={ar ? "أدخل بريدك الإلكتروني" : "Enter your email"}
-          className="w-full"
-        />
-      </div>
+      {/* Display error message */}
+      {error && (
+        <div className="mb-4 text-red-500 text-center text-sm">{error}</div>
+      )}
 
-      {/* Password Input */}
-      <div className="mb-6">
-        <label htmlFor="password" className="block text-sm font-medium mb-1 ">
-          {ar ? "كلمة المرور" : "Password"}
-        </label>
-        <Input
-          id="password"
-          type="password"
-          placeholder={ar ? "أدخل كلمة المرور" : "Enter your password"}
-          className="w-full"
-        />
-      </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit}>
+        {/* Username Input */}
+        <div className="mb-4">
+          <label htmlFor="username" className="block text-sm font-medium mb-1">
+            {ar ? "اسم المستخدم" : "User name"}
+          </label>
+          <Input
+            id="username"
+            type="text"
+            placeholder={ar ? "ادخل اسم المستخدم" : "Enter your user name"}
+            className="w-full"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
 
-      {/* Confirm Password Input */}
-      <div className="mb-6">
-        <label
-          htmlFor="confirmPassword"
-          className="block text-sm font-medium mb-1 "
+        {/* Email Input */}
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium mb-1">
+            {ar ? "البريد الإلكتروني" : "Email"}
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder={ar ? "أدخل بريدك الإلكتروني" : "Enter your email"}
+            className="w-full"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Password Input */}
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium mb-1">
+            {ar ? "كلمة المرور" : "Password"}
+          </label>
+          <Input
+            id="password"
+            type="password"
+            placeholder={ar ? "أدخل كلمة المرور" : "Enter your password"}
+            className="w-full"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Confirm Password Input */}
+        <div className="mb-6">
+          <label
+            htmlFor="confirmPassword"
+            className="block text-sm font-medium mb-1"
+          >
+            {ar ? "تأكيد كلمة المرور" : "Confirm Password"}
+          </label>
+          <Input
+            id="confirmPassword"
+            type="password"
+            placeholder={
+              ar ? "أعد إدخال كلمة المرور" : "Re-enter your password"
+            }
+            className="w-full"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Sign Up Button */}
+        <Button
+          type="submit"
+          className="w-full from-green-500 to-blue-600 bg-gradient-to-r hover:opacity-90 transition text-white mb-4"
         >
-          {ar ? "تأكيد كلمة المرور" : "Confirm Password"}
-        </label>
-        <Input
-          id="confirmPassword"
-          type="password"
-          placeholder={ar ? "أعد إدخال كلمة المرور" : "Re-enter your password"}
-          className="w-full"
-        />
-      </div>
-
-      {/* Sign Up Button */}
-      <Button className="w-full from-green-500 to-blue-600 bg-gradient-to-r hover:opacity-90 transition text-white mb-4">
-        {ar ? "إنشاء حساب" : "Sign Up"}
-      </Button>
+          {ar ? "إنشاء حساب" : "Sign Up"}
+        </Button>
+      </form>
 
       {/* Divider */}
       <div className="flex items-center my-6">

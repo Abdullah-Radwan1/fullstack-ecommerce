@@ -1,6 +1,3 @@
-import { log } from "console";
-import email from "next-auth/providers/email";
-import { title } from "process";
 import React from "react";
 
 const Footer = async ({ params }: { params: Promise<{ lang: string }> }) => {

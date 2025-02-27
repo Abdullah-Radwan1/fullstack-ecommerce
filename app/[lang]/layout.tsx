@@ -24,7 +24,7 @@ export default async function RootLayout({
   const { lang } = await params;
   const title = lang === "ar" ? "ڤوجيه هاڤن" : "Vogue-Haven";
   const session = await getServerSession(authOptions);
-  // console.log(session);
+  console.log(session);
   return (
     <html
       // Apply the font variable here

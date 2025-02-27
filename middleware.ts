@@ -1,48 +1,44 @@
 import { NextResponse, NextRequest } from "next/server";
-import { match } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
 
-import { cookies } from "next/headers";
-
-const locales = ["en", "ar"];
-const headers = { "accept-language": "ar,en;q=0.5" };
-const languages = new Negotiator({ headers }).languages();
-const defaultLocale = "ar";
-// Get the preferred locale, similar to the above or using a library
-function getLocale() {
- return match(languages, locales, defaultLocale);
-}
+const locales = ["en", "ar"]; // Supported locales
+const defaultLocale = "ar"; // Default locale
 
 export async function middleware(request: NextRequest) {
- // Check if there is any supported locale in the pathname
- const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
- // Check if the pathname has a locale
- const pathnameHasLocale = locales.some(
-  (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
- );
+  // Extract the lang from the pathname (e.g., /en/login -> "en")
+  const pathSegments = pathname.split("/");
+  const lang = pathSegments[1]; // The first segment is the lang
 
- if (!pathnameHasLocale) {
-  const locale = getLocale();
+  // Check if the lang is supported
+  const isSupportedLocale = locales.includes(lang);
 
-  request.nextUrl.pathname = `/${locale}${pathname}`;
-  // e.g. incoming request is /products
-  // The new URL is now /en-US/products
-  return NextResponse.redirect(request.nextUrl);
- }
+  // If the lang is not supported, fallback to the default locale
+  const locale = isSupportedLocale ? lang : defaultLocale;
 
+  // Check for the next-auth.session-token cookie
+  const sessionToken = request.cookies.get("next-auth.session-token");
 
+  // If the session token exists and the user is trying to access login/signup, redirect to home
+  if (sessionToken) {
+    if (pathname === `/${locale}/login` || pathname === `/${locale}/signup`) {
+      return NextResponse.redirect(new URL(`/${locale}`, request.url)); // Redirect to localized homepage
+    }
+  }
 
- return NextResponse.next();
- // Redirect if there is no locale
+  // If the lang is not in the pathname, redirect to the localized version of the path
+  if (!isSupportedLocale) {
+    const newPathname = `/${locale}${pathname}`;
+    request.nextUrl.pathname = newPathname;
+    return NextResponse.redirect(request.nextUrl);
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
- matcher: [
-  // Skip all internal paths (_next)
-  "/((?!_next/|api/|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
-
-  // Optional: only run on root (/) URL
-  // '/'
- ],
+  matcher: [
+    // Skip all internal paths (_next)
+    "/((?!_next/|api/|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
+  ],
 };

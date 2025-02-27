@@ -28,11 +28,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function NavigationMenuDemo() {
   const { data: session } = useSession();
-  console.log(session);
+
   const { lang } = useParams() as { lang: string };
   let ar = lang === "ar";
-  // const session = useSession();
-  // console.log(session);
+  console.log(session);
   return (
     <main className="flex justify-evenly items-center">
       {/* logo */}
@@ -128,7 +127,7 @@ export function NavigationMenuDemo() {
                     </Link>
                     <Avatar>
                       <AvatarImage
-                        src={session.user?.image ?? "/avatar.png"}
+                        src={session.user?.image || "/png.png"}
                         alt="@shadcn"
                       />
                       <AvatarFallback>
@@ -156,14 +155,14 @@ export function NavigationMenuDemo() {
           <div className="flex items-center gap-2">
             <Link
               href={ar ? "/profile" : "/en/profile"}
-              className="text-base  flex gap-2 items-center  "
+              className="text-base  flex gap-2 items-end  "
             >
               {session.user?.name}
 
               <Avatar>
                 <AvatarImage
-                  src={session.user?.image ?? "/avatar.png"}
-                  alt="profile photo"
+                  src={session.user?.image || "/png.png"}
+                  alt="@shadcn"
                 />
                 <AvatarFallback>
                   <Loader2 className="animate-spin" />
