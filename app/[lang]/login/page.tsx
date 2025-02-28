@@ -5,13 +5,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import React, { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import bcrypt from "bcrypt";
+import { useParams, useRouter } from "next/navigation";
+
 const Page = () => {
   const { lang } = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error"); // Capture auth errors
 
   const ar = lang === "ar";
 
@@ -28,7 +26,6 @@ const Page = () => {
     const res = await signIn("credentials", {
       email,
       password, // Hash password before sending
-
       redirect: false, // Avoid page reload
     });
 
@@ -50,11 +47,6 @@ const Page = () => {
 
       {/* Error Message */}
       {errorMsg && <p className="text-red-500 text-center mb-4">{errorMsg}</p>}
-      {error && (
-        <p className="text-red-500 text-center mb-4">
-          {ar ? "حدث خطأ أثناء المصادقة" : "Authentication error"}
-        </p>
-      )}
 
       {/* Login Form */}
       <form onSubmit={handleLogin}>

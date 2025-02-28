@@ -65,6 +65,21 @@ export const userOrders = cache(
   { revalidate: 10 }
 );
 
+export const allUsers = cache(
+  async () => {
+    return await db.user.findMany();
+  },
+  ["allUsers"],
+  { revalidate: 10 }
+);
+export const allOrders = cache(
+  async () => {
+    return await db.order.findMany();
+  },
+  ["allOrders"],
+  { revalidate: 10 }
+);
+
 // export const createCat = await db.category.create({
 //   data: { name: "thirdcat" },
 // });

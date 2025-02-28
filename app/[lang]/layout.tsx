@@ -38,7 +38,7 @@ export default async function RootLayout({
         <title>{title}</title>
       </head>
 
-      <body className="container m-auto">
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -53,7 +53,7 @@ export default async function RootLayout({
           <Toaster />
         </ThemeProvider>
 
-        <Footer params={params} />
+        <Footer lang={(await params).lang} />
       </body>
     </html>
   );

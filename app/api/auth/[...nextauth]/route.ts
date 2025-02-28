@@ -18,6 +18,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
         name: { label: "Name", type: "text", optional: true },
+        role: { label: "Role", type: "text", optional: true },
         isSignUp: { label: "Is Sign Up", type: "hidden" },
       },
       async authorize(credentials) {
@@ -52,6 +53,7 @@ export const authOptions: AuthOptions = {
             id: existingUser.id,
             name: existingUser.name,
             email: existingUser.email,
+            role: existingUser.role,
           };
         }
 
@@ -65,6 +67,7 @@ export const authOptions: AuthOptions = {
             name: credentials.name,
             email: credentials.email,
             password: hashedPassword,
+            role: credentials.role || "USER",
           },
         });
 
@@ -73,6 +76,7 @@ export const authOptions: AuthOptions = {
           id: newUser.id,
           name: newUser.name,
           email: newUser.email,
+          role: newUser.role,
         };
       },
     }),
@@ -83,6 +87,21 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/ar/login",
   },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
+
   debug: true,
 };
 

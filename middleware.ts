@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt"; // Use getToken to decode the session token
 
 const locales = ["en", "ar"]; // Supported locales
 const defaultLocale = "ar"; // Default locale
@@ -16,13 +17,26 @@ export async function middleware(request: NextRequest) {
   // If the lang is not supported, fallback to the default locale
   const locale = isSupportedLocale ? lang : defaultLocale;
 
-  // Check for the next-auth.session-token cookie
-  const sessionToken = request.cookies.get("next-auth.session-token");
+  // Get the session token from cookies
+  const sessionToken = request.cookies.get("next-auth.session-token")?.value;
 
-  // If the session token exists and the user is trying to access login/signup, redirect to home
-  if (sessionToken) {
+  // Decode the session token to get user information
+  const session = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET, // Ensure this matches your NextAuth secret
+  });
+
+  // If the user is authenticated (session exists)
+  if (session) {
+    // Redirect authenticated users away from login/signup pages
     if (pathname === `/${locale}/login` || pathname === `/${locale}/signup`) {
       return NextResponse.redirect(new URL(`/${locale}`, request.url)); // Redirect to localized homepage
+    }
+
+    // Example: Redirect users based on their role
+    const userRole = session.role; // Assuming the session contains a `role` field
+    if (userRole === "USER" && pathname.startsWith(`/${locale}/admin`)) {
+      return NextResponse.redirect(new URL(`/${locale}`, request.url));
     }
   }
 

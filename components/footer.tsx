@@ -1,7 +1,6 @@
 import React from "react";
 
-const Footer = async ({ params }: { params: Promise<{ lang: string }> }) => {
-  const { lang } = await params;
+const Footer = async ({ lang }: { lang: string }) => {
   type FooterTranslations = {
     [key: string]: {
       title: string;

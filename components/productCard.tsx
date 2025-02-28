@@ -11,7 +11,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const router = useRouter();
   console.log(product.image);
   return (
-    <div className="space-y-4 w-72   m-auto max-w-sm hover:scale-105 transition duration-100 ease-in-out transform-gpu">
+    <div className="space-y-4 w-72    max-w-sm hover:scale-105 transition duration-100 ease-in-out transform-gpu">
       {/* Image Container */}
       <div
         className="w-72 h-72 relative rounded-lg cursor-pointer"
@@ -37,9 +37,9 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <div className="flex gap-4 ">
-        <Button variant="ghost" size="icon" className="flex-shrink-0">
+        {/* <Button variant="ghost" size="icon" className="flex-shrink-0">
           <HeartIcon className="size-4" />
-        </Button>
+        </Button> */}
         <AddtoCart item={product} />
       </div>
     </div>

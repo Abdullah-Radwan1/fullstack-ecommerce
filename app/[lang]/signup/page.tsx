@@ -6,6 +6,16 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 
 const SignUpPage = () => {
   const { lang } = useParams() as { lang: string };
@@ -15,36 +25,50 @@ const SignUpPage = () => {
   // State for form inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState(""); // State for role
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   // Handle form submission
+  const [loading, setLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    try {
+      setLoading(true);
+      e.preventDefault();
 
-    // Basic validation
-    if (password !== confirmPassword) {
-      setError(ar ? "كلمة المرور غير متطابقة" : "Passwords do not match");
-      return;
-    }
+      // Basic validation
+      if (password !== confirmPassword) {
+        setError(ar ? "كلمة المرور غير متطابقة" : "Passwords do not match");
+        return;
+      }
 
-    // Call the signIn function with credentials
-    const result = await signIn("credentials", {
-      redirect: false, // Prevent automatic redirect
-      name: username,
-      email,
-      password,
-      isSignUp: "true", // Indicate sign-up
-      callbackUrl: ar ? "/ar" : "/en", // Redirect after successful sign-up
-    });
+      // Call the signIn function with credentials
+      const result = await signIn("credentials", {
+        redirect: false, // Prevent automatic redirect
+        name: username,
+        email,
+        password,
+        role, // Include the selected role
+        isSignUp: "true", // Indicate sign-up
+        callbackUrl: ar ? "/ar" : "/en", // Redirect after successful sign-up
+      });
 
-    // Handle the result
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      // Redirect to the dashboard or any other route
-      router.push(ar ? "/ar" : "/en");
+      // Handle the result
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        // Redirect to the dashboard or any other route
+        router.push(ar ? "/ar" : "/en");
+      }
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,6 +118,25 @@ const SignUpPage = () => {
           />
         </div>
 
+        {/* Role Select */}
+        <div className="mb-4">
+          <label htmlFor="role" className="block text-sm font-medium mb-1">
+            {ar ? "الدور" : "Role"}
+          </label>
+          <Select onValueChange={(value) => setRole(value)}>
+            <SelectTrigger id="role" className="w-full">
+              <SelectValue placeholder={ar ? "أدخل الدور" : "Select a Role"} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>{ar ? "الدور" : "Role"}</SelectLabel>
+                <SelectItem value="ADMIN">{ar ? "ادمن" : "Admin"}</SelectItem>
+                <SelectItem value="USER">{ar ? "مستخدم" : "User"}</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* Password Input */}
         <div className="mb-4">
           <label htmlFor="password" className="block text-sm font-medium mb-1">
@@ -133,10 +176,17 @@ const SignUpPage = () => {
 
         {/* Sign Up Button */}
         <Button
+          disabled={loading}
           type="submit"
           className="w-full from-green-500 to-blue-600 bg-gradient-to-r hover:opacity-90 transition text-white mb-4"
         >
-          {ar ? "إنشاء حساب" : "Sign Up"}
+          {loading ? (
+            <Loader2 className="animate-spin m-auto" />
+          ) : ar ? (
+            "إنشاء حساب"
+          ) : (
+            "Sign Up"
+          )}
         </Button>
       </form>
 
@@ -152,9 +202,16 @@ const SignUpPage = () => {
       {/* GitHub Sign Up Button */}
       <Button
         onClick={() => signIn("github")}
+        disabled={loading || githubLoading}
         className="w-full bg-gray-800 hover:bg-gray-900 text-white mb-4"
       >
-        {ar ? "التسجيل باستخدام GitHub" : "Sign Up with GitHub"}
+        {githubLoading ? (
+          <Loader2 className="animate-spin m-auto" />
+        ) : ar ? (
+          "التسجيل باستخدام GitHub"
+        ) : (
+          "Sign Up with GitHub"
+        )}
       </Button>
 
       {/* Login Link */}

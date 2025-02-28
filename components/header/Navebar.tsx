@@ -15,7 +15,7 @@ import {
 import { ModeToggle } from "@/components/header/ModeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 
-import { Loader2, Menu, ShoppingCart, UserCircle } from "lucide-react";
+import { Loader2, Lock, Menu, ShoppingCart, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +32,8 @@ export function NavigationMenuDemo() {
 
   const { lang } = useParams() as { lang: string };
   let ar = lang === "ar";
-  console.log(session);
+
+  const role = session?.user?.role;
 
   const itemsLength = useCartStore((state) =>
     state.items.reduce(
@@ -70,6 +71,17 @@ export function NavigationMenuDemo() {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
+          {role === "ADMIN" && (
+            <NavigationMenuItem className="hidden md:block">
+              <Link href="/admin" legacyBehavior passHref>
+                <NavigationMenuLink
+                  className={`${navigationMenuTriggerStyle()} flex items-center gap-2`}
+                >
+                  {ar ? "الادمن " : "Admin"} <Lock size={15} />
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          )}
 
           {/* cart*/}
           <NavigationMenuItem className="">
@@ -132,6 +144,15 @@ export function NavigationMenuDemo() {
                   </Link>
                 )}
               </DropdownMenuItem>
+              {/* admin or  not  */}
+              {role === "ADMIN" && (
+                <DropdownMenuItem asChild>
+                  <Link href="/admin">
+                    {ar ? "الادمن" : "Admin"}
+                    <Lock />
+                  </Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
