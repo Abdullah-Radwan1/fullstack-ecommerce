@@ -49,17 +49,14 @@ const Page = async ({
   const t = translations[lang]; // Get translations for the current language
   console.log(lang, "in cart");
   const product = await db.product.findUnique({
-    where: { id: Number(id) },
+    where: { id: id },
   });
+
   if (product == null) {
     return <Loader2 />;
   }
   const relatedFunc = await relatedProducts(product.categoryId);
-  const serializableProduct = {
-    ...product,
 
-    basePrice: product.basePrice.toNumber(), // Convert Decimal to number
-  };
   return (
     <main className="max-w-[80%] mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
       <Card className="mx-auto">
@@ -85,17 +82,15 @@ const Page = async ({
                   <Input type="number" min="1" defaultValue="1" />
                 </div>
 
-                <AddtoCart
-                  lang={lang}
-                  item={serializableProduct}
-                  className="w-full"
-                  size="lg"
-                >
-                  {t.addToCart} {/* Use translation for "Add to Cart" */}
-                </AddtoCart>
+                <AddtoCart item={product} />
+
                 <Link
                   className="w-full bg-muted m-auto mt-8"
-                  href={ar ? "/ar/checkout" : "/en/checkout"}
+                  href={
+                    ar
+                      ? `/ar/product/${id}/checkout`
+                      : `/en/product/${id}/checkout`
+                  }
                 >
                   <Button className="w-full mt-3" size="lg">
                     {t.checkout} {/* Use translation for "Checkout" */}

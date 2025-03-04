@@ -15,6 +15,8 @@ type CartState = {
   removeCartItem: (id: string) => void;
   removeItemFromCart: (id: string) => void;
   clearCart: () => void;
+  getQuantity: () => number; // Getter for total quantity
+  getTotalPrice: () => number; // Getter for total price
 };
 
 const useCartStore = create<CartState>()(
@@ -25,10 +27,8 @@ const useCartStore = create<CartState>()(
         const existingItem = get().items.find((i) => i.id === item.id);
         if (existingItem) {
           set({
-            items: get().items.map((item) =>
-              item.id === item.id
-                ? { ...item, quantity: (item.quantity || 0) + 1 }
-                : item
+            items: get().items.map((i) =>
+              i.id === item.id ? { ...i, quantity: (i.quantity || 0) + 1 } : i
             ),
           });
         } else {
@@ -39,17 +39,26 @@ const useCartStore = create<CartState>()(
         set({
           items: get()
             .items.map((i) =>
-              i.id === id && i.quantity && i.quantity > 1
+              i.id === id && i.quantity && i.quantity > 0
                 ? { ...i, quantity: i.quantity - 1 }
                 : i
             )
-            .filter((i) => !(i.id === id && i.quantity === 1)),
+            .filter((i) => !(i.id === id && i.quantity === 0)),
         });
       },
       removeItemFromCart: (id) => {
         set({ items: get().items.filter((i) => i.id !== id) });
       },
       clearCart: () => set({ items: [] }),
+      getQuantity: () => {
+        return get().items.reduce((acc, item) => acc + (item.quantity || 0), 0);
+      },
+      getTotalPrice: () => {
+        return get().items.reduce(
+          (acc, item) => acc + item.basePrice * (item.quantity || 0),
+          0
+        );
+      },
     }),
     {
       name: "cart-storage",

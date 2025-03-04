@@ -53,7 +53,7 @@ export default async function RootLayout({
           <Toaster />
         </ThemeProvider>
 
-        <Footer lang={(await params).lang} />
+        <Footer lang={lang} />
       </body>
     </html>
   );

@@ -26,23 +26,25 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import useCartStore from "@/zustand/store";
+import { useEffect, useState } from "react"; // Import useEffect and useState
 
 export function NavigationMenuDemo() {
   const { data: session } = useSession();
-
   const { lang } = useParams() as { lang: string };
-  let ar = lang === "ar";
-
+  const ar = lang === "ar";
   const role = session?.user?.role;
 
-  const itemsLength = useCartStore((state) =>
-    state.items.reduce(
-      (accumilatedQuantity, item) =>
-        accumilatedQuantity + (item?.quantity || 0),
-      0
-    )
-  );
-  console.log(itemsLength);
+  // State to track if the component has mounted
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Get the quantity from the store
+  const quantity = useCartStore((state) => state.getQuantity());
+
+  // Set isMounted to true after the component mounts
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <main className="flex justify-evenly items-center pt-2">
       {/* logo */}
@@ -90,9 +92,12 @@ export function NavigationMenuDemo() {
                 className={`${navigationMenuTriggerStyle()} relative`}
               >
                 <ShoppingCart />
-                <div className="absolute  -right-1 -top-1 rounded-full w-4 h-4 border p-2 text-xs flex items-center justify-center">
-                  {itemsLength}
-                </div>
+                {/* Only render quantity after mounting */}
+                {isMounted && (
+                  <div className="absolute  -right-1 -top-1 rounded-full w-4 h-4 border p-2 text-xs flex items-center justify-center">
+                    {quantity}
+                  </div>
+                )}
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

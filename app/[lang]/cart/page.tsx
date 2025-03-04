@@ -14,6 +14,19 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { Minus, Plus, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import Link from "@/components/Link";
+import { parse } from "path";
 
 const Page = () => {
   const { lang } = useParams();
@@ -21,23 +34,57 @@ const Page = () => {
   const cartItems = useCartStore((state) => state.items);
   const removeCartItem = useCartStore((state) => state.removeCartItem);
   const clearCart = useCartStore((state) => state.clearCart);
+  const removeItemFromCart = useCartStore((state) => state.removeItemFromCart);
   const addCartItem = useCartStore((state) => state.addCartItem);
-
+  const totalPrice = useCartStore((state) => state.getTotalPrice());
+  const items = useCartStore((state) => state.items);
   return cartItems.length > 0 ? (
-    <div className="p-6 flex flex-col items-center  min-h-[70vh]">
-      <h1 className="text-2xl font-bold mb-6 text-center">Cart Items</h1>
+    <div
+      className={`p-6 flex flex-col items-center min-h-[70vh] ${
+        ar ? "rtl" : "ltr"
+      }`}
+    >
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        {ar ? "منتجاتي" : "My products"}
+      </h1>
       <div className="w-full max-w-4xl">
         <Table>
-          <TableCaption className="text-center">
-            A list of your cart items.
+          <TableCaption>
+            <div className="flex items-center justify-center gap-4 ">
+              <h1 className=" text-3xl">
+                {ar ? "الإجمالي" : "Total"} {totalPrice}$
+              </h1>
+              <Button>
+                <Link
+                  href={
+                    ar
+                      ? `/ar/checkout?products=${JSON.stringify(items)}&totalPrice=${totalPrice}`
+                      : `/en/checkout?products=${JSON.stringify(items)}&totalPrice=${totalPrice}`
+                  }
+                >
+                  {" "}
+                  checkout
+                </Link>
+              </Button>{" "}
+            </div>
           </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Name</TableHead>
-              <TableHead className="text-center">Image</TableHead>
-              <TableHead className="text-center">Price</TableHead>
-              <TableHead className="text-center">Quantity</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className="text-center">
+                {ar ? "الاسم" : "Name"}
+              </TableHead>
+              <TableHead className="text-center">
+                {ar ? "الصورة" : "Image"}
+              </TableHead>
+              <TableHead className="text-center">
+                {ar ? "السعر" : "Price"}
+              </TableHead>
+              <TableHead className="text-center">
+                {ar ? "الكمية" : "Quantity"}
+              </TableHead>
+              <TableHead className="text-center">
+                {ar ? "الإجراءات" : "Actions"}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -62,14 +109,21 @@ const Page = () => {
                       size="sm"
                       onClick={() => removeCartItem(item.id)}
                     >
-                      Remove
+                      <Minus />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => addCartItem(item)}
                     >
-                      Add
+                      <Plus />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeItemFromCart(item.id)}
+                    >
+                      <X />
                     </Button>
                   </div>
                 </TableCell>
@@ -77,18 +131,43 @@ const Page = () => {
             ))}
           </TableBody>
         </Table>
-
-        <div className="mt-6 flex justify-center">
-          <Button variant="destructive" onClick={clearCart}>
-            Clear Cart
-          </Button>
-        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructive"
+              className="m-auto flex items-center mt-6"
+            >
+              {ar ? "تفريغ السلة" : "Clear Cart"}{" "}
+              {/* Arabic: "تفريغ السلة", English: "Clear Cart" */}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-center">
+                {ar ? "هل تريد تفريغ السله ؟" : "Clear the cart from products?"}{" "}
+                {/* Arabic: "هل أنت متأكد تمامًا؟", English: "Are you absolutely sure?" */}
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex gap-2 m-auto">
+              <AlertDialogCancel>
+                {ar ? "إلغاء" : "Cancel"}{" "}
+                {/* Arabic: "إلغاء", English: "Cancel" */}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  clearCart();
+                }}
+              >
+                {ar ? "حذف" : "Delete"} {/* Arabic: "حذف", English: "Delete" */}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   ) : (
     <h1 className="text-center flex items-center justify-center text-3xl font-bold min-h-[55vh]">
-      {" "}
-      {ar ? " السلة فارغة😭" : "No products yet 😭"}
+      {ar ? "السلة فارغة 😭" : "No products yet 😭"}
     </h1>
   );
 };

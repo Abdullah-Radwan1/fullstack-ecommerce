@@ -1,11 +1,9 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Button } from "@/components/ui/button";
 import AuthButton from "@/lib/auth/SignoutButton";
 import { userOrders } from "@/lib/Functions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Lock } from "lucide-react";
 import { getServerSession } from "next-auth";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -41,7 +39,7 @@ const Page = async ({ params }: { params: { lang: string } }) => {
           {ar ? "مرحبًا" : "Welcome"} {name}
           {role === "ADMIN" ? (
             <div className="flex items-center gap-2">
-              ({ar ? "مدير" : "Admin"} <Lock color="royalblue" />)
+              ({ar ? "ادمن" : "Admin"} <Lock color="royalblue" />)
             </div>
           ) : (
             <div>({ar ? "مستخدم" : "User"})</div>
@@ -73,7 +71,7 @@ const Page = async ({ params }: { params: { lang: string } }) => {
                 </h2>
                 <h3>{ar ? "المنتجات" : "Products"}</h3>
                 <div>
-                  {order.products.map((product) => (
+                  {order.orderItems.map((product) => (
                     <div key={product.id} className="border-t pt-2 mt-2">
                       <h4>{product.productId}</h4>
                       <p>

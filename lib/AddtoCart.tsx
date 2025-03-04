@@ -5,20 +5,16 @@ import React from "react";
 import useCartStore from "@/zustand/store";
 import { toast } from "@/hooks/use-toast";
 import { useParams } from "next/navigation";
+import { Product } from "@prisma/client";
 
 // Define the props for the component
 interface AddtoCartProps {
-  item: {
-    id: string;
-    name: string;
-    image: string;
-    basePrice: number;
-  };
+  item: Product;
 }
 
 const AddtoCart: React.FC<AddtoCartProps> = ({ item }) => {
-  const addCartItem = useCartStore((state) => state.addCartItem);
   const { lang } = useParams();
+  const addCartItem = useCartStore((state) => state.addCartItem);
   const ar = lang === "ar";
   return (
     <Button
