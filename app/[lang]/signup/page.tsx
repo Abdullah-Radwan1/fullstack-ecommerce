@@ -73,7 +73,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg">
+    <div className="border rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg">
       {/* Title */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {ar ? "إنشاء حساب" : "Sign Up"}

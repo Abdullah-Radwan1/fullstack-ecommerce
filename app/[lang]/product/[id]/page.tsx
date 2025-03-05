@@ -1,15 +1,14 @@
 import { db } from "@/lib/db";
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import Image from "next/image";
-import Link from "@/components/Link";
+import { assets } from "@/public/svg/assets";
 import { Loader2 } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import ProductCard from "@/components/productCard";
 import { relatedProducts } from "@/lib/Functions";
 import AddtoCart from "@/lib/AddtoCart";
+import CheckoutButton from "../../checkout/components/CheckoutButton";
 
 // Translation dictionary
 type Translations = {
@@ -59,57 +58,55 @@ const Page = async ({
 
   return (
     <main className="max-w-[80%] mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
-      <Card className="mx-auto">
-        <CardContent className="p-0">
-          <div className="flex items-center justify-start g flex-col sm:flex-row">
-            {/* Left column - Product Image */}
-            {/* Right column - Product Details and Actions */}
-            <div className="p-6 space-y-4 flex-1">
-              <div className="space-y-4">
-                <h1 className="scroll-m-20 text-4xl font-bold">
-                  {product.name}
-                </h1>
-                <p className="text-3xl font-bold">
-                  ${Number(product.basePrice).toFixed(2)}
-                </p>
-                <p className="leading-7">{product.description}</p>
+      <div className="mx-auto">
+        <div className="flex items-start lg:gap-16 gap-4  flex-col-reverse sm:flex-row">
+          {/* Left column - Product Image */}
+          {/* Right column - Product Details and Actions */}
+          <div className="p-6 space-y-4 flex-1 w-full ">
+            <div className="space-y-4">
+              <h1 className="scroll-m-20 text-4xl  font-bold">
+                {product.name}
+              </h1>
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Image
+                    key={index}
+                    className="h-4 w-4"
+                    src={
+                      index < Math.floor(4)
+                        ? assets.star_icon
+                        : assets.star_dull_icon
+                    }
+                    alt="star_icon"
+                  />
+                ))}
               </div>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">{t.quantity}</label>{" "}
-                  {/* Use translation for "Quantity" */}
-                  <Input type="number" min="1" defaultValue="1" />
-                </div>
-
-                <AddtoCart item={product} />
-
-                <Link
-                  className="w-full bg-muted m-auto mt-8"
-                  href={
-                    ar
-                      ? `/ar/product/${id}/checkout`
-                      : `/en/product/${id}/checkout`
-                  }
-                >
-                  <Button className="w-full mt-3" size="lg">
-                    {t.checkout} {/* Use translation for "Checkout" */}
-                  </Button>
-                </Link>
-              </div>
+              <p className="leading-7">{product.description}</p>
+              <p className="text-3xl font-bold">
+                ${Number(product.basePrice).toFixed(2)}
+              </p>
             </div>
-            <div className="relative flex-1 h-[400px] bg-muted">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={1000}
-                height={1000}
-                className="object-contain w-full h-full"
-              />
+
+            <div className="space-y-4">
+              <Separator className="h-[0.2px] bg-gray-300 w-full" />
+              <div className="flex items-center gap-2">
+                <AddtoCart classname="flex-1" item={product} />
+
+                <CheckoutButton lang={lang} />
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="relative flex-1 h-[300px] bg-muted">
+            <Image
+              src={product.image}
+              alt={product.name}
+              width={1000}
+              height={1000}
+              className="object-contain w-full h-full"
+            />
+          </div>
+        </div>
+      </div>
       <Separator />
       {/* Related Products Section */}
       <h2 className="text-2xl font-bold mt-6">{t.relatedProducts}</h2>{" "}

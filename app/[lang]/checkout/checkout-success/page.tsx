@@ -1,8 +1,14 @@
 import React from "react";
-import { CheckCircle } from "lucide-react"; // Import an icon for visual feedback
+import { CheckCircle, Mail } from "lucide-react"; // Import an icon for visual feedback
+import Link from "next/link";
 
-const SuccessPage = ({ params }: { params: { lang: string } }) => {
-  const ar = params.lang === "ar";
+const SuccessPage = async ({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) => {
+  const { lang } = await params;
+  const ar = lang === "ar";
 
   // Arabic translations
   const translations = {
@@ -14,12 +20,10 @@ const SuccessPage = ({ params }: { params: { lang: string } }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-500 to-blue-600 flex items-start justify-center p-6">
       {/* Card */}
       <div
-        className={`bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center transform transition-all duration-500 ease-in-out hover:scale-105 ${
-          ar ? "text-right" : "text-left"
-        }`}
+        className={`bg-white p-8 rounded-md shadow-lg max-w-md w-full text-center transform transition-all duration-500 ease-in-out hover:scale-105 `}
       >
         {/* Icon */}
         <div className="flex justify-center animate-bounce">
@@ -37,13 +41,21 @@ const SuccessPage = ({ params }: { params: { lang: string } }) => {
         </p>
 
         {/* Button */}
-        <div className="mt-8 animate-fade-in-delay-2">
-          <a
+        <div className="mt-8 animate-fade-in-delay-2 grid grid-cols-1">
+          <Link
             href="/"
-            className="inline-block bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors"
+            className="  bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 "
           >
             {translations.button}
-          </a>
+          </Link>
+          <Link
+            target="_blank"
+            href="https://mail.google.com/"
+            className="bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500 text-white px-6 py-2 rounded-md hover:opacity-90 flex items-center justify-center gap-2 mt-4"
+          >
+            Gmail
+            <Mail />
+          </Link>
         </div>
       </div>
     </div>

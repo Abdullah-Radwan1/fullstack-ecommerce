@@ -10,15 +10,18 @@ import { Product } from "@prisma/client";
 // Define the props for the component
 interface AddtoCartProps {
   item: Product;
+  classname?: string;
+  varient?: "default" | "outline" | "ghost" | "link" | "destructive";
 }
 
-const AddtoCart: React.FC<AddtoCartProps> = ({ item }) => {
+const AddtoCart: React.FC<AddtoCartProps> = ({ item, classname, varient }) => {
   const { lang } = useParams();
   const addCartItem = useCartStore((state) => state.addCartItem);
   const ar = lang === "ar";
   return (
     <Button
-      className="w-full"
+      variant={varient}
+      className={`${classname}   `}
       onClick={() => {
         addCartItem(item); // Add the item to the cart
         toast({
@@ -28,7 +31,7 @@ const AddtoCart: React.FC<AddtoCartProps> = ({ item }) => {
         });
       }}
     >
-      Add to Cart
+      {ar ? "اضف للسلة" : "Add to Cart"}
     </Button>
   );
 };

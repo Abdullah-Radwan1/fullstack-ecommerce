@@ -69,7 +69,7 @@ export default function ProductsPage() {
           placeholder={translations.searchPlaceholder}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full sm:w-[60%] p-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+          className="w-full sm:w-[60%] p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
         />
         {/* Filter Options */}
         <Select onValueChange={(value) => setCategory(value)}>
@@ -107,13 +107,13 @@ export default function ProductsPage() {
         <Button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
-          className="p-2  rounded-lg  transition-colors "
+          className="p-2  rounded-md  transition-colors "
         >
           {translations.previous}
         </Button>
         <Button
           onClick={() => setPage((prev) => prev + 1)}
-          className="p-2  rounded-lg  transition-colors"
+          className="p-2  rounded-md  transition-colors"
         >
           {translations.next}
         </Button>

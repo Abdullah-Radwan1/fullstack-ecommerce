@@ -39,7 +39,7 @@ const Page = () => {
   };
 
   return (
-    <div className="border rounded-lg mx-auto max-w-md p-6 mt-10 shadow-lg">
+    <div className="border rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg">
       {/* Title */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {ar ? "تسجيل الدخول" : "Login"}
@@ -93,8 +93,8 @@ const Page = () => {
               ? "جارٍ تسجيل الدخول..."
               : "Logging in..."
             : ar
-            ? "تسجيل الدخول"
-            : "Login"}
+              ? "تسجيل الدخول"
+              : "Login"}
         </Button>
       </form>
 

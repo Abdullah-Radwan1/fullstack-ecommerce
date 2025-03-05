@@ -8,9 +8,9 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const Page = async ({ params }: { params: { lang: string } }) => {
+const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const session = await getServerSession(authOptions);
-  const { lang } = params;
+  const { lang } = await params;
   const ar = lang === "ar";
 
   if (!session || !session.user?.email) {
@@ -61,7 +61,7 @@ const Page = async ({ params }: { params: { lang: string } }) => {
         <div>
           {orders.length >= 1 ? (
             orders.map((order) => (
-              <div key={order.id} className="border p-4 rounded-lg my-4">
+              <div key={order.id} className="border p-4 rounded-md my-4">
                 <h1>
                   {ar ? "رقم الطلب" : "Order ID"}: {order.id}
                 </h1>

@@ -1,46 +1,40 @@
-"use client";
-
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { HeartIcon } from "lucide-react";
+import Link from "next/link";
 import { Product } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import AddtoCart from "@/lib/AddtoCart";
+import AddtoCart from "@/lib/AddtoCart"; // Ensure this is a Client Component
+import { Heart } from "lucide-react";
 
 export default function ProductCard({ product }: { product: Product }) {
-  const router = useRouter();
-  console.log(product.image);
   return (
-    <div className="space-y-4 w-72    max-w-sm hover:scale-105 transition duration-100 ease-in-out transform-gpu">
+    <div className="flex flex-col items-start gap-1 max-w-[200px] w-full cursor-pointer">
       {/* Image Container */}
-      <div
-        className="w-72 h-72 relative rounded-lg cursor-pointer"
-        onClick={() => router.push(`/product/${product.id}`)}
-      >
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="object-contain m-auto p-2 bg-muted rounded-lg"
-          priority // or loading="lazy" depending on the use case
-        />
-      </div>
-
-      <div className="flex justify-between  ">
-        <div className="w-[calc(100%-80px)]">
-          <h3 className="text-lg">{product.name}</h3>
-          <p className="text-sm text-muted-foreground  text-overflow-ellipsis truncate ">
-            {product.description}
-          </p>
+      <Link href={`/product/${product.id}`}>
+        <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            className="group-hover:scale-105 transition-transform duration-300 object-contain w-4/5 h-4/5 md:w-full md:h-full"
+            width={800}
+            height={800}
+          />
         </div>
-        <p className="text-lg font-semibold">{Number(product.basePrice)}$</p>
-      </div>
+      </Link>
 
-      <div className="flex gap-4 ">
-        {/* <Button variant="ghost" size="icon" className="flex-shrink-0">
-          <HeartIcon className="size-4" />
-        </Button> */}
-        <AddtoCart item={product} />
+      {/* Product Name */}
+      <p className="md:text-base font-medium pt-2 w-full truncate">
+        {product.name}
+      </p>
+
+      {/* Product Description */}
+      <p className="w-full text-xs text-gray-500/70 max-sm:hidden line-clamp-2">
+        {product.description}
+      </p>
+
+      {/* Price and Add to Cart Button */}
+      <div className="flex items-center justify-between w-full mt-1">
+        <p className="text-base font-medium">${Number(product.basePrice)}</p>
+        {/* Ensure AddtoCart is a Client Component */}
+        <AddtoCart item={product} classname="text-xs " varient="outline" />
       </div>
     </div>
   );

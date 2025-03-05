@@ -38,7 +38,7 @@ const AboutPage = async ({ params }: { params: { lang: string } }) => {
       className="  flex justify-center p-6"
       dir={lang === "ar" ? "rtl" : "ltr"} // Set text direction based on language
     >
-      <div className="max-w-2xl bg-muted rounded-lg shadow-2xl p-8 space-y-6">
+      <div className="max-w-2xl bg-muted rounded-md shadow-2xl p-8 space-y-6">
         {/* Title */}
         <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent">
           {currentContent.title}

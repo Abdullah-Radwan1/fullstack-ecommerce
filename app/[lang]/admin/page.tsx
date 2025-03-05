@@ -44,28 +44,28 @@ export default async function AdminPage({
         {translations.dashboard} <LockKeyhole color="royalblue" />
       </h1>
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="flex w-fit items-center m-auto bg-gray-100 p-2 rounded-lg">
+        <TabsList className="flex w-fit items-center m-auto bg-gray-100 p-2 rounded-md">
           <TabsTrigger
             value="users"
-            className="px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
+            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors"
           >
             {translations.users}
           </TabsTrigger>
           <TabsTrigger
             value="orders"
-            className="px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
+            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors "
           >
             {translations.orders}
           </TabsTrigger>
           <TabsTrigger
             value="my orders"
-            className="px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
+            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors"
           >
             {translations.my_orders}
           </TabsTrigger>
           <TabsTrigger
             value="create-product"
-            className="px-4 py-2 rounded-md hover:bg-blue-50 transition-colors"
+            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors"
           >
             {translations.createProduct}
           </TabsTrigger>
@@ -75,12 +75,12 @@ export default async function AdminPage({
         <TabsContent className="text-center" value="users">
           <div className="mt-4">
             <h2 className="text-xl font-semibold mb-4">{translations.users}</h2>
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {users.length > 0 ? (
                 users.map((user) => (
                   <div
                     key={user.id}
-                    className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+                    className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow"
                   >
                     <p className="text-gray-700">
                       {translations.name}:{" "}
@@ -107,8 +107,8 @@ export default async function AdminPage({
 
         {/* Orders Tab Content */}
         <TabsContent className="text-start" value="orders">
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-4">
+          <div dir={ar ? "rtl" : "ltr"} className="mt-4">
+            <h2 className="text-xl text-center font-semibold mb-4">
               {translations.orders}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -116,7 +116,7 @@ export default async function AdminPage({
                 orders.map((order) => (
                   <div
                     key={order.id}
-                    className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
+                    className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
                   >
                     <p className="text-gray-700">
                       {translations.orderId}:{" "}
@@ -152,8 +152,8 @@ export default async function AdminPage({
         </TabsContent>
         {/* my Orders Tab Content */}
         <TabsContent className="text-start" value="my orders">
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-4">
+          <div dir={ar ? "rtl" : "ltr"} className="mt-4">
+            <h2 className="text-xl text-center font-semibold mb-4">
               {translations.my_orders}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -161,7 +161,7 @@ export default async function AdminPage({
                 my_orders.map((order) => (
                   <div
                     key={order.id}
-                    className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
+                    className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
                   >
                     <p className="text-gray-700">
                       {translations.orderId}:{" "}

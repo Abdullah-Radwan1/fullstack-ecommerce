@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
+import Link from "./Link";
 
 const products = [
   {
@@ -29,14 +30,14 @@ const products = [
   },
   {
     id: 3,
-    image: "/featured-images/screen.png",
+    image: "/featured-images/headphone.png",
     title: {
-      en: "blazing fast screens",
-      ar: "شاشات اوف بح",
+      en: "Headphones",
+      ar: "سماعات",
     },
     description: {
-      en: "Immerse yourself in crystal-clear screens with our blazing fast screens.",
-      ar: "اغمر نفسك في الوانصافيه مع شاشات اوف بح المميزة.",
+      en: "Experience the ultimate sound with our high-end headphones.",
+      ar: "جرب الأداء الفائق مع سماعات احترافية لدينا.",
     },
   },
 ];
@@ -50,7 +51,7 @@ const FeaturedProduct = async ({
   const ar = lang === "ar";
 
   return (
-    <div className="mt-14">
+    <div className="mt-14 w-full lg:w-[80%] mx-auto">
       <div className="flex flex-col items-center">
         <p className="text-3xl font-medium">
           {lang === "ar" ? "منتجات مميزة" : "Featured Products"}
@@ -73,15 +74,18 @@ const FeaturedProduct = async ({
                 ar ? "right-8" : "left-8"
               } space-y-2`}
             >
-              <p className="font-medium text-xl lg:text-2xl bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
+              <p className="font-medium text-xl lg:text-3xl bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
                 {title[lang as keyof typeof title]}
               </p>
-              <p className="text-sm lg:text-base leading-5 max-w-60 bg-gradient-to-r from-blue-500 to-red-500 text-transparent bg-clip-text">
+              <p className="text-lg font-bold lg:text-base leading-5 max-w-60 bg-gradient-to-r from-blue-500 to-red-500 text-transparent bg-clip-text">
                 {description[lang as keyof typeof description]}
               </p>
-              <button className=" text-white flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-blue-700 px-4 py-2 rounded ">
+              <Link
+                href={ar ? "/ar/products" : "/en/products"}
+                className="w-fit text-white flex items-center gap-1.5 bg-gradient-to-r from-green-500 to-blue-700 px-4 py-2 rounded "
+              >
                 {lang === "ar" ? "اشتري الآن" : "Buy now"} <ShoppingBag />
-              </button>
+              </Link>
             </div>
           </div>
         ))}

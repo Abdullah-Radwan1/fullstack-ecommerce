@@ -87,7 +87,7 @@ const CreateProduct = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 border-2 shadow-md rounded-lg gray-800">
+    <div className="max-w-xl mx-auto mt-10 p-6 border-2 shadow-md rounded-md gray-800">
       <h1 className="text-2xl font-bold mb-6 text-center">
         {ar ? "إنشاء منتج جديد" : "Create New Product"}
       </h1>
@@ -192,8 +192,8 @@ const CreateProduct = () => {
               ? "جاري الإنشاء..."
               : "Creating..."
             : ar
-            ? "إنشاء المنتج"
-            : "Create Product"}
+              ? "إنشاء المنتج"
+              : "Create Product"}
         </button>
       </form>
     </div>

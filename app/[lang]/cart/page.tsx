@@ -26,7 +26,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Link from "@/components/Link";
-import { parse } from "path";
 
 const Page = () => {
   const { lang } = useParams();

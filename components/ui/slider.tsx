@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Link from "../Link";
 
 const Slider = () => {
   const { lang } = useParams();
@@ -48,7 +49,7 @@ const Slider = () => {
         en: "Explore Deals",
         ar: "اكتشف العروض",
       },
-      imgSrc: "/slider-images/ps.png",
+      imgSrc: "/slider-images/ps5.png",
     },
     {
       id: 3,
@@ -108,9 +109,12 @@ const Slider = () => {
                 {slide.title[lang as keyof typeof slide.title]}
               </h1>
               <div className="flex items-center mt-4 md:mt-6">
-                <button className="md:px-10 px-7 md:py-2.5 py-2 bg-gradient-to-r from-green-500 to-blue-700 rounded-full text-white font-medium">
+                <Link
+                  href={ar ? "/ar/products" : "/en/products"}
+                  className="md:px-10 px-7 md:py-2.5 py-2 bg-gradient-to-r from-green-500 to-blue-700 rounded-full text-white font-medium"
+                >
                   {slide.buttonText1[lang as keyof typeof slide.buttonText1]}
-                </button>
+                </Link>
                 <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
                   {slide.buttonText2[lang as keyof typeof slide.buttonText2]}
                   {ar ? <ArrowLeft /> : <ArrowRight />}
@@ -118,14 +122,13 @@ const Slider = () => {
               </div>
             </div>
             <div className="flex items-center flex-1 justify-center">
-              <div className="relative w-72 h-72">
-                <Image
-                  className="md:w-72 w-48"
-                  src={slide.imgSrc}
-                  alt={`Slide ${index + 1}`}
-                  fill
-                />
-              </div>
+              <Image
+                className="md:w-80 w-80 object-cover"
+                src={slide.imgSrc}
+                width={500}
+                height={500}
+                alt={`Slide ${index + 1}`}
+              />
             </div>
           </div>
         ))}
