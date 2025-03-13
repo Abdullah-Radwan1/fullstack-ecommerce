@@ -69,6 +69,7 @@ const SignUpPage = () => {
       setError(e.message);
     } finally {
       setLoading(false);
+      setGithubLoading(false);
     }
   };
 
@@ -123,7 +124,10 @@ const SignUpPage = () => {
           <label htmlFor="role" className="block text-sm font-medium mb-1">
             {ar ? "الدور" : "Role"}
           </label>
-          <Select onValueChange={(value) => setRole(value)}>
+          <Select
+            dir={ar ? "rtl" : "ltr"}
+            onValueChange={(value) => setRole(value)}
+          >
             <SelectTrigger id="role" className="w-full">
               <SelectValue placeholder={ar ? "أدخل الدور" : "Select a Role"} />
             </SelectTrigger>
@@ -215,7 +219,7 @@ const SignUpPage = () => {
       </Button>
 
       {/* Login Link */}
-      <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+      <p className="text-center text-sm ">
         {ar ? "لديك حساب بالفعل؟" : "Already have an account?"}{" "}
         <Link
           href={`/${lang}/login`}

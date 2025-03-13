@@ -9,6 +9,12 @@ export type CartItem = {
   quantity?: number;
 };
 
+type imageState = {
+  setImageUrl: (imageUrl: string) => void;
+  imageUrl: string;
+  setImageName: (imageName: string) => void;
+  imageName: string;
+};
 type CartState = {
   items: CartItem[];
   addCartItem: (item: CartItem) => void;
@@ -65,5 +71,18 @@ const useCartStore = create<CartState>()(
     }
   )
 );
-
+const useImageStore = create<imageState>()(
+  persist(
+    (set) => ({
+      imageUrl: "",
+      imageName: "",
+      setImageUrl: (imageUrl) => set({ imageUrl }),
+      setImageName: (imageName) => set({ imageName }),
+    }),
+    {
+      name: "image-storage",
+    }
+  )
+);
 export default useCartStore;
+export { useImageStore };

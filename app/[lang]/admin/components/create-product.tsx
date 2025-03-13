@@ -13,23 +13,24 @@ import React, { useState } from "react";
 import { useParams } from "next/navigation";
 
 import { toast } from "@/hooks/use-toast";
+import Cloudinary from "@/lib/cloudinary";
+import { useImageStore } from "@/zustand/store";
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+
 const CreateProduct = () => {
   const { lang } = useParams(); // Get the language from the URL
+  const session = useSession();
+  const userId = session?.data?.user.id;
   const ar = lang === "ar"; // Check if the language is Arabic
-
+  console.log(userId);
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState<number>();
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
+  const { imageUrl, setImageUrl } = useImageStore();
+  const { setImageName } = useImageStore();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -43,7 +44,8 @@ const CreateProduct = () => {
           description,
           basePrice: parseFloat(price),
           categoryId: categoryId,
-          image: "/pcParts/mac.png", // Ideally, you should upload the image first and send the URL
+          image: imageUrl, // Ideally, you should upload the image first and send the URL
+          userId, // Add userId
         }),
       });
 
@@ -68,9 +70,9 @@ const CreateProduct = () => {
       });
 
       setName("");
-      setCategoryId(0);
+      // setCategoryId(0);
       setPrice("");
-      setImage(null);
+
       setDescription("");
     } catch (error) {
       console.error("Error:", error);
@@ -83,6 +85,8 @@ const CreateProduct = () => {
       });
     } finally {
       setIsLoading(false);
+      setImageUrl("");
+      setImageName("");
     }
   };
 
@@ -104,6 +108,8 @@ const CreateProduct = () => {
             onChange={(e) => setName(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
+            minLength={1}
+            maxLength={10}
           />
         </div>
 
@@ -113,6 +119,7 @@ const CreateProduct = () => {
             {ar ? "الفئة" : "Category"}
           </label>
           <Select
+            dir={ar ? "rtl" : "ltr"}
             required
             onValueChange={(value: string) => setCategoryId(parseInt(value))}
           >
@@ -146,23 +153,12 @@ const CreateProduct = () => {
             onChange={(e) => setPrice(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
-            min={5}
+            min={50}
             max={1000}
           />
         </div>
 
         {/* Image Field */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="image">
-            {ar ? "الصورة" : "Image"}
-          </label>
-          <Input
-            type="file"
-            id="image"
-            onChange={handleImageChange}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
 
         {/* Description Field */}
         <div className="mb-4">
@@ -178,11 +174,13 @@ const CreateProduct = () => {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
+            minLength={15}
+            maxLength={30}
           />
         </div>
-
+        <Cloudinary />
         {/* Submit Button */}
-        <button
+        <Button
           type="submit"
           disabled={isLoading}
           className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:opacity-90 transition text-white py-2 rounded"
@@ -194,7 +192,7 @@ const CreateProduct = () => {
             : ar
               ? "إنشاء المنتج"
               : "Create Product"}
-        </button>
+        </Button>
       </form>
     </div>
   );

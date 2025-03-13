@@ -1,7 +1,14 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { allOrders, allUsers, myOrders } from "@/lib/Functions";
 import CreateProduct from "./components/create-product";
-import { LockKeyhole } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -14,18 +21,17 @@ export default async function AdminPage({
   const ar = lang === "ar";
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;
-  // Fetch users and orders data
   const users = await allUsers();
   const orders = await allOrders();
   const my_orders = await myOrders(email || "");
-  // Arabic translations
+
   const translations = {
     dashboard: ar ? "لوحة التحكم" : "Admin Dashboard",
     items: ar ? "المنتجات" : "Items",
     users: ar ? "المستخدمين" : "Users",
-    orders: ar ? "الطلبات" : "Orders",
+    orders: ar ? "الطلبات " : "Orders",
     my_orders: ar ? "طلباتي" : "My Orders",
-    createProduct: ar ? "إنشاء منتج" : "Create Product",
+    createProduct: ar ? "المنتجات" : "Product",
     noUsers: ar ? "لا يوجد مستخدمين بعد 😾" : "No users Yet 😾",
     noOrders: ar
       ? "لا توجد طلبات بعد. ابتسم، سيأتي يوم وتصبح غنيًا إن شاء الله 😊"
@@ -39,163 +45,142 @@ export default async function AdminPage({
   };
 
   return (
-    <div className="p-8 w-full md:w-[80%] lg:w-[70%] m-auto min-h-[60vh]">
-      <h1 className="text-2xl font-bold mb-6 justify-center flex items-center gap-2">
-        {translations.dashboard} <LockKeyhole color="royalblue" />
-      </h1>
+    <div className=" py-8 px-2 w-full md:w-[100%] lg:w-[70%] m-auto min-h-[60vh]">
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="flex w-fit items-center m-auto bg-gray-100 p-2 rounded-md">
+        <TabsList className="flex w-fit  items-center m-auto bg-muted p-2 rounded-md">
           <TabsTrigger
             value="users"
-            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors"
+            className="px-4 py-2 rounded-md  transition-colors"
           >
             {translations.users}
           </TabsTrigger>
           <TabsTrigger
             value="orders"
-            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors "
+            className="px-4 py-2 rounded-md  transition-colors "
           >
             {translations.orders}
           </TabsTrigger>
           <TabsTrigger
             value="my orders"
-            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors"
+            className="px-4 py-2 rounded-md  transition-colors"
           >
             {translations.my_orders}
           </TabsTrigger>
           <TabsTrigger
             value="create-product"
-            className="px-4 py-2 rounded-md hover:bg-green-50 transition-colors"
+            className="px-4 py-2 rounded-md  transition-colors"
           >
             {translations.createProduct}
           </TabsTrigger>
         </TabsList>
 
-        {/* Users Tab Content */}
-        <TabsContent className="text-center" value="users">
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-4">{translations.users}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {users.length > 0 ? (
-                users.map((user) => (
-                  <div
-                    key={user.id}
-                    className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <p className="text-gray-700">
-                      {translations.name}:{" "}
-                      <span className="font-medium">{user.name}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      {translations.email}:{" "}
-                      <span className="font-medium">{user.email}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      {translations.role}:{" "}
-                      <span className="font-medium">{user.role}</span>
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <h1 className="text-center text-2xl font-bold text-gray-600">
-                  {translations.noUsers}
-                </h1>
-              )}
-            </div>
+        {/* Users Table */}
+        <TabsContent value="users">
+          <div className="mt-6">
+            {users.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{translations.name}</TableHead>
+                    <TableHead>{translations.email}</TableHead>
+                    <TableHead>{translations.role}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody dir={ar ? "ltr" : "ltr"}>
+                  {users.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.role}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <h1 className="text-center text-2xl font-bold">
+                {translations.noUsers}
+              </h1>
+            )}
           </div>
         </TabsContent>
 
-        {/* Orders Tab Content */}
-        <TabsContent className="text-start" value="orders">
-          <div dir={ar ? "rtl" : "ltr"} className="mt-4">
-            <h2 className="text-xl text-center font-semibold mb-4">
-              {translations.orders}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {orders.length > 0 ? (
-                orders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
-                  >
-                    <p className="text-gray-700">
-                      {translations.orderId}:{" "}
-                      <span className="font-medium">{order.id}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      {translations.subTotal}:{" "}
-                      <span className="font-medium">${order.totalPrice}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      {translations.userEmail}:{" "}
-                      <span className="font-medium">{order.user.email}</span>
-                    </p>
-                    <div className="mt-2">
-                      <p className="text-gray-700">{translations.items}:</p>
-                      <ul className="list-disc list-inside">
-                        {order.orderItems.map((i) => (
-                          <li key={i.id} className="text-gray-600">
-                            {i.product.name} x {i.quantity}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-gray-600 col-span-full">
-                  {translations.noOrders}
-                </p>
-              )}
-            </div>
+        {/* All Orders Table */}
+        <TabsContent value="orders">
+          <div dir={ar ? "rtl" : "ltr"} className="mt-6">
+            {orders.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{translations.orderId}</TableHead>
+                    <TableHead>{translations.subTotal}</TableHead>
+                    <TableHead>{translations.userEmail}</TableHead>
+                    <TableHead>{translations.items}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell>{order.id}</TableCell>
+                      <TableCell>${order.totalPrice}</TableCell>
+                      <TableCell>{order.user.email}</TableCell>
+                      <TableCell>
+                        <ul className="list-disc list-inside">
+                          {order.orderItems.map((item) => (
+                            <li key={item.id}>
+                              {item.product.name} x {item.quantity}
+                            </li>
+                          ))}
+                        </ul>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-center text-lg">{translations.noOrders}</p>
+            )}
           </div>
         </TabsContent>
-        {/* my Orders Tab Content */}
-        <TabsContent className="text-start" value="my orders">
-          <div dir={ar ? "rtl" : "ltr"} className="mt-4">
-            <h2 className="text-xl text-center font-semibold mb-4">
-              {translations.my_orders}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {my_orders.length > 0 ? (
-                my_orders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
-                  >
-                    <p className="text-gray-700">
-                      {translations.orderId}:{" "}
-                      <span className="font-medium">{order.id}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      {translations.subTotal}:{" "}
-                      <span className="font-medium">${order.totalPrice}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      {translations.userEmail}:{" "}
-                      <span className="font-medium">{order.user.email}</span>
-                    </p>
-                    <div className="mt-2">
-                      <p className="text-gray-700">{translations.items}:</p>
-                      <ul className="list-disc list-inside">
-                        {order.orderItems.map((i) => (
-                          <li key={i.id} className="text-gray-600">
-                            {i.product.name} x {i.quantity}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-gray-600 col-span-full">
-                  {translations.noOrders}
-                </p>
-              )}
-            </div>
+
+        {/* My Orders Table */}
+        <TabsContent value="my orders">
+          <div dir={ar ? "rtl" : "ltr"} className="mt-6">
+            {my_orders.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{translations.orderId}</TableHead>
+                    <TableHead>{translations.subTotal}</TableHead>
+                    <TableHead>{translations.userEmail}</TableHead>
+                    <TableHead>{translations.items}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {my_orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell>{order.id}</TableCell>
+                      <TableCell>${order.totalPrice}</TableCell>
+                      <TableCell>{order.user.email}</TableCell>
+                      <TableCell>
+                        <ul className="list-disc list-inside">
+                          {order.orderItems.map((item) => (
+                            <li key={item.id}>
+                              {item.product.name} x {item.quantity}
+                            </li>
+                          ))}
+                        </ul>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-center text-lg">{translations.noOrders}</p>
+            )}
           </div>
         </TabsContent>
-        {/* Create Product Tab Content */}
+
+        {/* Create Product Tab */}
         <TabsContent dir={ar ? "rtl" : "ltr"} value="create-product">
           <CreateProduct />
         </TabsContent>

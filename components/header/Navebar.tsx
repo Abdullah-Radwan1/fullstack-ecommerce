@@ -58,7 +58,11 @@ export function NavigationMenuDemo() {
         <NavigationMenuList>
           {/* Products */}
           <NavigationMenuItem className="hidden md:block">
-            <Link href="/products" legacyBehavior passHref>
+            <Link
+              href={ar ? "/products" : "/en/products"}
+              legacyBehavior
+              passHref
+            >
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 {ar ? "المنتجات" : "products"}
               </NavigationMenuLink>
@@ -67,7 +71,7 @@ export function NavigationMenuDemo() {
           {/* About Links  */}
 
           <NavigationMenuItem className="hidden md:block">
-            <Link href="/about" legacyBehavior passHref>
+            <Link href={ar ? "/about" : "/en/about"} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 {ar ? "من نحن" : "About"}
               </NavigationMenuLink>
@@ -75,7 +79,7 @@ export function NavigationMenuDemo() {
           </NavigationMenuItem>
           {role === "ADMIN" && (
             <NavigationMenuItem className="hidden md:block">
-              <Link href="/admin" legacyBehavior passHref>
+              <Link href={ar ? "/admin" : "/en/admin"} legacyBehavior passHref>
                 <NavigationMenuLink
                   className={`${navigationMenuTriggerStyle()} flex items-center gap-2`}
                 >
@@ -118,7 +122,9 @@ export function NavigationMenuDemo() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <Link href="/about">{ar ? "من نحن" : "About"}</Link>
+                <Link href={ar ? "/about" : "/en/about"}>
+                  {ar ? "من نحن" : "About"}
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 {session ? (
@@ -152,7 +158,7 @@ export function NavigationMenuDemo() {
               {/* admin or  not  */}
               {role === "ADMIN" && (
                 <DropdownMenuItem asChild>
-                  <Link href="/admin">
+                  <Link href={ar ? "/admin" : "/en/admin"}>
                     {ar ? "الادمن" : "Admin"}
                     <Lock />
                   </Link>

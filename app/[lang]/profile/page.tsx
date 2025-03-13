@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import AuthButton from "@/lib/auth/SignoutButton";
-import { userOrders } from "@/lib/Functions";
+import { myOrders } from "@/lib/Functions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Lock } from "lucide-react";
 import { getServerSession } from "next-auth";
@@ -22,7 +22,8 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const image = session.user.image;
   const role = session.user.role;
 
-  const orders = await userOrders(email);
+  const orders = await myOrders(email);
+  console.log(orders);
 
   return (
     <div className="space-y-5 mt-10 min-h-[55vh]">
@@ -35,7 +36,7 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
             className="rounded-full"
           />
         </div>
-        <h1 className="text-4xl font-bold w-full text-center flex justify-center gap-2">
+        <h1 className=" sm:text-3xl md:text-4xl text-2xl font-bold w-full text-center flex justify-center gap-2">
           {ar ? "مرحبًا" : "Welcome"} {name}
           {role === "ADMIN" ? (
             <div className="flex items-center gap-2">
@@ -52,37 +53,24 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
       <div>
         <AuthButton />
       </div>
-      <Separator className="h-1 bg-gradient-to-r from-green-500 to-blue-700 w-96 m-auto" />
+      <Separator className="h-1 bg-gradient-to-r from-green-500 to-blue-700 w-[50%] m-auto" />
       <div>
-        <h1 className="text-4xl font-bold text-center">
+        <h1 className="text-3xl font-bold text-center">
           {ar ? "طلباتك" : "Your Orders"}
         </h1>
-
         <div>
           {orders.length >= 1 ? (
-            orders.map((order) => (
-              <div key={order.id} className="border p-4 rounded-md my-4">
-                <h1>
-                  {ar ? "رقم الطلب" : "Order ID"}: {order.id}
-                </h1>
-                <h2>
-                  {ar ? "تاريخ الطلب" : "Order Date"}:{" "}
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </h2>
-                <h3>{ar ? "المنتجات" : "Products"}</h3>
-                <div>
-                  {order.orderItems.map((product) => (
-                    <div key={product.id} className="border-t pt-2 mt-2">
-                      <h4>{product.productId}</h4>
-                      <p>
-                        {ar ? "الكمية" : "Quantity"}: {product.quantity}
-                      </p>
-                      <p></p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
+            <h1 className="text-center">
+              {ar ? " لديك " : "You have "}
+              <strong>{orders.length}</strong>{" "}
+              {ar
+                ? orders.length === 1
+                  ? "طلب قيد التنفيذ"
+                  : "طلبات قيد التنفيذ"
+                : orders.length === 1
+                  ? "order in progress"
+                  : "orders in progress"}
+            </h1>
           ) : (
             <h1 className="text-center">
               {ar ? "لا توجد طلبات بعد 😒" : "No orders yet 😒"}

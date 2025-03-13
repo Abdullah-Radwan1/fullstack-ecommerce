@@ -1,7 +1,5 @@
-import { Product } from "@prisma/client";
 import CheckoutForm from "./components/CheckoutForm";
 
-import React from "react";
 import Stripe from "stripe";
 
 const page = async ({
@@ -14,9 +12,8 @@ const page = async ({
 
   const products = (await searchParams).products;
 
-  const NumberTotalPrice = Number(totalprice);
   const paymentIntents = stripe.paymentIntents.create({
-    amount: NumberTotalPrice,
+    amount: Number(totalprice),
     currency: "usd",
     metadata: { products },
   });

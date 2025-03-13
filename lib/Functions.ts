@@ -1,5 +1,7 @@
-// Cached functions return plain JSON-serializable objects, solving the Prisma Decimal issue.
-import email from "next-auth/providers/email";
+// Cached functions return plain JSON-serializable objects, solving the Prisma Decimal issue.//but i have removed decimal from
+
+import { count } from "console";
+import { create } from "domain";
 import { cache } from "./cache";
 import { db } from "./db";
 import { Product } from "@prisma/client";
@@ -12,37 +14,7 @@ export const first_10_products = cache(
   { revalidate: 5 }
 );
 
-export const bestSellers = cache(
-  async () => {
-    return await db.product.findMany({
-      take: 4,
-      where: { orderItems: { some: {} } },
-      orderBy: { orderItems: { _count: "desc" } },
-      include: { orderItems: true },
-    });
-  },
-  ["bestSellers"],
-  { revalidate: 10 }
-);
-
-export async function createproduct({
-  name,
-  description,
-  image,
-  basePrice,
-  categoryId,
-}: Product) {
-  const product = await db.product.create({
-    data: {
-      name,
-      description,
-      image,
-      basePrice: basePrice,
-      categoryId: categoryId,
-    },
-  });
-  return product;
-}
+//
 
 export const relatedProducts = cache(
   async (categoryId: number) => {
@@ -99,16 +71,6 @@ export const myOrders = cache(
   ["myOrders"], // Cache key
   { revalidate: 10 } // Revalidate every 10 seconds
 );
-export const userOrders = cache(
-  async (id: string) => {
-    return await db.order.findMany({
-      where: { userId: id },
-      include: { orderItems: true },
-    });
-  },
-  ["userOrders"],
-  { revalidate: 10 }
-);
 
 type OrderItemInput = {
   productId: string;
@@ -151,6 +113,46 @@ export const hasMatchingOrder = async (orderItems: OrderItemInput[]) => {
   // No matching order found
   return false;
 };
-// export const createCat = await db.category.create({
-//   data: { name: "thirdcat" },
-// });
+// export async function createproduct({
+//   userId,
+//   name,
+//   description,
+//   image,
+//   basePrice,
+//   categoryId,
+// }: Product & { userId: string }) {
+//   // Step 1: Check if the user already has 2 or more products
+//   const productCount = await db.product.count({
+//     where: { userId },
+//   });
+
+//   if (productCount >= 2) {
+//     throw new Error("You can only create 2 products");
+//   }
+
+//   // Step 2: Create the product and associate it with the user
+//   const product = await db.product.create({
+//     data: {
+//       name,
+//       description,
+//       image,
+//       basePrice,
+//       categoryId,
+//       userId, // Ensure the userId is assigned to the product
+//     },
+//   });
+
+//   return product;
+// }
+// export const bestSellers = cache(
+//   async () => {
+//     return await db.product.findMany({
+//       take: 4,
+//       where: { orderItems: { some: {} } },
+//       orderBy: { orderItems: { _count: "desc" } },
+//       include: { orderItems: true },
+//     });
+//   },
+//   ["bestSellers"],
+//   { revalidate: 10 }
+// );

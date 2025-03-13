@@ -7,8 +7,9 @@ import { Loader2 } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import ProductCard from "@/components/productCard";
 import { relatedProducts } from "@/lib/Functions";
-import AddtoCart from "@/lib/AddtoCart";
+import AddtoCart from "@/zustand/AddtoCart";
 import CheckoutButton from "../../checkout/components/CheckoutButton";
+import loading from "../../loading";
 
 // Translation dictionary
 type Translations = {
@@ -100,8 +101,9 @@ const Page = async ({
             <Image
               src={product.image}
               alt={product.name}
-              width={1000}
-              height={1000}
+              width={800}
+              height={800}
+              loading="lazy" // Experimental lazy loading
               className="object-contain w-full h-full"
             />
           </div>
@@ -111,7 +113,7 @@ const Page = async ({
       {/* Related Products Section */}
       <h2 className="text-2xl font-bold mt-6">{t.relatedProducts}</h2>{" "}
       {/* Use translation for "Related Products" */}
-      <div className="grid grid-cols-1  lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
         {relatedFunc.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

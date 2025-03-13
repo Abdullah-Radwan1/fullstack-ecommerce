@@ -17,8 +17,8 @@ const Footer = async ({ lang }: { lang: string }) => {
           </h5>
           <p className="mt-6 text-sm">
             {ar
-              ? "لوريم إيبسوم هو ببساطة نص شكلي يستخدم في صناعة الطباعة والتنضيد. كان لوريم إيبسوم النص القياسي في الصناعة منذ القرن الخامس عشر، عندما أخذت طابعة غير معروفة لوحًا من النوع وخلطته لعمل كتاب عينة."
-              : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."}
+              ? "مطور full stack أعمل على تطوير و إكتساب مهارات جديده, لدي خبرة تزيد عن 3 سنوات ومهارات في مجموعة واسعة من التقنيات، بما في ذلك Next.js, express وأنواع مختلفة من قواعد البيانات مع Prisma كـORM، مع التزام قوي بتقديم تجارب مستخدم عالية الجودة"
+              : "A continuously self-improving Full-stack developer with +3 years of experience, skilled in a wide range of technologies,including Next.js, express, and different types of databases with prisma as an ORM, with a strong commitment to deliveringhigh-quality user experiences"}
           </p>
         </div>
 

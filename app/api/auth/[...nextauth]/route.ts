@@ -4,6 +4,7 @@ import GitHubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { db } from "@/lib/db";
 import bcrypt from "bcrypt";
+import { UserRole } from "@prisma/client";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
@@ -67,7 +68,7 @@ export const authOptions: AuthOptions = {
             name: credentials.name,
             email: credentials.email,
             password: hashedPassword,
-            role: credentials.role || "USER",
+            role: credentials.role as UserRole,
           },
         });
 
@@ -88,12 +89,14 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.id = user.id;
         token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
+        session.user.id = token.id; // Add user ID to the session
         session.user.role = token.role;
       }
       return session;

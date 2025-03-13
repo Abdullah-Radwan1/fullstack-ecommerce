@@ -19,7 +19,8 @@ export default async function Home({
   const { lang } = await params;
 
   const ten_products = await first_10_products();
-  const products = await db.orderItem.deleteMany();
+  ///
+
   return (
     <main className=" m-auto">
       {/* Hero Section */}

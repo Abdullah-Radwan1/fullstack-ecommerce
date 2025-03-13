@@ -38,7 +38,7 @@ export default async function RootLayout({
         <title>{title}</title>
       </head>
 
-      <body>
+      <body className=" min-h-screen">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

@@ -105,7 +105,12 @@ function Form({}: {}) {
     <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>Checkout</CardTitle>
+          <CardTitle className="text-center">
+            {ar ? "عععات فلوووس" : "payment"}{" "}
+            <p className="text-sm p-2  text-slate-500">
+              use 4242 4242 4242 4242 as a fake card number
+            </p>
+          </CardTitle>
           {errorMessage && (
             <CardDescription className="text-destructive">
               {errorMessage}
@@ -151,7 +156,7 @@ function Form({}: {}) {
             size="lg"
             disabled={stripe == null || elements == null || isLoading}
           >
-            {isLoading ? "Purchasing..." : `Purchase - ${totalPrice}`}
+            {isLoading ? "Purchasing..." : `Purchase - ${totalPrice}$`}
           </Button>
         </CardFooter>
       </Card>

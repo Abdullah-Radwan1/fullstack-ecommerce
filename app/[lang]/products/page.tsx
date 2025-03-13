@@ -10,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Product } from "@prisma/client";
-import { Loader2 } from "lucide-react";
+
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -19,6 +20,7 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [hasMore, setHasMore] = useState(false);
   const [products, setProducts] = useState([]);
   const { lang } = useParams();
   const ar = lang === "ar";
@@ -35,9 +37,9 @@ export default function ProductsPage() {
     next: ar ? "التالي" : "Next",
     categories: {
       all: ar ? "الكل" : "All",
-      electronics: ar ? "إلكترونيات" : "Electronics",
-      clothing: ar ? "ملابس" : "Clothing",
-      books: ar ? "كتب" : "Books",
+      accessories: ar ? "منتجات للبي سي" : "PC Accessories",
+      labs: ar ? "Labs" : "لابات",
+      other: ar ? "مستلزمات اخري" : "Other",
     },
   };
 
@@ -48,7 +50,8 @@ export default function ProductsPage() {
         `/api/products?page=${page}&search=${search}&category=${category}`
       );
       const data = await response.json();
-      setProducts(data);
+      setProducts(data.products);
+      setHasMore(data.hasMore);
       setLoading(false);
     };
 
@@ -56,7 +59,7 @@ export default function ProductsPage() {
   }, [page, search, category]);
 
   return (
-    <div className="p-8 container m-auto">
+    <div className="p-8 container m-auto min-h-[60vh]">
       {/* Title */}
       <h1 className="text-2xl font-bold mb-6 text-center">
         {translations.title}
@@ -72,28 +75,43 @@ export default function ProductsPage() {
           className="w-full sm:w-[60%] p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
         />
         {/* Filter Options */}
-        <Select onValueChange={(value) => setCategory(value)}>
+        <Select
+          dir={ar ? "rtl" : "ltr"}
+          onValueChange={(value) => {
+            setCategory(value);
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder={translations.filterPlaceholder} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{translations.categories.all}</SelectItem>
-            <SelectItem value="1">
-              {translations.categories.electronics}
-            </SelectItem>
+            <SelectItem value="1">{translations.categories.labs}</SelectItem>
             <SelectItem value="2">
-              {translations.categories.clothing}
+              {translations.categories.accessories}
             </SelectItem>
-            <SelectItem value="3">{translations.categories.books}</SelectItem>
+
+            <SelectItem value="3">{translations.categories.other}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Product List */}
       {loading ? (
-        <Loader2 className="animate-spin m-auto" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          {[...Array(2)].map((_, index) => (
+            <div key={index} className=" rounded-lg p-4">
+              <Skeleton className="h-48 w-full rounded-lg mb-4" />{" "}
+              {/* Image placeholder */}
+              <Skeleton className="h-6 w-3/4 mb-2" />{" "}
+              {/* Product name placeholder */}
+              <Skeleton className="h-4 w-1/2" /> {/* Price placeholder */}
+            </div>
+          ))}
+        </div>
       ) : products.length > 0 ? (
-        <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 justify-center items-center sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
           {products.map((product: Product) => (
             <ProductCard product={product} key={product.id} />
           ))}
@@ -105,15 +123,16 @@ export default function ProductsPage() {
       {/* Pagination Controls */}
       <div className="flex justify-between mt-6">
         <Button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
-          className="p-2  rounded-md  transition-colors "
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          className="  bg-blue-500 text-white hover:text-black"
         >
           {translations.previous}
         </Button>
         <Button
+          disabled={!hasMore}
           onClick={() => setPage((prev) => prev + 1)}
-          className="p-2  rounded-md  transition-colors"
+          className=" bg-blue-500 text-white hover:text-black"
         >
           {translations.next}
         </Button>
