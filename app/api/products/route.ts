@@ -7,7 +7,6 @@ export async function GET(request: Request) {
   const page = parseInt(searchParams.get("page") || "1");
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
-
   const skip = (page - 1) * 8; // Pagination logic
   const take = 8;
 
