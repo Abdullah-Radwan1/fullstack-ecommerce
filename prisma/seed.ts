@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db } from "@/lib/db";
 
 async function main() {
   const categories = [
@@ -10,7 +8,7 @@ async function main() {
   ];
 
   for (const category of categories) {
-    await prisma.category.upsert({
+    await db.category.upsert({
       where: { id: category.id },
       update: {},
       create: category,
@@ -122,7 +120,7 @@ async function main() {
   ];
 
   for (const product of products) {
-    await prisma.product.upsert({
+    await db.product.upsert({
       where: { id: product.id },
       update: {},
       create: product,
@@ -137,4 +135,4 @@ main()
     console.error("Error during seeding:", e);
     process.exit(1);
   })
-  .finally(() => prisma.$disconnect());
+  .finally(() => db.$disconnect());
