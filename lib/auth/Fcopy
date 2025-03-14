@@ -1,52 +1,72 @@
 // Cached functions return plain JSON-serializable objects, solving the Prisma Decimal issue.//but i have removed decimal from
 
+import { cache } from "./cache";
 import { db } from "./db";
-export const first_10_products = async () => {
-  return await db.product.findMany({ take: 10 });
-};
+export const first_10_products = cache(
+  async () => {
+    return await db.product.findMany({ take: 10 });
+  },
+  ["first_10_products"],
+  { revalidate: 5 }
+);
 
 //
 
-export const relatedProducts = async (categoryId: number) => {
-  return await db.product.findMany({
-    where: { categoryId },
-    take: 4,
-  });
-};
+export const relatedProducts = cache(
+  async (categoryId: number) => {
+    return await db.product.findMany({
+      where: { categoryId },
+      take: 4,
+    });
+  },
+  ["relatedProducts"],
+  { revalidate: 10 }
+);
 
-export const allUsers = async () => {
-  return await db.user.findMany();
-};
-export const allOrders = async () => {
-  return await db.order.findMany({
-    include: {
-      user: true,
-      orderItems: {
-        include: {
-          product: true, // Include the Product relation
+export const allUsers = cache(
+  async () => {
+    return await db.user.findMany();
+  },
+  ["allUsers"],
+  { revalidate: 10 }
+);
+export const allOrders = cache(
+  async () => {
+    return await db.order.findMany({
+      include: {
+        user: true,
+        orderItems: {
+          include: {
+            product: true, // Include the Product relation
+          },
         },
       },
-    },
-  });
-};
-
-export const myOrders = async (userEmail: string) => {
-  return await db.order.findMany({
-    where: {
-      user: {
-        email: userEmail, // Filter orders by the logged-in user's email
-      },
-    },
-    include: {
-      user: true,
-      orderItems: {
-        include: {
-          product: true, // Include the Product relation
+    });
+  },
+  ["allOrders"],
+  { revalidate: 10 }
+);
+export const myOrders = cache(
+  async (userEmail: string) => {
+    return await db.order.findMany({
+      where: {
+        user: {
+          email: userEmail, // Filter orders by the logged-in user's email
         },
       },
-    },
-  });
-};
+      include: {
+        user: true,
+        orderItems: {
+          include: {
+            product: true, // Include the Product relation
+          },
+        },
+      },
+    });
+  },
+  ["myOrders"], // Cache key
+  { revalidate: 10 } // Revalidate every 10 seconds
+);
 
 type OrderItemInput = {
   productId: string;
