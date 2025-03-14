@@ -3,7 +3,6 @@ import FeaturedProduct from "@/components/FeaturedProducts";
 import Link from "@/components/Link";
 import ProductCard from "@/components/productCard";
 import Slider from "@/components/ui/slider";
-import { db } from "@/lib/db";
 
 import { first_10_products } from "@/lib/Functions";
 
