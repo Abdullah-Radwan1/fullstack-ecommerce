@@ -23,7 +23,7 @@ const CreateProduct = () => {
   const session = useSession();
   const userId = session?.data?.user.id;
   const ar = lang === "ar"; // Check if the language is Arabic
-  console.log(userId);
+
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState<number>();
   const [price, setPrice] = useState("");

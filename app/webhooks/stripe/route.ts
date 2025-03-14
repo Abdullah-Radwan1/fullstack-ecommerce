@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       const charge = event.data.object as Stripe.Charge;
       const email = charge.billing_details?.email;
       const productsMetadata = charge.metadata?.products;
-      console.log("Received metadata:", productsMetadata);
+    
 
       if (!email || !productsMetadata) {
         return new NextResponse("Bad Request: Missing products or email", {
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        console.log("Order created successfully", order.id);
+   
 
         await resend.emails.send({
           from: `Support <${process.env.SENDER_EMAIL}>`,
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
           }),
         });
 
-        console.log("Confirmation email sent to", email);
+       
       } catch (parseError) {
         console.error("Error processing product data:", parseError);
         return new NextResponse("Invalid product data format", { status: 400 });

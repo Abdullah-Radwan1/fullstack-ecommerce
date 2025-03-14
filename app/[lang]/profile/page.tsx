@@ -23,7 +23,7 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const role = session.user.role;
 
   const orders = await myOrders(email);
-  console.log(orders);
+
 
   return (
     <div className="space-y-5 mt-10 min-h-[55vh]">

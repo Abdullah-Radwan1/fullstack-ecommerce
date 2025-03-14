@@ -46,7 +46,7 @@ const Page = async ({
   const ar = lang === "ar";
 
   const t = translations[lang]; // Get translations for the current language
-  console.log(lang, "in cart");
+
   const product = await db.product.findUnique({
     where: { id: id },
   });
