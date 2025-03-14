@@ -10,14 +10,14 @@ import {
 import { allOrders, allUsers, myOrders } from "@/lib/Functions";
 import CreateProduct from "./components/create-product";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/Authoptions";
 
 export default async function AdminPage({
   params,
 }: {
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = params;
+  const { lang } = await params;
   const ar = lang === "ar";
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;

@@ -9,7 +9,6 @@ import ProductCard from "@/components/productCard";
 import { relatedProducts } from "@/lib/Functions";
 import AddtoCart from "@/zustand/AddtoCart";
 import CheckoutButton from "../../checkout/components/CheckoutButton";
-import loading from "../../loading";
 
 // Translation dictionary
 type Translations = {

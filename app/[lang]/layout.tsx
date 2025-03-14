@@ -8,7 +8,7 @@ import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import SessionProvider from "@/lib/auth/SessionProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/Authoptions";
 
 export const metadata: Metadata = {
   description: "Vogue Haven Ecommerce",

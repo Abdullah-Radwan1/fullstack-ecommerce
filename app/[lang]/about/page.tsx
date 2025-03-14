@@ -1,7 +1,7 @@
 import React from "react";
 
-const AboutPage = async ({ params }: { params: { lang: string } }) => {
-  const { lang } = params;
+const AboutPage = async ({ params }: { params: Promise<{ lang: string }> }) => {
+  const { lang } = await params;
 
   // Content for English and Arabic
   const content: { [key: string]: { [key: string]: string } } = {

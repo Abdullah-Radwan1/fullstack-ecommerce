@@ -69,7 +69,7 @@ export const YelpRecentLoginEmail = ({ order }: YelpRecentLoginEmailProps) => {
             </Row>
 
             <Row style={boxInfos}>
-              <Column style={buttonContainer}>
+              <Column style={{ textAlign: "center" }}>
                 <Button
                   style={button}
                   href={
@@ -83,7 +83,9 @@ export const YelpRecentLoginEmail = ({ order }: YelpRecentLoginEmailProps) => {
             </Row>
           </Section>
 
-          <Text style={footer}>
+          <Text
+            style={{ textAlign: "center", fontSize: "12px", color: "#888888" }}
+          >
             © 2025 Your Company Name, All rights reserved.
           </Text>
         </Container>
@@ -120,20 +122,10 @@ const paragraph = {
   margin: "10px 0",
 };
 
-const buttonContainer = {
-  textAlign: "center",
-};
-
 const button = {
   backgroundColor: "#007BFF",
   color: "#ffffff",
   padding: "10px 20px",
   borderRadius: "5px",
   textDecoration: "none",
-};
-
-const footer = {
-  textAlign: "center",
-  fontSize: "12px",
-  color: "#888888",
 };

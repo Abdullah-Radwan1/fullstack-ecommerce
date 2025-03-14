@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         image,
       },
     });
-    const linkProductToUser = await db.user.update({
+    await db.user.update({
       where: { id: userId },
       data: { products: { connect: { id: product.id } } },
     });

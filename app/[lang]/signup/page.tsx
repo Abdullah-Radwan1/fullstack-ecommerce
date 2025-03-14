@@ -65,8 +65,12 @@ const SignUpPage = () => {
         // Redirect to the dashboard or any other route
         router.push(ar ? "/ar" : "/en");
       }
-    } catch (e: any) {
-      setError(e.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message); // TypeScript knows `error` is an Error object with a `message` property
+      } else {
+        setError("An unknown error occurred"); // Handle cases where the error is not an Error object
+      }
     } finally {
       setLoading(false);
       setGithubLoading(false);

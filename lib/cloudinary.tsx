@@ -6,7 +6,7 @@ import {
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 
 export default function CloudinaryUpload() {
   const { setImageUrl } = useImageStore();

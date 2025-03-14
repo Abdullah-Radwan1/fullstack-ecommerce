@@ -1,11 +1,7 @@
 // Cached functions return plain JSON-serializable objects, solving the Prisma Decimal issue.//but i have removed decimal from
 
-import { count } from "console";
-import { create } from "domain";
 import { cache } from "./cache";
 import { db } from "./db";
-import { Product } from "@prisma/client";
-
 export const first_10_products = cache(
   async () => {
     return await db.product.findMany({ take: 10 });

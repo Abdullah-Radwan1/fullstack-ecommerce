@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
 import purchaseReciept from "@/email/purchaseReciept";
-import { render } from "@react-email/components";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const resend = new Resend(process.env.RESEND_API_KEY as string);
@@ -55,10 +54,12 @@ export async function POST(req: NextRequest) {
             phone: charge.billing_details?.phone || "s",
             userId: user.id,
             orderItems: {
-              create: products.map((product: any) => ({
-                quantity: product.quantity,
-                product: { connect: { id: product.id } },
-              })),
+              create: products.map(
+                (product: { id: number; quantity: number }) => ({
+                  quantity: product.quantity,
+                  product: { connect: { id: product.id } },
+                })
+              ),
             },
           },
           include: {

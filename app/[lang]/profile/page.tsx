@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/Authoptions";
 import AuthButton from "@/lib/auth/SignoutButton";
 import { myOrders } from "@/lib/Functions";
 import { Separator } from "@radix-ui/react-dropdown-menu";

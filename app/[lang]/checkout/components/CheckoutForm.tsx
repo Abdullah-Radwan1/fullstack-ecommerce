@@ -1,5 +1,4 @@
 "use client";
-import { Product } from "@prisma/client";
 import React, { FormEvent, useState } from "react";
 import {
   Elements,
@@ -9,7 +8,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import Image from "next/image";
+
 import {
   Card,
   CardContent,
@@ -23,7 +22,11 @@ import { Input } from "@/components/ui/input"; // Add this import for the input 
 import { useParams, useSearchParams } from "next/navigation";
 import { DropdownMenuRadioGroupDemo } from "@/components/ui/Phonedropdown";
 
-export default function ({ clientSecret }: { clientSecret: string }) {
+export default function CheckoutForm({
+  clientSecret,
+}: {
+  clientSecret: string;
+}) {
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
   );
@@ -47,14 +50,14 @@ export default function ({ clientSecret }: { clientSecret: string }) {
   );
 }
 
-function Form({}: {}) {
+function Form() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [email, setEmail] = useState<string>("");
   const [country_code, setCountryCode] = useState<string>("");
   const [phone, setPhone] = useState<string>(""); // Change to string for phone input
   const [streetAddress, setStreetAddress] = useState<string>(""); // Add street address input
-  let allPhone = country_code + phone;
+  const allPhone = country_code + phone;
 
   const stripe = useStripe();
   const elements = useElements();
@@ -96,6 +99,7 @@ function Form({}: {}) {
       }
     } catch (error) {
       setErrorMessage("An unexpected error occurred.");
+      return error;
     } finally {
       setIsLoading(false);
     }
