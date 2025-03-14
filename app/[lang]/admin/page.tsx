@@ -11,6 +11,7 @@ import { allOrders, allUsers, myOrders } from "@/lib/Functions";
 import CreateProduct from "./components/create-product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/Authoptions";
+import { User } from "@prisma/client";
 
 export default async function AdminPage({
   params,
@@ -87,7 +88,7 @@ export default async function AdminPage({
                   </TableRow>
                 </TableHeader>
                 <TableBody dir={ar ? "ltr" : "ltr"}>
-                  {users.map((user) => (
+                  {users.map((user: User) => (
                     <TableRow key={user.id}>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
