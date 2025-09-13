@@ -1,0 +1,166 @@
+"use client";
+
+import ProductCard from "@/components/productCard";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Product } from "@/prisma/src/generated/client";
+
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+
+export default function ProductsPage() {
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+
+  const [appliedSearch, setAppliedSearch] = useState("");
+  const [appliedCategory, setAppliedCategory] = useState("");
+
+  const [hasMore, setHasMore] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const { lang } = useParams();
+  const ar = lang === "ar";
+  const [loading, setLoading] = useState(true);
+
+  const translations = {
+    title: ar ? "المنتجات" : "Products",
+    searchPlaceholder: ar ? "ابحث عن المنتجات..." : "Search products...",
+    filterPlaceholder: ar ? "الفئة" : "Category",
+    noProducts: ar ? "لا توجد منتجات." : "No products found.",
+    price: ar ? "السعر" : "Price",
+    previous: ar ? "السابق" : "Previous",
+    next: ar ? "التالي" : "Next",
+    search: ar ? "بحث" : "Search",
+    categories: {
+      all: ar ? "الكل" : "All",
+      accessories: ar ? "منتجات للبي سي" : "PC Accessories",
+      labs: ar ? "Labs" : "لابات",
+      other: ar ? "مستلزمات اخري" : "Other",
+    },
+  };
+
+  const fetchProducts = async (overridePage = page) => {
+    setLoading(true);
+    const response = await fetch(
+      `/api/products?page=${overridePage}&search=${appliedSearch}&category=${appliedCategory}`
+    );
+    const data = await response.json();
+    setProducts(data.products);
+    setHasMore(data.hasMore);
+    setLoading(false);
+  };
+
+  const handleSubmit = () => {
+    setPage(1);
+    setAppliedSearch(search);
+    setAppliedCategory(category);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSubmit();
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [page, appliedSearch, appliedCategory]);
+
+  return (
+    <div className="p-8 container m-auto min-h-[60vh]">
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        {translations.title}
+      </h1>
+
+      {/* Search + Filter */}
+      <div className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-[60%] lg:w-[40%] m-auto">
+        <Input
+          type="text"
+          placeholder={translations.searchPlaceholder}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="w-full sm:w-[50%] "
+        />
+        <Button
+          variant={"outline"}
+          onClick={handleSubmit}
+          className="w-full sm:w-[25%] "
+        >
+          {translations.search}
+        </Button>
+        <Select
+          dir={ar ? "rtl" : "ltr"}
+          //todo
+          onValueChange={(value: any) => {
+            setCategory(value);
+            setPage(1);
+            setAppliedSearch(search); // to make sure search is included
+            setAppliedCategory(value); // apply category immediately
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[25%]">
+            <SelectValue placeholder={translations.filterPlaceholder} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{translations.categories.all}</SelectItem>
+            <SelectItem value="1">{translations.categories.labs}</SelectItem>
+            <SelectItem value="2">
+              {translations.categories.accessories}
+            </SelectItem>
+            <SelectItem value="3">{translations.categories.other}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Product List */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          {[...Array(4)].map((_, index) => (
+            <div key={index} className="rounded-lg p-4">
+              <Skeleton className="h-48 w-full rounded-lg mb-4" />
+              <Skeleton className="h-6 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : products.length > 0 ? (
+        <div className="grid grid-cols-1 justify-center items-center sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+          {products.map((product: Product) => (
+            <ProductCard
+              lang={ar ? "ar" : "en"}
+              product={product}
+              key={product.id}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">{translations.noProducts}</p>
+      )}
+
+      {/* Pagination */}
+      <div className="flex justify-between mt-6">
+        <Button
+          variant={"outline"}
+          disabled={page === 1}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        >
+          {translations.previous}
+        </Button>
+        <Button
+          disabled={!hasMore}
+          onClick={() => setPage((prev) => prev + 1)}
+          variant={"outline"}
+        >
+          {translations.next}
+        </Button>
+      </div>
+    </div>
+  );
+}

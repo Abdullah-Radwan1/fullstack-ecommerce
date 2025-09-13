@@ -1,0 +1,57 @@
+import "../globals.css";
+import { Navbar } from "@/components/header/Navebar";
+
+import { ThemeProvider } from "@/lib/ThemeProvider";
+import Footer from "@/components/footer";
+import SessionProvider from "@/lib/auth/SessionProvider";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/Authoptions";
+import Sidebar from "@/components/sidebar/AppSidebar";
+import { inter } from "@/app/font/font";
+import { Toaster } from "@/components/ui/sonner";
+// using next fotns
+export const metadata = {
+  title: "Vogue-Haven Store",
+  description: "Vogue-Haven - Your Fashion Destination",
+};
+export const revalidate = 10;
+export default async function RootLayout({
+  children,
+  params,
+}: Readonly<{
+  children: React.ReactNode;
+  params: Promise<{ lang: string }>;
+}>) {
+  const { lang } = await params;
+  const session = await getServerSession(authOptions);
+
+  return (
+    <html
+      // Apply the font variable here
+      className={` ${inter.className} antialiased`}
+      suppressHydrationWarning
+      dir={lang === "ar" ? "rtl" : "ltr"}
+      lang={lang}
+    >
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider session={session}>
+            <Navbar />
+
+            <Sidebar />
+            <main className="max-w-[90%] lg:max-w-[75%] mx-auto ">
+              {children}
+              <Footer lang={lang} />
+            </main>
+          </SessionProvider>
+        </ThemeProvider>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
