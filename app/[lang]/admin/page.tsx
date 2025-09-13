@@ -91,7 +91,7 @@ export default async function AdminPage({
                     <TableHead>{translations.role}</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody dir={ar ? "ltr" : "ltr"}>
+                <TableBody>
                   {users.map((user: User) => (
                     <TableRow key={user.id}>
                       <TableCell>{user.name}</TableCell>
@@ -114,15 +114,24 @@ export default async function AdminPage({
           <div dir={ar ? "rtl" : "ltr"} className="mt-6">
             {orders.length > 0 ? (
               <Table>
-                <TableHeader>
+                <TableHeader dir={ar ? "rtl" : "ltr"}>
                   <TableRow>
-                    <TableHead>{translations.orderId}</TableHead>
-                    <TableHead>{translations.subTotal}</TableHead>
-                    <TableHead>{translations.userEmail}</TableHead>
-                    <TableHead>{translations.items}</TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.orderId}
+                    </TableHead>
+
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.subTotal}
+                    </TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.userEmail}
+                    </TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.items}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody dir={ar ? "rtl" : "ltr"}>
                   {orders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell>{order.id}</TableCell>
@@ -154,10 +163,18 @@ export default async function AdminPage({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{translations.orderId}</TableHead>
-                    <TableHead>{translations.subTotal}</TableHead>
-                    <TableHead>{translations.userEmail}</TableHead>
-                    <TableHead>{translations.items}</TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.orderId}
+                    </TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.subTotal}
+                    </TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.userEmail}
+                    </TableHead>
+                    <TableHead className={ar ? "text-right" : "text-left"}>
+                      {translations.items}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

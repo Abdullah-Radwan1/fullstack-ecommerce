@@ -24,7 +24,7 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const image = session.user.image;
   const role = session.user.role;
   const orders = await myOrders(email);
-
+  console.log(await myOrders("abdallabeedo85@gmail.com"));
   return (
     <div className="space-y-5 mt-10 min-h-[55vh]">
       <div className="flex flex-col items-center justify-center">
