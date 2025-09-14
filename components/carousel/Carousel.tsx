@@ -69,7 +69,7 @@ export function MyCarousel() {
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
-      <CarouselContent className="animate-slide-up-fade">
+      <CarouselContent className="animate-pulse">
         {sliderData.map((slide, index) => (
           <CarouselItem key={slide.id} className="basis-full">
             <div
