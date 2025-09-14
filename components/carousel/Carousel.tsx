@@ -3,9 +3,9 @@
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "../Link";
+import { useParams } from "next/navigation";
 import "../../app/animations.css";
 import {
   Carousel,
@@ -16,10 +16,9 @@ import {
 } from "@/components/ui/carousel";
 
 export function MyCarousel() {
+  const plugin = React.useRef(Autoplay({ delay: 2000 }));
   const { lang } = useParams();
   const ar = lang === "ar";
-
-  const plugin = React.useRef(Autoplay({ delay: 2000 }));
 
   const sliderData = [
     {
@@ -65,17 +64,17 @@ export function MyCarousel() {
 
   return (
     <Carousel
-      dir={"ltr"}
       plugins={[plugin.current]}
-      className=" bg-muted mt-8 "
+      className="w-full bg-muted mt-8"
+      onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
-      <CarouselContent className="animate-slide-up-fade ">
+      <CarouselContent className="animate-slide-up-fade">
         {sliderData.map((slide, index) => (
-          <CarouselItem key={slide.id}>
+          <CarouselItem key={slide.id} className="basis-full">
             <div
               dir={ar ? "rtl" : "ltr"}
-              className="flex flex-col-reverse lg:flex-row items-center justify-between md:px-14 px-5 py-4   "
+              className="flex flex-col-reverse lg:flex-row items-center justify-between md:px-14 px-5 py-4"
             >
               {/* Text content */}
               <div className="pb-4 lg:pb-0">
@@ -112,8 +111,6 @@ export function MyCarousel() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
     </Carousel>
   );
 }

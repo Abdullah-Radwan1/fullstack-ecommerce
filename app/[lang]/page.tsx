@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import { MyCarousel } from "@/components/carousel/Carousel";
+
 import FeaturedProduct from "@/components/FeaturedProducts";
 
 import ProductCard from "@/components/productCard";
