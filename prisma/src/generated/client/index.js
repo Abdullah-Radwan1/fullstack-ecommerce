@@ -223,7 +223,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\Work\\projects\\next\\my-app\\prisma\\src\\generated\\client",
+      "value": "D:\\Work\\projects\\Next_ecommerce\\prisma\\src\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -237,7 +237,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\Work\\projects\\next\\my-app\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\Work\\projects\\Next_ecommerce\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -251,7 +251,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
