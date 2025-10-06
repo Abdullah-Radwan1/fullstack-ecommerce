@@ -24,7 +24,7 @@ const AddtoCart: React.FC<AddtoCartProps> = ({ item, classname, varient }) => {
       className={`${classname}   `}
       onClick={() => {
         addCartItem(item); // Add the item to the cart
-        toast(ar ? "تمت الإضافة إلى السلة" : "Added to cart"); // Show a toast notification
+        toast.success(ar ? "تمت الإضافة إلى السلة" : "Added to cart"); // Show a toast notification
       }}
     >
       {ar ? "اضف للسلة" : "Add to Cart"}

@@ -17,7 +17,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (products.length === 0 && getTotalPrice() === 0) {
-      toast(ar ? "سلة التسوق فارغة" : "Your cart is empty");
+      toast.error(ar ? "سلة التسوق فارغة" : "Your cart is empty");
       redirect(ar ? "/ar/products" : "/products");
     }
     // Avoid calculating derived state outside useEffect

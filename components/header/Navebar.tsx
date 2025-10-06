@@ -10,7 +10,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ModeToggle } from "@/components/header/ModeToggle";
+// import { ModeToggle } from "@/components/header/ModeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 
 import {
@@ -85,16 +85,7 @@ export function Navbar() {
                   {ar ? "المنتجات" : "Products"}
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              {/* About Links  */}
 
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href={ar ? "/about" : "/en/about"}
-                  className={`${navigationMenuTriggerStyle()}hidden md:block  `}
-                >
-                  {ar ? "من نحن" : "About"}
-                </NavigationMenuLink>
-              </NavigationMenuItem>
               {role === "ADMIN" && (
                 <NavigationMenuItem className="hidden md:block">
                   <NavigationMenuLink
@@ -118,9 +109,6 @@ export function Navbar() {
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
-                <ModeToggle />
-              </NavigationMenuItem>
               <NavigationMenuItem>
                 <LanguageToggle />
               </NavigationMenuItem>
@@ -147,11 +135,6 @@ export function Navbar() {
                   <Menu className="h-10 w-10 hover:bg-muted transition hover:cursor-pointer rounded-lg p-3 " />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="md:hidden" align="end">
-                  <DropdownMenuItem asChild>
-                    <Link href={ar ? "/about" : "/en/about"}>
-                      {ar ? "من نحن" : "About"}
-                    </Link>
-                  </DropdownMenuItem>{" "}
                   <DropdownMenuItem>
                     <Link href={ar ? "/products" : "/en/products"}>
                       {ar ? "المنتجات" : "products"}

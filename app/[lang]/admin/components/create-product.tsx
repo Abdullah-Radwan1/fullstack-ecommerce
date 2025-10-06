@@ -102,7 +102,9 @@ const CreateProduct = () => {
 
       if (!response.ok) throw new Error(await response.text());
 
-      toast(ar ? "تم إنشاء المنتج بنجاح" : "Product created successfully");
+      toast.success(
+        ar ? "تم إنشاء المنتج بنجاح" : "Product created successfully"
+      );
 
       // Reset form
       setName("");

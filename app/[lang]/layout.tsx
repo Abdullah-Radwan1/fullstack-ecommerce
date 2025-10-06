@@ -1,7 +1,6 @@
 import "../globals.css";
 import { Navbar } from "@/components/header/Navebar";
 
-import { ThemeProvider } from "@/lib/ThemeProvider";
 import Footer from "@/components/footer";
 import SessionProvider from "@/lib/auth/SessionProvider";
 import { getServerSession } from "next-auth";
@@ -34,22 +33,15 @@ export default async function RootLayout({
       lang={lang}
     >
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProvider session={session}>
-            <Navbar />
+        <SessionProvider session={session}>
+          <Navbar />
 
-            <Sidebar />
-            <main className="max-w-[90%] lg:max-w-[75%] mx-auto ">
-              {children}
-              <Footer lang={lang} />
-            </main>
-          </SessionProvider>
-        </ThemeProvider>
+          <Sidebar />
+          <main className="max-w-[90%] lg:max-w-[75%] mx-auto ">
+            {children}
+            <Footer lang={lang} />
+          </main>
+        </SessionProvider>
         <Toaster />
       </body>
     </html>
