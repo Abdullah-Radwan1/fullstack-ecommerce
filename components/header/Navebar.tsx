@@ -77,7 +77,7 @@ export function Navbar() {
             <NavigationMenuList>
               {/* Products */}
 
-              <NavigationMenuItem>
+              <NavigationMenuItem className="hidden md:block">
                 <NavigationMenuLink
                   href={ar ? "/products" : "/en/products"}
                   className={`${navigationMenuTriggerStyle()}hidden md:block  `}

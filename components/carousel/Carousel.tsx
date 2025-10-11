@@ -65,7 +65,7 @@ export function MyCarousel() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full bg-muted mt-8"
+      className="w-full bg-accent mt-8"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >

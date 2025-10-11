@@ -52,7 +52,7 @@ export default async function AdminPage({
   return (
     <div className=" py-8 px-2 w-full md:w-[100%] lg:w-[70%] m-auto min-h-[60vh]">
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="flex w-fit  items-center m-auto bg-muted p-2 rounded-md">
+        <TabsList className="flex w-fit  items-center m-auto  p-2 rounded-md">
           <TabsTrigger
             value="users"
             className="px-4 py-2 rounded-md  transition-colors"

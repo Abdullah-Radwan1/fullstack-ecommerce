@@ -18,7 +18,7 @@ export default function ProductCard({
         className="min-w-[230px] w-full"
         href={ar ? `/ar/product/${product.id}` : `/en/product/${product.id}`}
       >
-        <div className="cursor-pointer group relative bg-muted rounded-lg  h-52 flex items-center justify-center overflow-hidden">
+        <div className="cursor-pointer group relative bg-accent rounded-lg  h-52 flex items-center justify-center overflow-hidden">
           <Image
             src={product.image}
             alt={product.name}
