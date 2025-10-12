@@ -39,7 +39,7 @@ export default function CheckoutForm({
           clientSecret,
           appearance: {
             disableAnimations: false,
-            theme: "flat",
+            theme: "night",
             labels: "floating",
           },
         }}
@@ -216,7 +216,7 @@ function Form() {
                   </p>
                   <p className="text-sm text-muted-foreground">
                     ${item.basePrice}{" "}
-                    <span className="text-xs text-muted-foreground text-orange-600">
+                    <span className="text-xs  text-orange-600">
                       {item.quantity}X
                     </span>
                   </p>

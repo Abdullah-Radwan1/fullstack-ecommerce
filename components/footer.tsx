@@ -74,7 +74,7 @@ const Footer = async ({ lang }: { lang: string }) => {
                 +01288265751 <Phone size={15} />
               </p>
               <p className="flex items-center gap-1">
-                abdallahbeedo5584@gmail.com <Mail size={15} />
+                abdullah.radwan.dev@gmail.com <Mail size={15} />
               </p>
             </div>
           </div>
