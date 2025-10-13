@@ -90,20 +90,19 @@ export function Navbar() {
 
           {/* Language Toggle */}
 
-          {/* cart page */}
-          <Link className="hover:bg-accent p-2" href={routes.cart}>
-            {" "}
-            <Columns2 />
-          </Link>
           {/* Cart */}
           <div
-            className="relative cursor-pointer hover:bg-muted p-2 rounded-lg transition"
+            className=" cursor-pointer hover:bg-muted p-2 rounded-lg transition"
             onClick={() => setTogglestate(true)}
           >
-            <ShoppingCart />
-            {isMounted && <CartBadge quantity={quantity} />}
+            <Columns2 />
           </div>
-
+          {/* cart page */}
+          <Link className="relative hover:bg-accent p-2" href={routes.cart}>
+            {" "}
+            <ShoppingBasket />
+            {isMounted && <CartBadge quantity={quantity} />}
+          </Link>
           {/* Language Toggle */}
           <LanguageToggle />
 
