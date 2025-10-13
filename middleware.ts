@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt"; // Use getToken to decode the session token
 
 const locales = ["en", "ar"]; // Supported locales
-const defaultLocale = "ar"; // Default locale
+const defaultLocale = "en"; // Default locale
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

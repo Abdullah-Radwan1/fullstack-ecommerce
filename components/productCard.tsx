@@ -12,7 +12,7 @@ export default function ProductCard({
 }) {
   const ar = lang === "ar";
   return (
-    <div className="mx-auto w-full my-4 flex flex-col items-start gap-1  cursor-pointer  min-h-full">
+    <div className=" w-full my-4 flex flex-col  gap-1  cursor-pointer  min-h-full">
       {/* Image Container */}
       <Link
         className="min-w-[230px] w-full"

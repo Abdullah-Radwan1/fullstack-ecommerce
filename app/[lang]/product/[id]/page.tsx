@@ -140,7 +140,7 @@ const Page = async ({
               </div>
             </div>
           </div>
-          <div className="relative h-[265px] flex-1  bg-muted rounded-lg ">
+          <div className="relative h-[265px] flex-1  rounded-lg ">
             <Image
               src={product.image}
               alt={product.name}
@@ -156,7 +156,7 @@ const Page = async ({
       {/* Related Products Section */}
       <h2 className="text-2xl font-bold mt-6">{t.relatedProducts}</h2>{" "}
       {/* Use translation for "Related Products" */}
-      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2   lg:grid-cols-2 xl:grid-cols-3  2xl:grid-cols-4 gap-6 mt-6">
         {relatedFunc.map((product) => (
           <ProductCard lang={lang} key={product.id} product={product} />
         ))}

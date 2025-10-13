@@ -1,3 +1,5 @@
+import "../globals.css";
+
 import { MyCarousel } from "@/components/carousel/Carousel";
 
 import ProductCard from "@/components/productCard";
