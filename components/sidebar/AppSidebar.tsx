@@ -58,6 +58,7 @@ const SideCart = () => {
           "opacity-0 pointer-events-none": !togglestate,
         }
       )}
+      onClick={() => setTogglestate(false)} // 👈 close when clicking outside
     >
       <div
         className={clsx(
@@ -67,6 +68,7 @@ const SideCart = () => {
             "translate-x-full": !togglestate,
           }
         )}
+        onClick={(e) => e.stopPropagation()} // 👈 stop clicks *inside* sidebar from closing it
       >
         <Button
           className="absolute top-4 right-4 z-10 bg-red-500 text-white hover:text-black"

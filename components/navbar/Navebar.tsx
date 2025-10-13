@@ -4,15 +4,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { LanguageToggle } from "./LanguageToggle";
 import useCartStore, { useSidebarStore } from "@/zustand/store";
 import { cn } from "@/lib/utils";
@@ -20,12 +14,12 @@ import {
   Columns2,
   Loader2,
   Lock,
-  Menu,
-  Search,
   ShoppingBasket,
   ShoppingCart,
   User,
 } from "lucide-react";
+import { SearchBar } from "./SearchBar";
+import { Button } from "../ui/button";
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -53,6 +47,7 @@ export function Navbar() {
     admin: ar ? "/admin" : "/en/admin",
     login: ar ? "/login" : "/en/login",
     profile: ar ? "/profile" : "/en/profile",
+    cart: ar ? "/cart" : "/en/cart",
   };
 
   return (
@@ -66,25 +61,22 @@ export function Navbar() {
         {/* -------- Left: Logo -------- */}
         <Link
           href={routes.home}
-          className="text-lg xl:text-2xl font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent"
+          className="text-lg  xl:text-2xl font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent"
         >
           {t("ڤوجيه هاڤن", "Vogue-Haven")}
         </Link>
 
         {/* -------- Center: Search Bar -------- */}
-        <div className="hidden md:flex items-center w-[40%] relative">
-          <div className="w-full p-[2px] rounded-full bg-gradient-to-r from-green-500 to-blue-600">
-            <Input
-              type="text"
-              placeholder={t("ابحث عن منتج...", "Search for products...")}
-              className="pl-10 pr-4 rounded-full bg-background border-none focus:ring-0 focus:outline-none"
-            />
-          </div>
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <div className="hidden md:flex flex-1 items-center w-full relative">
+          <SearchBar ar={ar} />
         </div>
 
         {/* -------- Right: Actions -------- */}
         <div className=" flex items-center gap-3">
+          {/* products */}
+          <Link href={routes.products} className="hidden md:block">
+            <Button variant="outline">{t("تسوق الآن", "Shop Now")}</Button>
+          </Link>
           {/* Admin */}
           {role === "ADMIN" && (
             <Link
@@ -98,6 +90,11 @@ export function Navbar() {
 
           {/* Language Toggle */}
 
+          {/* cart page */}
+          <Link className="hover:bg-accent p-2" href={routes.cart}>
+            {" "}
+            <Columns2 />
+          </Link>
           {/* Cart */}
           <div
             className="relative cursor-pointer hover:bg-muted p-2 rounded-lg transition"
@@ -106,11 +103,7 @@ export function Navbar() {
             <ShoppingCart />
             {isMounted && <CartBadge quantity={quantity} />}
           </div>
-          {/* cart page */}
-          <Link className="hover:bg-accent p-2" href={`${lang}/cart`}>
-            {" "}
-            <ShoppingBasket />
-          </Link>
+
           {/* Language Toggle */}
           <LanguageToggle />
 
@@ -137,14 +130,7 @@ export function Navbar() {
 
       {/* -------- Mobile Search Bar (below navbar) -------- */}
       <div className="flex md:hidden items-center mx-6 relative">
-        <div className="w-full p-[2px] rounded-full bg-gradient-to-r from-green-500 to-blue-600">
-          <Input
-            type="text"
-            placeholder={t("ابحث عن منتج...", "Search for products...")}
-            className="pl-10 pr-4 rounded-full bg-background border-none focus:ring-0 focus:outline-none"
-          />
-        </div>
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <SearchBar ar={ar} />
       </div>
     </header>
   );

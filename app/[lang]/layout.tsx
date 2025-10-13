@@ -1,5 +1,5 @@
 import "../globals.css";
-import { Navbar } from "@/components/header/Navebar";
+import { Navbar } from "@/components/navbar/Navebar";
 
 import Footer from "@/components/footer";
 import SessionProvider from "@/lib/auth/SessionProvider";

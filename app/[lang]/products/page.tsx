@@ -12,23 +12,23 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Product } from "@/prisma/src/generated/client";
-
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
-
   const [appliedSearch, setAppliedSearch] = useState("");
   const [appliedCategory, setAppliedCategory] = useState("");
-
   const [hasMore, setHasMore] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const { lang } = useParams();
   const ar = lang === "ar";
-  const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const searchParamsValue = searchParams.get("search");
 
   const translations = {
     title: ar ? "المنتجات" : "Products",
@@ -47,17 +47,31 @@ export default function ProductsPage() {
     },
   };
 
-  const fetchProducts = async (overridePage = page) => {
-    setLoading(true);
-    const response = await fetch(
-      `/api/products?page=${overridePage}&search=${appliedSearch}&category=${appliedCategory}`
-    );
-    const data = await response.json();
-    setProducts(data.products);
-    setHasMore(data.hasMore);
-    setLoading(false);
-  };
+  // ✅ Step 1: Read query param once on mount
+  useEffect(() => {
+    if (searchParamsValue !== null) {
+      setSearch(searchParamsValue);
+      setAppliedSearch(searchParamsValue);
+    }
+  }, [searchParamsValue]);
 
+  // ✅ Step 2: Fetch products whenever page, search, or category changes
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `/api/products?page=${page}&search=${appliedSearch}&category=${appliedCategory}`
+      );
+      const data = await response.json();
+      setProducts(data.products);
+      setHasMore(data.hasMore);
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, [page, appliedSearch, appliedCategory]);
+
+  // ✅ Step 3: Handle manual search/filter
   const handleSubmit = () => {
     setPage(1);
     setAppliedSearch(search);
@@ -67,10 +81,6 @@ export default function ProductsPage() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSubmit();
   };
-
-  useEffect(() => {
-    fetchProducts();
-  }, [page, appliedSearch, appliedCategory]);
 
   return (
     <div className="p-8 container m-auto min-h-[60vh]">
@@ -86,23 +96,22 @@ export default function ProductsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full sm:w-[50%] "
+          className="w-full sm:w-[50%]"
         />
         <Button
           variant={"outline"}
           onClick={handleSubmit}
-          className="w-full sm:w-[25%] "
+          className="w-full sm:w-[25%]"
         >
           {translations.search}
         </Button>
         <Select
           dir={ar ? "rtl" : "ltr"}
-          //todo
           onValueChange={(value: any) => {
             setCategory(value);
             setPage(1);
-            setAppliedSearch(search); // to make sure search is included
-            setAppliedCategory(value); // apply category immediately
+            setAppliedSearch(search); // include search in query
+            setAppliedCategory(value);
           }}
         >
           <SelectTrigger className="w-full sm:w-[25%]">
@@ -131,7 +140,7 @@ export default function ProductsPage() {
           ))}
         </div>
       ) : products.length > 0 ? (
-        <div className="grid grid-cols-1 justify-center items-center sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
           {products.map((product: Product) => (
             <ProductCard
               lang={ar ? "ar" : "en"}
