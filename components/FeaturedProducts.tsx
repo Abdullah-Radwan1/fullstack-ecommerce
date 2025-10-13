@@ -1,8 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
-import Link from "./Link";
-import "../app/animations.css";
+import Link from "next/link";
 const products = [
   {
     id: 2,
@@ -69,7 +68,7 @@ const FeaturedProduct = async ({
           ({ id, image, title, description, badgeRight }, index) => (
             <div
               key={id}
-              className="relative group bg-accent rounded-lg animate-card-fade-up"
+              className="relative group bg-accent rounded-lg animate-slide-up-fade"
               style={{ animationDelay: `${index * 0.3}s` }} // <-- stagger each card by 0.5s
             >
               {badgeRight && (

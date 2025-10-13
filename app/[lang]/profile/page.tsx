@@ -53,7 +53,7 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
       <div>
         <AuthButton />
       </div>
-      <Separator className="h-1 bg-gradient-to-r from-green-500 to-blue-700 w-[50%] m-auto" />
+      <Separator className="h-1 bg-gradient-to-r from-my-main  to-my-secondary  w-[50%] m-auto" />
       <div>
         <h1 className="text-3xl font-bold text-center">
           {ar ? "طلباتك" : "Your Orders"}

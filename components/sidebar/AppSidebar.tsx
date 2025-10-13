@@ -71,6 +71,7 @@ const SideCart = () => {
         onClick={(e) => e.stopPropagation()} // 👈 stop clicks *inside* sidebar from closing it
       >
         <Button
+          name="close"
           className="absolute top-4 right-4 z-10 bg-red-500 text-white hover:text-black"
           onClick={() => setTogglestate(false)}
         >

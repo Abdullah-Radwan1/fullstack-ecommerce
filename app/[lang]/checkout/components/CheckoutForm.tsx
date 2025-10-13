@@ -180,6 +180,7 @@ function Form() {
           </CardContent>
           <CardFooter>
             <Button
+              name="purchase"
               className="w-full"
               size="lg"
               disabled={stripe == null || elements == null || isLoading}

@@ -12,9 +12,9 @@ const Footer = async ({ lang }: { lang: string }) => {
       >
         {/* Title and Description */}
         <div className="w-4/5">
-          <h5 className="text-2xl font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-my-main  to-my-secondary  bg-clip-text text-transparent">
             {ar ? "ڤوجيه هاڤن" : "Vogue-Haven"}
-          </h5>
+          </h2>
           <p className="mt-6 text-sm">
             {ar
               ? " فوجيه هاڤن هو موقع تجاري يهدف إلى توفير مجموعة متنوعة من المنتجات و تسهيل البحث و الفلتره علي المستخدم, اضافه امكانيه  الدفع بالفيزا و ماستر كارد, مبني علي قاعده بيانات سريعه , مع واجهه اماميه سلسه و تعطي المستخدم  تجربه  رائعه"

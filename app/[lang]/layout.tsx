@@ -1,13 +1,14 @@
 import "../globals.css";
 import { Navbar } from "@/components/navbar/Navebar";
 
-import Footer from "@/components/footer";
 import SessionProvider from "@/lib/auth/SessionProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/Authoptions";
 import Sidebar from "@/components/sidebar/AppSidebar";
 import { inter } from "@/app/font/font";
 import { Toaster } from "@/components/ui/sonner";
+import dynamic from "next/dynamic";
+import Loading from "./loading";
 // using next fotns
 export const metadata = {
   title: "Vogue-Haven Store",
@@ -23,7 +24,9 @@ export default async function RootLayout({
 }>) {
   const { lang } = await params;
   const session = await getServerSession(authOptions);
-
+  const Footer = dynamic(() => import("@/components/footer"), {
+    loading: () => <Loading />,
+  });
   return (
     <html
       // Apply the font variable here

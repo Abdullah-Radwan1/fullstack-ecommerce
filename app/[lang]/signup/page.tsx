@@ -184,9 +184,10 @@ const SignUpPage = () => {
 
         {/* Sign Up Button */}
         <Button
+          name="SignUp"
           disabled={loading}
           type="submit"
-          className="w-full from-green-500 to-blue-600 bg-gradient-to-r hover:opacity-90 transition text-white mb-4"
+          className="w-full from-my-main  to-my-secondary bg-gradient-to-r hover:opacity-90 transition text-white mb-4"
         >
           {loading ? (
             <Loader2 className="animate-spin m-auto" />

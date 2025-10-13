@@ -128,6 +128,7 @@ export default function ProductsPage() {
       {/* Pagination */}
       <div className="flex justify-between mt-6">
         <Button
+          name="previous"
           variant={"outline"}
           disabled={page === 1}
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -135,6 +136,7 @@ export default function ProductsPage() {
           {translations.previous}
         </Button>
         <Button
+          name="next"
           disabled={!hasMore}
           onClick={() => setPage((prev) => prev + 1)}
           variant={"outline"}

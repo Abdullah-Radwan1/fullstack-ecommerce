@@ -25,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Link from "@/components/Link";
+import Link from "next/link";
 
 const Page = () => {
   const { lang } = useParams();
@@ -98,6 +98,7 @@ const Page = () => {
                 <TableCell>
                   <div className="flex justify-center gap-2">
                     <Button
+                      name="minus"
                       variant="outline"
                       size="sm"
                       onClick={() => removeCartItem(item.id)}
@@ -105,6 +106,7 @@ const Page = () => {
                       <Minus />
                     </Button>
                     <Button
+                      name="plus"
                       variant="outline"
                       size="sm"
                       onClick={() => addCartItem(item)}
@@ -112,6 +114,7 @@ const Page = () => {
                       <Plus />
                     </Button>
                     <Button
+                      name="remove"
                       variant="outline"
                       size="sm"
                       onClick={() => removeItemFromCart(item.id)}

@@ -21,15 +21,15 @@ export function SearchBar({ ar }: { ar: boolean }) {
       className="relative w-full md:w-[60%] mb-2 mx-auto group"
     >
       {/* gradient border */}
-      <div className="p-[2px] rounded-full bg-gradient-to-r from-green-500 to-blue-600 relative">
+      <div className="p-[2px] rounded-full bg-gradient-to-r from-my-main  to-my-secondary relative">
         {/* input field */}
         <Input
           id="search"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={ar ? "ابحث عن منتج..." : "Search for products..."}
-          className="rounded-full border-none focus:ring-0 focus:outline-none  pl-12 pr-10"
+          placeholder={ar ? "ابحث عن ما في بالك" : "Search for anything"}
+          className="rounded-full border-none focus:ring-0 focus:outline-none  pl-12 pr-11"
         />
 
         {/* search icon (left) */}
@@ -45,7 +45,7 @@ export function SearchBar({ ar }: { ar: boolean }) {
 
         <Sparkle
           className={`absolute ${
-            ar ? "left-4" : "right-4"
+            ar ? "left-3" : "right-3"
           } top-1/2 -translate-y-1/2 text-blue-500 animate-pulse transition-opacity duration-300`}
         />
       </div>

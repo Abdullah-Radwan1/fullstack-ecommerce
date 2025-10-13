@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 export default function signoutButton() {
   return (
     <Button
+      name="sign-out"
       variant={"destructive"}
       className="m-auto flex  justify-center"
       onClick={async () => {

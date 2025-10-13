@@ -20,6 +20,7 @@ const AddtoCart: React.FC<AddtoCartProps> = ({ item, classname, varient }) => {
   const ar = lang === "ar";
   return (
     <Button
+      name="add-to-cart"
       variant={varient}
       className={`${classname}   `}
       onClick={() => {

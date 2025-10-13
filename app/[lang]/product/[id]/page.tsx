@@ -130,7 +130,10 @@ const Page = async ({
                   className="flex-1 "
                   href={ar ? `/ar/checkout` : `/en/checkout`}
                 >
-                  <Button className="w-full flex-1 bg-gradient-to-r from-green-500 to-blue-700 text-white hover:opacity-80 transition ">
+                  <Button
+                    name="checkout"
+                    className="w-full flex-1 bg-gradient-to-r from-my-main  to-my-secondary  text-white hover:opacity-80 transition "
+                  >
                     {ar ? "الدفع" : "Checkout"}
                   </Button>
                 </Link>

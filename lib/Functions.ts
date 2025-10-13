@@ -1,3 +1,4 @@
+"use cache";
 // lib/data.ts (for example)
 
 import { db } from "@/prisma/db";

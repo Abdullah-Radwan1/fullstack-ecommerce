@@ -88,8 +88,9 @@ const Page = () => {
 
         {/* Login Button */}
         <Button
+          name="login"
           type="submit"
-          className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:opacity-90 transition mb-4"
+          className="w-full bg-gradient-to-r from-my-main  to-my-secondary  hover:opacity-90 transition mb-4"
           disabled={loading}
         >
           {loading ? (

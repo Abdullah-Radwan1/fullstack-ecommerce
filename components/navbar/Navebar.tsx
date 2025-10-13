@@ -54,7 +54,7 @@ export function Navbar() {
         {/* -------- Left: Logo -------- */}
         <Link
           href={routes.home}
-          className="text-lg  xl:text-2xl font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent"
+          className="text-lg  xl:text-2xl font-bold bg-gradient-to-r from-my-main  to-my-secondary  bg-clip-text text-transparent"
         >
           {t("ڤوجيه هاڤن", "Vogue-Haven")}
         </Link>
@@ -68,7 +68,9 @@ export function Navbar() {
         <div className=" flex items-center gap-3">
           {/* products */}
           <Link href={routes.products} className="hidden md:block">
-            <Button variant="outline">{t("تسوق الآن", "Shop Now")}</Button>
+            <Button name="shop-now" variant="outline">
+              {t("تسوق الآن", "Shop Now")}
+            </Button>
           </Link>
           {/* Admin */}
           {role === "ADMIN" && (
@@ -114,6 +116,7 @@ export function Navbar() {
               href={routes.login}
               className="flex items-center gap-1 text-sm text-foreground hover:bg-accent p-2 transition"
             >
+              <span className="sr-only">Login</span>
               <User />
             </Link>
           )}

@@ -4,16 +4,13 @@ import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Link from "../Link";
 import { useParams } from "next/navigation";
-import "../../app/animations.css";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
+import Link from "next/link";
 
 export function MyCarousel() {
   const plugin = React.useRef(Autoplay({ delay: 2000 }));
@@ -71,14 +68,17 @@ export function MyCarousel() {
     >
       <CarouselContent dir="ltr" className="animate-pulse">
         {sliderData.map((slide, index) => (
-          <CarouselItem key={slide.id} className="basis-full">
+          <CarouselItem
+            key={slide.id}
+            className="basis-full animate-slide-up-fade"
+          >
             <div
               dir={ar ? "rtl" : "ltr"}
               className="flex flex-col-reverse lg:flex-row items-center justify-between md:px-14 px-5 py-4"
             >
               {/* Text content */}
               <div className="pb-4 lg:pb-0">
-                <p className="md:text-base font-bold bg-gradient-to-r from-green-500 to-blue-700 bg-clip-text text-transparent pb-1">
+                <p className="md:text-base font-bold bg-gradient-to-r from-my-main  to-my-secondary bg-clip-text text-transparent pb-1">
                   {slide.offer[lang as keyof typeof slide.offer]}
                 </p>
                 <h1 className="max-w-lg md:text-3xl md:leading-[48px] text-lg font-semibold">
@@ -87,7 +87,7 @@ export function MyCarousel() {
                 <div className="flex items-center mt-4 gap-2 text-center">
                   <Link
                     href={ar ? "/ar/products" : "/en/products"}
-                    className="bg-gradient-to-r text-center from-green-500 to-blue-700 rounded-lg text-white font-medium xl:px-4 px-2 py-2"
+                    className="bg-gradient-to-r text-center from-my-main  to-my-secondary  rounded-lg text-white font-medium xl:px-4 px-2 py-2"
                   >
                     {slide.buttonText1[lang as keyof typeof slide.buttonText1]}
                   </Link>
@@ -104,7 +104,9 @@ export function MyCarousel() {
                   src={slide.imgSrc}
                   width={index === 1 ? 400 : 300}
                   height={300}
-                  alt={`Slide ${index + 1}`}
+                  alt={slide.title[lang as keyof typeof slide.title]}
+                  priority={index === 0} // only first slide is priority
+                  loading={index === 0 ? "eager" : "lazy"} // lazy-load offscreen slides
                 />
               </div>
             </div>
