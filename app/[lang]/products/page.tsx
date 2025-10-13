@@ -17,7 +17,6 @@ import { useState, useEffect } from "react";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
   const [appliedCategory, setAppliedCategory] = useState("");
@@ -28,8 +27,6 @@ export default function ProductsPage() {
   const { lang } = useParams();
   const ar = lang === "ar";
   const searchParams = useSearchParams();
-  const searchParamsValue = searchParams.get("search");
-
   const translations = {
     title: ar ? "المنتجات" : "Products",
     searchPlaceholder: ar ? "ابحث عن المنتجات..." : "Search products...",
@@ -42,21 +39,22 @@ export default function ProductsPage() {
     categories: {
       all: ar ? "الكل" : "All",
       accessories: ar ? "منتجات للبي سي" : "PC Accessories",
-      labs: ar ? "Labs" : "لابات",
+      labs: ar ? "لابات" : "Laptops",
       other: ar ? "مستلزمات اخري" : "Other",
     },
   };
 
   // ✅ Step 1: Read query param once on mount
   useEffect(() => {
-    if (searchParamsValue !== null) {
-      setSearch(searchParamsValue);
-      setAppliedSearch(searchParamsValue);
-    }
-  }, [searchParamsValue]);
+    const searchParam = searchParams.get("search") || "";
 
-  // ✅ Step 2: Fetch products whenever page, search, or category changes
-  useEffect(() => {
+    // 1️⃣ Update appliedSearch if URL search param changes
+    if (searchParam !== appliedSearch) {
+      setAppliedSearch(searchParam);
+      return; // Wait for next render to fetch products with new appliedSearch
+    }
+
+    // 2️⃣ Fetch products whenever appliedSearch, appliedCategory, or page changes
     const fetchProducts = async () => {
       setLoading(true);
       const response = await fetch(
@@ -69,18 +67,7 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, [page, appliedSearch, appliedCategory]);
-
-  // ✅ Step 3: Handle manual search/filter
-  const handleSubmit = () => {
-    setPage(1);
-    setAppliedSearch(search);
-    setAppliedCategory(category);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") handleSubmit();
-  };
+  }, [page, appliedSearch, appliedCategory, searchParams]);
 
   return (
     <div className="p-8 container m-auto min-h-[60vh]">
@@ -90,27 +77,12 @@ export default function ProductsPage() {
 
       {/* Search + Filter */}
       <div className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-[60%] lg:w-[40%] m-auto">
-        <Input
-          type="text"
-          placeholder={translations.searchPlaceholder}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full sm:w-[50%]"
-        />
-        <Button
-          variant={"outline"}
-          onClick={handleSubmit}
-          className="w-full sm:w-[25%]"
-        >
-          {translations.search}
-        </Button>
         <Select
           dir={ar ? "rtl" : "ltr"}
           onValueChange={(value: any) => {
             setCategory(value);
             setPage(1);
-            setAppliedSearch(search); // include search in query
+            setAppliedSearch(appliedSearch); // include search in query
             setAppliedCategory(value);
           }}
         >

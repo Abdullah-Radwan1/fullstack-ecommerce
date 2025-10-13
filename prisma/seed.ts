@@ -56,9 +56,9 @@ async function main() {
     },
     {
       id: "cm84m00pp0068vg2k61d0q6zf",
-      name: "ASUS ZenBook",
+      name: "Strix X Gaming Laptop",
       description:
-        "Slim, lightweight, and powerful. The ASUS ZenBook is perfect for productivity on the go.",
+        "Slim, lightweight, and powerful. The Strix X laptop is perfect for productivity on the go.",
       image: "/products/asus.png",
       basePrice: 49,
       categoryId: 1,
@@ -74,9 +74,9 @@ async function main() {
     },
     {
       id: "cm84m00pp006dvg2kbctgsr62",
-      name: "Gaming Mouse",
+      name: "Professional Microphone",
       description:
-        "Designed for gamers, this mouse offers precision, speed, and customizable buttons.",
+        "Designed for gamers, this Microphone offers precision, quality, and customizable buttons.",
       image: "/products/mice.png",
       basePrice: 69,
       categoryId: 2,

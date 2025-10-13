@@ -10,14 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LanguageToggle } from "./LanguageToggle";
 import useCartStore, { useSidebarStore } from "@/zustand/store";
 import { cn } from "@/lib/utils";
-import {
-  Columns2,
-  Loader2,
-  Lock,
-  ShoppingBasket,
-  ShoppingCart,
-  User,
-} from "lucide-react";
+import { Columns2, Loader2, Lock, ShoppingBasket, User } from "lucide-react";
 import { SearchBar } from "./SearchBar";
 import { Button } from "../ui/button";
 

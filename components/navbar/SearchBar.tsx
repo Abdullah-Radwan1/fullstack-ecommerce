@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Sparkle } from "lucide-react";
 import React, { useState } from "react";
-import { Button } from "../ui/button";
 
 export function SearchBar({ ar }: { ar: boolean }) {
   const router = useRouter();
@@ -12,7 +11,6 @@ export function SearchBar({ ar }: { ar: boolean }) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-
     const base = ar ? "/products" : "/en/products";
     router.push(`${base}?search=${encodeURIComponent(query)}`);
   };
@@ -20,25 +18,37 @@ export function SearchBar({ ar }: { ar: boolean }) {
   return (
     <form
       onSubmit={handleSearch}
-      className="relative w-full md:w-[60%] mb-2 mx-auto  group"
+      className="relative w-full md:w-[60%] mb-2 mx-auto group"
     >
-      <div className="p-[2px] rounded-full bg-gradient-to-r from-green-500 to-blue-600">
+      {/* gradient border */}
+      <div className="p-[2px] rounded-full bg-gradient-to-r from-green-500 to-blue-600 relative">
+        {/* input field */}
         <Input
           id="search"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={ar ? "ابحث عن منتج..." : "Search for products..."}
-          className="  rounded-full border-none focus:ring-0 focus:outline-none bg-none"
+          className="rounded-full border-none focus:ring-0 focus:outline-none  pl-12 pr-10"
+        />
+
+        {/* search icon (left) */}
+        <Search
+          onClick={handleSearch}
+          size={30}
+          className={`absolute ${
+            ar ? "right-4" : "left-4"
+          } top-1/2 -translate-y-1/2 text-muted-foreground hover:bg-accent rounded-2xl p-1 hover:cursor-pointer transition`}
+        />
+
+        {/* sparkle icon (right) — only show when input is empty */}
+
+        <Sparkle
+          className={`absolute ${
+            ar ? "left-4" : "right-4"
+          } top-1/2 -translate-y-1/2 text-blue-500 animate-pulse transition-opacity duration-300`}
         />
       </div>
-      <Button
-        type="submit"
-        variant={"ghost"}
-        className="absolute  left-4 top-1/2 -translate-y-1/2  "
-      >
-        <Search />
-      </Button>
     </form>
   );
 }
