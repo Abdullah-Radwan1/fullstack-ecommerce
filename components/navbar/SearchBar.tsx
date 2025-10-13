@@ -11,8 +11,9 @@ export function SearchBar({ ar }: { ar: boolean }) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const base = ar ? "/products" : "/en/products";
-    router.push(`${base}?search=${encodeURIComponent(query)}`);
+
+    router.push(`/products?search=${encodeURIComponent(query)}&page=1`);
+    setQuery("");
   };
 
   return (
@@ -46,7 +47,7 @@ export function SearchBar({ ar }: { ar: boolean }) {
         <Sparkle
           className={`absolute ${
             ar ? "left-3" : "right-3"
-          } top-1/2 -translate-y-1/2 text-blue-500 animate-pulse transition-opacity duration-300`}
+          } top-1/2 -translate-y-1/2 text-my-secondary animate-pulse transition-opacity duration-300`}
         />
       </div>
     </form>

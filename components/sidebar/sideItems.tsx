@@ -29,7 +29,7 @@ const Sideitem = ({ CartItem }: { CartItem: CartItem }) => {
           />
           <div className="flex flex-col gap-1 items-start">
             <span className="text-sm font-base">{CartItem.name}</span>
-            <span className="text-xs text-orange-600 ">
+            <span className="text-xs text-secondary-foreground ">
               {CartItem.basePrice}$
             </span>
           </div>
@@ -55,14 +55,12 @@ const Sideitem = ({ CartItem }: { CartItem: CartItem }) => {
           </Button>
         </div>
 
-        <Button
-          variant={"ghost"}
+        <X
+          color="red"
           onClick={deleteTheProduct}
-          className="py-1 px-2 hover:bg-destructive hover:text-white  text-red-500 transition mx-2
-           "
-        >
-          <X size={16} />
-        </Button>
+          className=" hover:cursor-pointer "
+          size={18}
+        />
       </div>
     </>
   );

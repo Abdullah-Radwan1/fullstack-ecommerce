@@ -67,8 +67,8 @@ export function Navbar() {
         {/* -------- Right: Actions -------- */}
         <div className=" flex items-center gap-3">
           {/* products */}
-          <Link href={routes.products} className="hidden md:block">
-            <Button name="shop-now" variant="outline">
+          <Link href={routes.products} className="hidden md:block ">
+            <Button className="hover:cursor-pointer" name="shop-now">
               {t("تسوق الآن", "Shop Now")}
             </Button>
           </Link>
@@ -134,7 +134,7 @@ export function Navbar() {
 /* --------------------------- Helper --------------------------- */
 function CartBadge({ quantity }: { quantity: number }) {
   return (
-    <div className="absolute -right-2 -top-2 rounded-full w-4 h-4 border text-xs flex items-center justify-center bg-blue-600">
+    <div className="absolute -right-2 -top-2 rounded-full w-4 h-4 border text-xs flex items-center justify-center bg-my-main text-white">
       {quantity}
     </div>
   );

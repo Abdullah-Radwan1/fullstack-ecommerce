@@ -40,7 +40,7 @@ const Banner = async ({ params }: { params: Promise<{ lang: string }> }) => {
             {"من "}
             <span className="font-bold text-green-500">الصوت</span>
             {" الغامر إلى "}
-            <span className="font-bold text-blue-600"> التحكم </span>
+            <span className="font-bold text-my-main"> التحكم </span>
             {" الدقيق  — كل ما تحتاجه للفوز "}
           </p>
         ) : (
@@ -48,7 +48,7 @@ const Banner = async ({ params }: { params: Promise<{ lang: string }> }) => {
             {"From immersive "}
             <span className="font-bold text-green-500">sound</span>
             {" to precise "}
-            <span className="font-bold text-blue-600">controls</span>
+            <span className="font-bold text-my-main">controls</span>
             {" — everything you need to win"}
           </p>
         )}

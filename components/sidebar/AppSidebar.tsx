@@ -72,7 +72,7 @@ const SideCart = () => {
       >
         <Button
           name="close"
-          className="absolute top-4 right-4 z-10 bg-red-500 text-white hover:text-black"
+          className="absolute top-4 right-4 z-10 bg-red-500 text-white  "
           onClick={() => setTogglestate(false)}
         >
           <X className="h-5 w-5" />
@@ -94,8 +94,7 @@ const SideCart = () => {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t flex justify-between items-center bg-background">
           <h5 className="text-lg font-medium ">
-            {ar ? "الإجمالي :" : "Total :"}{" "}
-            <span className="text-orange-600">${totalAmount()}</span>
+            {ar ? "الإجمالي :" : "Total :"} <span>${totalAmount()}</span>
           </h5>
           <Link onClick={() => setTogglestate(false)} href="/checkout">
             <Button>{ar ? "الدفع" : "Checkout"}</Button>

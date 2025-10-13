@@ -24,7 +24,7 @@ async function main() {
       description:
         "Experience unparalleled performance with the latest MacBook Pro. Perfect for professionals and creatives.",
       image: "/products/mac2.png",
-      basePrice: 29,
+      basePrice: 289,
       categoryId: 1,
     },
     {
@@ -33,7 +33,7 @@ async function main() {
       description:
         "Enjoy crystal-clear sound with this portable JBL Bluetooth speaker. Perfect for parties and outdoor adventures.",
       image: "/products/jbl.png",
-      basePrice: 69,
+      basePrice: 1209,
       categoryId: 3,
     },
     {
@@ -42,7 +42,7 @@ async function main() {
       description:
         "Capture stunning photos and videos with this high-quality DSLR camera. A must-have for photographers.",
       image: "/products/camera.png",
-      basePrice: 69,
+      basePrice: 419,
       categoryId: 3,
     },
     {
@@ -51,7 +51,7 @@ async function main() {
       description:
         "Experience premium sound quality and noise cancellation with these sleek AirPods Pro.",
       image: "/products/airpods.png",
-      basePrice: 69,
+      basePrice: 679,
       categoryId: 3,
     },
     {
@@ -60,7 +60,7 @@ async function main() {
       description:
         "Slim, lightweight, and powerful. The Strix X laptop is perfect for productivity on the go.",
       image: "/products/asus.png",
-      basePrice: 49,
+      basePrice: 469,
       categoryId: 1,
     },
     {
@@ -69,7 +69,7 @@ async function main() {
       description:
         "Dominate the gaming world with this high-performance ASUS laptop. Built for speed and power.",
       image: "/products/asuslab.png",
-      basePrice: 39,
+      basePrice: 239,
       categoryId: 1,
     },
     {
@@ -78,7 +78,7 @@ async function main() {
       description:
         "Designed for gamers, this Microphone offers precision, quality, and customizable buttons.",
       image: "/products/mice.png",
-      basePrice: 69,
+      basePrice: 889,
       categoryId: 2,
     },
     {
@@ -87,7 +87,7 @@ async function main() {
       description:
         "Enhance your productivity with this comfortable and responsive wireless mouse.",
       image: "/products/hand.png",
-      basePrice: 69,
+      basePrice: 979,
       categoryId: 2,
     },
     {
@@ -96,7 +96,7 @@ async function main() {
       description:
         "Ideal for labs and research, this PC offers top-tier performance and reliability.",
       image: "/products/lab2.png",
-      basePrice: 59,
+      basePrice: 559,
       categoryId: 1,
     },
     {
@@ -105,7 +105,7 @@ async function main() {
       description:
         "Stay connected with this sleek and stylish smartwatch. Track your fitness, receive notifications, and more.",
       image: "/products/watch.png",
-      basePrice: 19,
+      basePrice: 199,
       categoryId: 3,
     },
   ];
