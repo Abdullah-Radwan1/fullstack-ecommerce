@@ -4,11 +4,15 @@ import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 const products = [
   {
-    id: 2,
-    image: "/featured-images/camera.png",
+    id: 1,
+    image: "/products/camera.png",
     title: {
       en: "Capture Every Moment",
       ar: "التقط كل لحظة",
+    },
+    link: {
+      en: "/en/products/product/cm84m00pp006bvg2knn74n1fc",
+      ar: "/ar/products/product/cm84m00pp006bvg2knn74n1fc",
     },
     description: {
       en: "Professional cameras  capture stunning photos and videos, perfect for both beginners and experts.",
@@ -18,11 +22,15 @@ const products = [
     badgeRight: "Sale", // Badge for top-right corner
   },
   {
-    id: 1,
-    image: "/featured-images/jbl.png",
+    id: 2,
+    image: "/products/jbl.png",
     title: {
       en: "Quality Quran Sound",
       ar: "جودة صوت قرآن",
+    },
+    link: {
+      en: "/en/products/product/cm84m00pp006avg2k9ty963ji",
+      ar: "/ar/products/product/cm84m00pp006avg2k9ty963ji",
     },
     description: {
       en: "Experience unmatched sound quality with JBL audio devices, delivering crystal-clear Quran recitations and immersive listening experiences.",
@@ -33,10 +41,14 @@ const products = [
   },
   {
     id: 3,
-    image: "/featured-images/headphone.png",
+    image: "/products/bose.png",
     title: {
       en: "BOSE Headphones Sound",
       ar: "سماعات Bose الصوتية",
+    },
+    link: {
+      en: "/en/products/product/cm84n00pp0067vg2kqszuwqgm",
+      ar: "/ar/products/product/cm84n00pp0067vg2kqszuwqgm",
     },
     description: {
       en: "Immerse yourself in the ultimate sound experience with Bose headphones, offering unparalleled audio quality and comfort for all-day use.",
@@ -65,10 +77,10 @@ const FeaturedProduct = async ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 lg:gap-14 mt-8 px-4">
         {products.map(
-          ({ id, image, title, description, badgeRight }, index) => (
+          ({ id, image, title, link, description, badgeRight }, index) => (
             <div
               key={id}
-              className="relative group bg-accent rounded-lg animate-slide-up-fade"
+              className="relative flex-col flex  group bg-accent rounded-lg animate-slide-up-fade"
               style={{ animationDelay: `${index * 0.3}s` }} // <-- stagger each card by 0.5s
             >
               {badgeRight && (
@@ -77,7 +89,7 @@ const FeaturedProduct = async ({
                     {/* Ribbon Image */}
                     <Image
                       alt="ribbon"
-                      src={"/featured-images/rebbon.png"}
+                      src={"/rebbon.png"}
                       width={80}
                       height={80}
                       className="w-32 h-32"
@@ -106,7 +118,7 @@ const FeaturedProduct = async ({
                 </p>
 
                 <Link
-                  href={ar ? "/ar/products" : "/en/products"}
+                  href={link[lang as keyof typeof link]}
                   className="w-fit font-medium bg-red-500 text-white flex items-center gap-1.5 transition duration-200 rounded-lg p-2"
                 >
                   {lang === "ar" ? "اشتري الآن" : "Buy now"} <ShoppingBag />

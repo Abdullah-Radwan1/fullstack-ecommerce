@@ -113,12 +113,19 @@ async function main() {
   for (const product of products) {
     await db.product.upsert({
       where: { id: product.id },
-      update: {},
+      update: {
+        basePrice: product.basePrice,
+        // Add other fields you want to update
+        name: product.name,
+        description: product.description,
+        image: product.image,
+        categoryId: product.categoryId,
+      },
       create: product,
     });
   }
 
-  console.log("Products seeded.");
+  console.log("Products seeded.🤍");
 }
 
 main()

@@ -1,7 +1,6 @@
 // authOptions.ts
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GitHubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { db } from "@/prisma/db";
 import bcrypt from "bcrypt";
@@ -10,10 +9,6 @@ import { UserRole } from "@/prisma/src/generated/client";
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID ?? "",
-      clientSecret: process.env.GITHUB_SECRET ?? "",
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -103,5 +98,4 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
-  debug: true,
 };

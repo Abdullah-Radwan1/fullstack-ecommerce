@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 
 export function MyCarousel() {
-  const plugin = React.useRef(Autoplay({ delay: 2000 }));
+  const plugin = React.useRef(Autoplay({ delay: 2500 }));
   const { lang } = useParams();
   const ar = lang === "ar";
 
@@ -28,9 +28,9 @@ export function MyCarousel() {
         en: "Limited Time Offer 30% Off",
         ar: "عرض لفترة محدودة خصم 30%",
       },
-      buttonText1: { en: "Buy now", ar: "اشتري الآن" },
+      buttonText1: { en: "Shop now", ar: "اشتري الآن" },
       buttonText2: { en: "Find more", ar: "اكتشف المزيد" },
-      imgSrc: "/slider-images/headphone.png",
+      imgSrc: "/products/bose.png",
     },
     {
       id: 2,
@@ -63,10 +63,11 @@ export function MyCarousel() {
     <Carousel
       plugins={[plugin.current]}
       className="w-full bg-accent mt-8"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
+      style={{
+        backgroundImage: "url('/slider-images/bg.jpg')",
+      }}
     >
-      <CarouselContent dir="ltr" className="animate-pulse">
+      <CarouselContent dir="ltr">
         {sliderData.map((slide, index) => (
           <CarouselItem
             key={slide.id}

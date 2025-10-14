@@ -19,7 +19,7 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [appliedSearch, setAppliedSearch] = useState("");
   const [appliedCategory, setAppliedCategory] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
+  const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
   const [hasMore, setHasMore] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,7 @@ export default function ProductsPage() {
   // ✅ Reset filters
   const resetFilters = () => {
     setAppliedCategory([]);
-    setPriceRange([0, 1000]);
+    setPriceRange([0, 1300]);
     setPage(1);
     setAppliedSearch("");
 

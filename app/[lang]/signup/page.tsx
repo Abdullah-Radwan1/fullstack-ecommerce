@@ -33,7 +33,6 @@ const SignUpPage = () => {
 
   // Handle form submission
   const [loading, setLoading] = useState(false);
-  const [githubLoading, setGithubLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     try {
@@ -73,7 +72,6 @@ const SignUpPage = () => {
       }
     } finally {
       setLoading(false);
-      setGithubLoading(false);
     }
   };
 
@@ -207,21 +205,6 @@ const SignUpPage = () => {
         </span>
         <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
       </div>
-
-      {/* GitHub Sign Up Button */}
-      <Button
-        onClick={() => signIn("github")}
-        disabled={loading || githubLoading}
-        className="w-full bg-gray-800 hover:bg-gray-900 text-white mb-4"
-      >
-        {githubLoading ? (
-          <Loader2 className="animate-spin m-auto" />
-        ) : ar ? (
-          "التسجيل باستخدام GitHub"
-        ) : (
-          "Sign Up with GitHub"
-        )}
-      </Button>
 
       {/* Login Link */}
       <p className="text-center text-sm ">

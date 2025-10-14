@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LanguageToggle } from "./LanguageToggle";
 import useCartStore, { useSidebarStore } from "@/zustand/store";
 import { cn } from "@/lib/utils";
-import { Columns2, Loader2, Lock, ShoppingBasket, User } from "lucide-react";
+import { Columns2, Loader2, ShoppingBasket, User } from "lucide-react";
 import { SearchBar } from "./SearchBar";
 import { Button } from "../ui/button";
 
@@ -33,14 +33,13 @@ export function Navbar() {
   }, []);
 
   const t = (arText: string, enText: string) => (ar ? arText : enText);
-
   const routes = {
-    home: ar ? "/" : "/en",
-    products: ar ? "/products" : "/en/products",
-    admin: ar ? "/admin" : "/en/admin",
-    login: ar ? "/login" : "/en/login",
-    profile: ar ? "/profile" : "/en/profile",
-    cart: ar ? "/cart" : "/en/cart",
+    home: ar ? "/ar" : "/en",
+    products: ar ? "/ar/products" : "/products",
+    admin: ar ? "/ar/admin" : "/admin",
+    login: ar ? "/ar/login" : "/login",
+    profile: ar ? "/ar/profile" : "/profile",
+    cart: ar ? "/ar/cart" : "/cart",
   };
 
   return (
@@ -74,11 +73,7 @@ export function Navbar() {
           </Link>
           {/* Admin */}
           {role === "ADMIN" && (
-            <Link
-              href={routes.admin}
-              className="flex items-center gap-1 text-sm hover:text-primary transition"
-            >
-              <Lock />
+            <Link className="underline" href={routes.admin}>
               {t("الادمن", "Admin")}
             </Link>
           )}

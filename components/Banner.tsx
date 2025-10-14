@@ -14,7 +14,7 @@ const Banner = async ({ params }: { params: Promise<{ lang: string }> }) => {
     >
       <Image
         className="max-w-56"
-        src={"/jbl.png"}
+        src={"/products/jbl.png"}
         alt="jbl_soundbox_image"
         loading="lazy"
         width={300}
@@ -74,7 +74,7 @@ const Banner = async ({ params }: { params: Promise<{ lang: string }> }) => {
       />
       <Image
         className="md:hidden object-cover"
-        src={"/watch.png"}
+        src={"/products/watch.png"}
         alt="watch"
         loading="lazy"
         width={300}

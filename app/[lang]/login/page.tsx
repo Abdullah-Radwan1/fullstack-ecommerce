@@ -19,7 +19,6 @@ const Page = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [githubLoading, setGithubLoading] = useState(false);
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -34,16 +33,14 @@ const Page = () => {
     if (res?.error) {
       setErrorMsg(res.error);
       setLoading(false);
-      setGithubLoading(false);
     } else {
       setLoading(false);
       router.push(ar ? "/" : "/en"); // Redirect to dashboard on success
-      setGithubLoading(false);
     }
   };
 
   return (
-    <div className="border animate-slide-up-fade rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg min-h-[55vh]">
+    <div className="border animate-slide-up-fade rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg ">
       {/* Title */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {ar ? "تسجيل الدخول" : "Login"}
@@ -113,15 +110,6 @@ const Page = () => {
         <span className="mx-4 text-gray-500">{ar ? "أو" : "OR"}</span>
         <div className="flex-grow border-t"></div>
       </div>
-
-      {/* GitHub Login Button */}
-      <Button
-        disabled={loading || githubLoading}
-        onClick={() => signIn("github")}
-        className="w-full bg-gray-800 text-white hover:bg-gray-900 mb-4"
-      >
-        {ar ? "تسجيل الدخول باستخدام GitHub" : "Login with GitHub"}
-      </Button>
 
       {/* Sign Up Link */}
       <p className="text-center text-sm ">
