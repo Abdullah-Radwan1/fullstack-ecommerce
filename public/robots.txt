@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: fullstack-ecommerce-flax.vercel.app
+
+# Sitemaps
+Sitemap: fullstack-ecommerce-flax.vercel.app/sitemap.xml

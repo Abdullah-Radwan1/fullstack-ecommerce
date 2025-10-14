@@ -26,11 +26,6 @@ export const metadata: Metadata = {
         url: "/ecommerce.png",
         media: "(prefers-color-scheme: light)",
       },
-      {
-        rel: "icon",
-        url: "/ecommerce.png",
-        media: "(prefers-color-scheme: dark)",
-      },
     ],
   },
 };
