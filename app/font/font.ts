@@ -1,6 +1,7 @@
 import { Lato } from "next/font/google";
 
-export const inter = Lato({
+export const lato = Lato({
   weight: ["400", "700", "900"],
   subsets: ["latin"],
+  fallback: ["Arial", "sans-serif"], // optional but recommended
 });

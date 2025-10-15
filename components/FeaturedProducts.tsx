@@ -48,8 +48,8 @@ const products = [
       ar: "سماعات Bose الصوتية",
     },
     link: {
-      en: "/en/products/product/cm84n00pp0067vg2kqszuwqgm",
-      ar: "/ar/products/product/cm84n00pp0067vg2kqszuwqgm",
+      en: "/en/products/product/cm84m00pp006fvg2kbosehphone",
+      ar: "/ar/products/product/cm84m00pp006fvg2kbosehphone",
     },
     description: {
       en: "Immerse yourself in the ultimate sound experience with Bose headphones, offering unparalleled audio quality and comfort for all-day use.",
@@ -122,7 +122,7 @@ const FeaturedProduct = async ({
                 </p>
 
                 <Link
-                  href={link[lang as keyof typeof link]}
+                  href={link[lang as keyof typeof link] || "/products"}
                   className="inline-flex w-fit items-center gap-2 bg-my-main text-black  rounded-lg px-4 py-2 mt-2 transition-colors "
                 >
                   {lang === "ar" ? "اشتري الآن" : "Buy now"}{" "}

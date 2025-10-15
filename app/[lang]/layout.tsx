@@ -5,7 +5,7 @@ import SessionProvider from "@/lib/auth/SessionProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/Authoptions";
 import Sidebar from "@/components/sidebar/AppSidebar";
-import { inter } from "@/app/font/font";
+import { lato } from "@/app/font/font";
 import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
 import Loading from "./loading";
@@ -30,7 +30,7 @@ export default async function RootLayout({
   return (
     <html
       // Apply the font variable here
-      className={` ${inter.className} antialiased`}
+      className={` ${lato.className} antialiased`}
       suppressHydrationWarning
       dir={lang === "ar" ? "rtl" : "ltr"}
       lang={lang}

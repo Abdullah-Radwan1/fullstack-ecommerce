@@ -18,9 +18,11 @@ export default function ProductCard({
       <Link
         className="w-full h-52 relative block"
         href={
-          ar
-            ? `/ar/products/product/${product.id}`
-            : `/en/products/product/${product.id}`
+          product.id
+            ? ar
+              ? `/ar/products/product/${product.id}`
+              : `/en/products/product/${product.id}`
+            : "/" // fallback to homepage if id is missing
         }
       >
         <div className="w-full h-full bg-card rounded-lg flex items-center justify-center overflow-hidden relative">
