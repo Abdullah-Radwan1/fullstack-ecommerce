@@ -5,15 +5,15 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import Link from "next/link";
 
 export function MyCarousel() {
-  const plugin = React.useRef(Autoplay({ delay: 2500 }));
+  const plugin = React.useRef(Autoplay({ delay: 3000 }));
   const { lang } = useParams();
   const ar = lang === "ar";
 
@@ -28,8 +28,8 @@ export function MyCarousel() {
         en: "Limited Time Offer 30% Off",
         ar: "عرض لفترة محدودة خصم 30%",
       },
-      buttonText1: { en: "Shop now", ar: "اشتري الآن" },
-      buttonText2: { en: "Find more", ar: "اكتشف المزيد" },
+      buttonText1: { en: "Shop Now", ar: "اشتري الآن" },
+      buttonText2: { en: "Find More", ar: "اكتشف المزيد" },
       imgSrc: "/products/bose.png",
     },
     {
@@ -43,14 +43,14 @@ export function MyCarousel() {
         ar: "أسرع، الكمية محدودة!",
       },
       buttonText1: { en: "Shop Now", ar: "تسوق الآن" },
-      buttonText2: { en: "Explore !", ar: "اكتشف !" },
+      buttonText2: { en: "Explore!", ar: "اكتشف!" },
       imgSrc: "/slider-images/gaming_monitor2-transformed.png",
     },
     {
       id: 3,
       title: {
         en: "Unleash Creativity and Power - 3Labs Workstation for Professionals!",
-        ar: "أطلق العنان للإبداع والقوة -  عروض اللابات الحصريه للمحترفين!",
+        ar: "أطلق العنان للإبداع والقوة - عروض اللابات الحصرية للمحترفين!",
       },
       offer: { en: "Exclusive Deal 40% Off", ar: "صفقة حصرية خصم 40%" },
       buttonText1: { en: "Order Now", ar: "اطلب الآن" },
@@ -62,58 +62,101 @@ export function MyCarousel() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full bg-accent mt-8"
-      style={{
-        backgroundImage: "url('/slider-images/bg.jpg')",
-      }}
+      className="w-full bg-white relative overflow-hidden"
     >
       <CarouselContent dir="ltr">
         {sliderData.map((slide, index) => (
-          <CarouselItem
-            key={slide.id}
-            className="basis-full animate-slide-up-fade"
-          >
+          <CarouselItem key={slide.id} className="basis-full">
             <div
               dir={ar ? "rtl" : "ltr"}
-              className="flex flex-col-reverse lg:flex-row items-center justify-between md:px-14 px-5 py-4"
+              className="relative flex flex-col-reverse lg:flex-row items-center justify-between px-6 md:px-14 py-10 md:py-16"
             >
-              {/* Text content */}
-              <div className="pb-4 lg:pb-0">
-                <p className="md:text-base font-bold bg-gradient-to-r from-my-main  to-my-secondary bg-clip-text text-transparent pb-1">
+              {/* Text Section */}
+              <div
+                className="max-w-xl animate-fade-in"
+                style={{
+                  animationDelay: "0.3s",
+                  animationDuration: "0.8s",
+                  animationFillMode: "forwards",
+                  opacity: 0,
+                }}
+              >
+                <p className="text-sm md:text-base font-bold bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent pb-1 uppercase tracking-wide">
                   {slide.offer[lang as keyof typeof slide.offer]}
                 </p>
-                <h1 className="max-w-lg md:text-3xl md:leading-[48px] text-lg font-semibold">
+                <h1 className="text-2xl md:text-4xl font-semibold leading-snug text-gray-800 mb-4">
                   {slide.title[lang as keyof typeof slide.title]}
                 </h1>
-                <div className="flex items-center mt-4 gap-2 text-center">
+                <div className="flex items-center mt-4 gap-3">
                   <Link
                     href={ar ? "/ar/products" : "/en/products"}
-                    className="bg-gradient-to-r text-center from-my-main  to-my-secondary  rounded-lg text-white font-medium xl:px-4 px-2 py-2"
+                    className="bg-gradient-to-r from-green-600 to-green-400 text-white font-medium rounded-lg px-4 py-2 transition-transform hover:scale-105"
                   >
                     {slide.buttonText1[lang as keyof typeof slide.buttonText1]}
                   </Link>
-                  <button className="group flex items-center gap-2 p-2 font-medium max-h-2">
+                  <button className="group flex items-center gap-2 text-green-600 font-medium hover:underline">
                     {slide.buttonText2[lang as keyof typeof slide.buttonText2]}
-                    {ar ? <ArrowLeft /> : <ArrowRight />}
+                    {ar ? (
+                      <ArrowLeft className="transition-transform group-hover:translate-x-[-4px]" />
+                    ) : (
+                      <ArrowRight className="transition-transform group-hover:translate-x-[4px]" />
+                    )}
                   </button>
                 </div>
               </div>
-              {/* Image */}
-              <div className="flex items-center flex-1 justify-center">
+
+              {/* Image Section */}
+              <div
+                className="relative w-full h-[280px] sm:h-[350px] md:h-[420px] lg:h-[520px] animate-slide-up"
+                style={{
+                  animationDelay: "0.1s",
+                  animationDuration: "0.9s",
+                  animationFillMode: "forwards",
+                  opacity: 0,
+                }}
+              >
                 <Image
-                  className="object-contain"
                   src={slide.imgSrc}
-                  width={index === 1 ? 400 : 300}
-                  height={300}
-                  alt={slide.title[lang as keyof typeof slide.title]}
-                  priority={index === 0} // only first slide is priority
-                  loading={index === 0 ? "eager" : "lazy"} // lazy-load offscreen slides
+                  alt={`Slide ${slide.id}`}
+                  fill
+                  priority={index === 0}
+                  className="object-contain"
                 />
               </div>
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
+
+      {/* Custom Animations */}
+      <style jsx>{`
+        @keyframes fade-in {
+          0% {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slide-up {
+          0% {
+            transform: translateY(30px);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.9s ease forwards;
+        }
+        .animate-slide-up {
+          animation: slide-up 0.9s ease forwards;
+        }
+      `}</style>
     </Carousel>
   );
 }

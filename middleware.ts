@@ -6,7 +6,12 @@ const defaultLocale = "en"; // Default locale
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
+  // Redirect /en/robots.txt or /ar/robots.txt → /robots.txt
+  if (pathname.match(/^\/(en|ar)\/robots\.txt$/)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/robots.txt";
+    return NextResponse.redirect(url);
+  }
   // Extract the lang from the pathname (e.g., /en/login -> "en")
   const pathSegments = pathname.split("/");
   const lang = pathSegments[1]; // The first segment is the lang  // e.g., "/en/login" => "en"

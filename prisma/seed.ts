@@ -108,6 +108,16 @@ async function main() {
       basePrice: 199,
       categoryId: 3,
     },
+    // NEW BOSE HEADPHONE PRODUCT
+    {
+      id: "cm84m00pp006fvg2kbosehphone", // You can remove this id to let Prisma generate it
+      name: "BOSE QuietComfort Ultra Headphones",
+      description:
+        "Experience Pure Sound with the BOSE QuietComfort Ultra Headphones. Immerse yourself in crystal-clear audio with industry-leading noise cancellation technology. Perfect for music lovers, travelers, and professionals seeking unparalleled sound quality and comfort.",
+      image: "/products/bose.png", // Make sure you have this image in your public folder
+      basePrice: 429,
+      categoryId: 3, // Electronics category
+    },
   ];
 
   for (const product of products) {
@@ -115,7 +125,6 @@ async function main() {
       where: { id: product.id },
       update: {
         basePrice: product.basePrice,
-        // Add other fields you want to update
         name: product.name,
         description: product.description,
         image: product.image,

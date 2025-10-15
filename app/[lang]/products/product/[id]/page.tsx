@@ -125,15 +125,15 @@ const Page = async ({
             <div className="space-y-4">
               <Separator className="h-[0.2px] bg-gray-200 w-full" />
               <div className="flex items-center gap-2">
-                <AddtoCart classname="flex-1" item={product} />
+                <AddtoCart
+                  classname="flex-1 bg-my-secondary hover:bg-blue-600"
+                  item={product}
+                />
                 <Link
                   className="flex-1 "
                   href={ar ? `/ar/checkout` : `/en/checkout`}
                 >
-                  <Button
-                    name="checkout"
-                    className="w-full flex-1 bg-gradient-to-r from-my-main  to-my-secondary  text-white hover:opacity-80 transition "
-                  >
+                  <Button name="checkout" className="w-full flex-1 bg-my-main">
                     {ar ? "الدفع" : "Checkout"}
                   </Button>
                 </Link>

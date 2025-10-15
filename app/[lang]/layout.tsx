@@ -40,7 +40,7 @@ export default async function RootLayout({
           <Navbar />
 
           <Sidebar />
-          <main className="max-w-[90%] lg:max-w-[75%] mx-auto ">
+          <main className=" ">
             {children}
             <Footer lang={lang} />
           </main>

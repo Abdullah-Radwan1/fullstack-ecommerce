@@ -62,7 +62,7 @@ const SideCart = () => {
     >
       <div
         className={clsx(
-          "relative w-[80%] sm:w-[350px] h-full bg-background/90 backdrop-blur-md shadow-lg transition-transform duration-300 ease-in-out transform will-change-transform",
+          "relative w-[75%]  sm:w-[350px] h-full bg-background/90 backdrop-blur-md shadow-lg transition-transform duration-300 ease-in-out transform will-change-transform",
           {
             "translate-x-0": togglestate,
             "translate-x-full": !togglestate,

@@ -11,12 +11,17 @@ export default function ProductCard({
   lang: string;
 }) {
   const ar = lang === "ar";
+
   return (
     <div className=" w-full my-4 flex flex-col  gap-1  cursor-pointer  min-h-full">
       {/* Image Container */}
       <Link
         className="min-w-[230px] w-full"
-        href={ar ? `/ar/product/${product.id}` : `/en/product/${product.id}`}
+        href={
+          ar
+            ? `/ar/products/product/${product.id}`
+            : `/en/products/product/${product.id}`
+        }
       >
         <div className="cursor-pointer group relative bg-accent rounded-lg  h-52 flex items-center justify-center overflow-hidden">
           <Image
@@ -42,7 +47,7 @@ export default function ProductCard({
         {/* Ensure AddtoCart is a Client Component */}
         <AddtoCart
           item={product}
-          classname="border border-green-600 text-green-600 px-3 rounded-lg "
+          classname=" text-green-600 "
           varient="outline"
         />
         <span className="bg-emerald-500 text-white px-3 py-1 rounded-lg text-sm font-medium shadow-md ">

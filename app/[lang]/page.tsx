@@ -64,8 +64,8 @@ export default async function Home({
             <ProductCard lang={lang} key={product.id} product={product} />
           ))}
         </div>
-        <Banner params={params} />
       </div>
+      <Banner params={params} />
     </main>
   );
 }
