@@ -126,7 +126,7 @@ const Page = async ({
               <Separator className="h-[0.2px] bg-gray-200 w-full" />
               <div className="flex items-center gap-2">
                 <AddtoCart
-                  classname="flex-1 bg-my-secondary hover:bg-blue-600"
+                  classname="flex-1 bg-my-secondary hover:bg-my-secondary/90"
                   item={product}
                 />
                 <Link

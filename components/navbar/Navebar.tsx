@@ -79,22 +79,26 @@ export function Navbar() {
           )}
 
           {/* Language Toggle */}
+          <LanguageToggle />
 
           {/* Cart */}
-          <div
-            className=" cursor-pointer hover:bg-muted p-2 rounded-lg transition"
-            onClick={() => setTogglestate(true)}
-          >
-            <Columns2 />
+          <div className="  p-1 transition hover:bg-accent ">
+            <Columns2
+              size={22}
+              onClick={() => setTogglestate(true)}
+              className=" cursor-pointer "
+            />
           </div>
+
           {/* cart page */}
-          <Link className="relative hover:bg-accent p-2" href={routes.cart}>
+          <Link
+            className="relative transition hover:bg-accent  p-1"
+            href={routes.cart}
+          >
             {" "}
             <ShoppingBasket />
             {isMounted && <CartBadge quantity={quantity} />}
           </Link>
-          {/* Language Toggle */}
-          <LanguageToggle />
 
           {/* Login / Profile */}
           {session ? (
@@ -109,7 +113,7 @@ export function Navbar() {
           ) : (
             <Link
               href={routes.login}
-              className="flex items-center gap-1 text-sm text-foreground hover:bg-accent p-2 transition"
+              className="transition hover:bg-accent  p-1"
             >
               <span className="sr-only">Login</span>
               <User />
@@ -129,7 +133,10 @@ export function Navbar() {
 /* --------------------------- Helper --------------------------- */
 function CartBadge({ quantity }: { quantity: number }) {
   return (
-    <div className="absolute -right-2 -top-2 rounded-full w-4 h-4 border text-xs flex items-center justify-center bg-my-main text-white">
+    <div
+      className="absolute -right-2 -top-2 rounded-full w-4 h-4 border text-xs flex items-center justify-center bg-my-main text-black p-2
+    "
+    >
       {quantity}
     </div>
   );

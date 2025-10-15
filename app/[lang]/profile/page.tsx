@@ -39,7 +39,7 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
           {ar ? "مرحبًا" : "Welcome"} {name}
           {role === "ADMIN" ? (
             <div className="flex items-center gap-2">
-              ({ar ? "ادمن" : "Admin"} <Lock color="royalblue" />)
+              ({ar ? "ادمن" : "Admin"} <Lock color="gold" />)
             </div>
           ) : (
             <div>({ar ? "مستخدم" : "User"})</div>

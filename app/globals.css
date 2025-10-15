@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -42,39 +47,98 @@
 /* --my-main: oklch(65.833% 0.2005 144.324);
 --my-secondary: oklch(41.182% 0.15632 265.188); */
 :root {
-  --background: oklch(0.985 0.001 260);
-  --foreground: oklch(0.12 0.03 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.12 0.03 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.12 0.03 260);
-  --primary: oklch(65.833% 0.2005 144.324); /* --my-main */
-  --primary-foreground: oklch(0.985 0.001 260);
-  --secondary: oklch(0.95 0.005 260);
-  --secondary-foreground: oklch(0.12 0.03 260);
-  --my-main: oklch(65.833% 0.2005 144.324);
-  --my-secondary: oklch(41.182% 0.15632 265.188);
-  --muted: oklch(0.95 0.005 260);
-  --muted-foreground: oklch(0.45 0.03 260);
-  --accent: oklch(0.95 0.005 260);
-  --accent-foreground: oklch(0.12 0.03 260);
-  --destructive: oklch(0.55 0.25 27);
-  --border: oklch(0.87 0.01 260);
-  --input: oklch(0.87 0.01 260);
-  --ring: oklch(65.833% 0.2005 144.324);
-  --chart-1: oklch(65.833% 0.2005 144.324);
-  --chart-2: oklch(41.182% 0.15632 265.188);
-  --chart-3: oklch(0.15 0.03 260);
-  --chart-4: oklch(0.3 0.04 260);
-  --chart-5: oklch(0.25 0.035 260);
-  --sidebar: oklch(0.97 0.003 260);
-  --sidebar-foreground: oklch(0.12 0.03 260);
-  --sidebar-primary: oklch(65.833% 0.2005 144.324);
-  --sidebar-primary-foreground: oklch(0.985 0.001 260);
-  --sidebar-accent: oklch(0.93 0.006 260);
-  --sidebar-accent-foreground: oklch(0.12 0.03 260);
-  --sidebar-border: oklch(0.87 0.01 260);
-  --sidebar-ring: oklch(65.833% 0.2005 144.324);
+  /* Base background & text */
+  --background: #1a1a1a; /* dark charcoal */
+  --foreground: #f5f5f5; /* off-white for readability */
+
+  /* Cards & Popovers */
+  --card: #2a2a2a; /* slightly lighter than background */
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+
+  /* Primary & secondary colors */
+  --my-main: #ffd700; /* classic gold for main CTA */
+  --my-secondary: #ffa500; /* darker amber/gold for accents */
+
+  /* Buttons, links, accents */
+  --primary: var(--my-main);
+  --primary-foreground: var(--background);
+  --secondary: var(--my-secondary);
+  --secondary-foreground: var(--foreground);
+  --accent: #ffc107; /* slightly lighter gold for hover/highlights */
+  --accent-foreground: var(--background);
+
+  /* Muted & borders */
+  --muted: #555555;
+  --muted-foreground: #bbbbbb;
+  --border: #444444;
+  --input: var(--border);
+  --ring: var(--my-main);
+
+  /* Sidebar */
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--my-main);
+  --sidebar-primary-foreground: var(--background);
+  --sidebar-accent: var(--my-secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--my-main);
+}
+
+/* Body and typography */
+body {
+  background-color: var(--background);
+  font-family: "Inter", sans-serif;
+}
+.button-primary:hover {
+  background-color: var(--accent); /* brighter gold on hover */
+}
+a:hover {
+  text-decoration: underline;
+}
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--card);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--my-main);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffee33;
+}
+
+/* Animations */
+@keyframes fade-in {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-up {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.9s ease forwards;
+}
+.animate-slide-up {
+  animation: slide-up 0.9s ease forwards;
 }
 
 @layer base {
@@ -85,67 +149,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom scrollbar for webkit browsers */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--primary-foreground); /* light blue */
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #3b82f6, #0aec68); /* blue gradient */
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #2563eb, #0aec68);
-}
-
-/* animations */
-
-/* Slide up + fade in animation */
-@keyframes slide-up-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Card fade-up animation */
-@keyframes card-fade-up {
-  0% {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Utilities */
-.animate-slide-up-fade {
-  animation: slide-up-fade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-
-.animate-card-fade-up {
-  animation-name: card-fade-up;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease-out;
-  opacity: 0;
-}
-
-/* Add more as needed */

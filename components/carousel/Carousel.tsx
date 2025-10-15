@@ -62,11 +62,11 @@ export function MyCarousel() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full bg-white relative overflow-hidden"
+      className="w-full relative overflow-hidden"
     >
       <CarouselContent dir="ltr">
         {sliderData.map((slide, index) => (
-          <CarouselItem key={slide.id} className="basis-full">
+          <CarouselItem key={slide.id} className="bg-card ">
             <div
               dir={ar ? "rtl" : "ltr"}
               className="relative flex flex-col-reverse lg:flex-row items-center justify-between px-6 md:px-14 py-10 md:py-16"
@@ -81,26 +81,22 @@ export function MyCarousel() {
                   opacity: 0,
                 }}
               >
-                <p className="text-sm md:text-base font-bold bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent pb-1 uppercase tracking-wide">
+                <p className="text-sm md:text-base font-bold bg-clip-text text-my-main pb-1 uppercase tracking-wide">
                   {slide.offer[lang as keyof typeof slide.offer]}
                 </p>
-                <h1 className="text-2xl md:text-4xl font-semibold leading-snug text-gray-800 mb-4">
+                <h1 className="text-2xl md:text-4xl font-semibold leading-snug text-foreground mb-4">
                   {slide.title[lang as keyof typeof slide.title]}
                 </h1>
                 <div className="flex items-center mt-4 gap-3">
                   <Link
                     href={ar ? "/ar/products" : "/en/products"}
-                    className="bg-gradient-to-r from-green-600 to-green-400 text-white font-medium rounded-lg px-4 py-2 transition-transform hover:scale-105"
+                    className="font-medium  bg-accent text-black  px-4 py-2"
                   >
                     {slide.buttonText1[lang as keyof typeof slide.buttonText1]}
                   </Link>
-                  <button className="group flex items-center gap-2 text-green-600 font-medium hover:underline">
+                  <button className="flex items-center gap-2 text-my-main font-medium">
                     {slide.buttonText2[lang as keyof typeof slide.buttonText2]}
-                    {ar ? (
-                      <ArrowLeft className="transition-transform group-hover:translate-x-[-4px]" />
-                    ) : (
-                      <ArrowRight className="transition-transform group-hover:translate-x-[4px]" />
-                    )}
+                    {ar ? <ArrowLeft /> : <ArrowRight />}
                   </button>
                 </div>
               </div>

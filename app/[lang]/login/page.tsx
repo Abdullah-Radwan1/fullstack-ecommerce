@@ -116,7 +116,7 @@ const Page = () => {
         {ar ? "ليس لديك حساب؟" : "Don't have an account?"}{" "}
         <Link
           href={`/${lang}/signup`}
-          className="text-my-main hover:text-blue-700"
+          className="text-my-main hover:text-my-secondary"
         >
           {ar ? "سجل هنا" : "Sign up"}
         </Link>
