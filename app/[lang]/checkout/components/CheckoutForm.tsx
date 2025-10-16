@@ -39,7 +39,7 @@ export default function CheckoutForm({
           clientSecret,
           appearance: {
             disableAnimations: false,
-            theme: "stripe",
+            theme: "night",
             labels: "floating",
           },
         }}

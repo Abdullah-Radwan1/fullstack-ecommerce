@@ -15,7 +15,7 @@ async function getRelatedProducts(categoryId: number) {
   });
 }
 export const relatedProducts = getRelatedProducts;
-
+// admin function
 async function getAllUsers() {
   return await db.user.findMany();
 }
@@ -53,7 +53,7 @@ async function getMyOrders(userEmail: string) {
   });
 }
 export const myOrders = getMyOrders;
-
+// auth function
 async function getUserFunc(email: string) {
   return await db.user.upsert({
     where: { email },
