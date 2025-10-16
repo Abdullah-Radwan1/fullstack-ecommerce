@@ -31,6 +31,7 @@ export function MyCarousel() {
       buttonText1: { en: "Shop Now", ar: "اشتري الآن" },
       buttonText2: { en: "Find More", ar: "اكتشف المزيد" },
       imgSrc: "/products/bose.png",
+      link: "/products/product/cm84m00pp006fvg2kbosehphone",
     },
     {
       id: 2,
@@ -45,6 +46,7 @@ export function MyCarousel() {
       buttonText1: { en: "Shop Now", ar: "تسوق الآن" },
       buttonText2: { en: "Explore!", ar: "اكتشف!" },
       imgSrc: "/slider-images/gaming_monitor2-transformed.png",
+      link: "/products",
     },
     {
       id: 3,
@@ -56,6 +58,7 @@ export function MyCarousel() {
       buttonText1: { en: "Order Now", ar: "اطلب الآن" },
       buttonText2: { en: "Learn More", ar: "تعرف أكثر" },
       imgSrc: "/slider-images/3labs.png",
+      link: "/products",
     },
   ];
 
@@ -89,7 +92,7 @@ export function MyCarousel() {
                 </h1>
                 <div className="flex items-center mt-4 gap-3">
                   <Link
-                    href={ar ? "/ar/products" : "/en/products"}
+                    href={slide.link}
                     className="font-medium  bg-accent text-black  px-4 py-2"
                   >
                     {slide.buttonText1[lang as keyof typeof slide.buttonText1]}

@@ -33,7 +33,7 @@ export function LanguageToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={"ghost"}
           className="transition bg-none hover:bg-accent  p-1"
           name="language"
         >
