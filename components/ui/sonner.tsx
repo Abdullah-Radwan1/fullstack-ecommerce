@@ -8,6 +8,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       className="toaster group"
+      style={
+        {
+          "--normal-bg": "var(--my-secondary)",
+          "--normal-text": "black",
+          "--normal-border": "var(--border)",
+          "--border-radius": "var(--radius)",
+        } as React.CSSProperties
+      }
       toastOptions={{
         classNames: {
           toast:

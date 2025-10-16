@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   const skip = (page - 1) * 8;
   const take = 8;
   // 🧠 Build Prisma `where` condition dynamically
-  const baseWhere: any = {
+  const baseWhere = {
     AND: [
       {
         OR: [

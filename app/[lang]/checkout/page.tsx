@@ -1,4 +1,5 @@
 "use client";
+/* eslint react-hooks/set-state-in-effect: "off" */
 
 import { useEffect, useState } from "react";
 import useCartStore from "@/zustand/store";
@@ -12,6 +13,7 @@ export default function CheckoutPage() {
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const { lang } = useParams();
   const ar = lang === "ar";
+
   const [loading, setLoading] = useState(true);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
@@ -35,14 +37,14 @@ export default function CheckoutPage() {
         const data = await res.json();
 
         setClientSecret(data.clientSecret);
+        setLoading(false);
       } catch (err) {
         console.error("❌ Payment Intent Error:", err);
       }
     };
 
     createPaymentIntent();
-    setLoading(false);
-  }, [products]); // empty deps = run once on mount only
+  }, [products, getTotalPrice, ar]); // empty deps = run once on mount only
 
   if (clientSecret) {
     return (

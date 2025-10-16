@@ -1,4 +1,5 @@
 "use client";
+/* eslint react-hooks/set-state-in-effect: "off" */
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";

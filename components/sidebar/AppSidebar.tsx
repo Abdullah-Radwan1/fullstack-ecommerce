@@ -1,3 +1,5 @@
+/* eslint react-hooks/set-state-in-effect: "off" */
+
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";

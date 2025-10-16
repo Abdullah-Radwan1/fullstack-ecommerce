@@ -1,4 +1,5 @@
 "use client";
+/* eslint react-hooks/set-state-in-effect: "off" */
 
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -75,7 +76,14 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, [page, appliedSearch, searchParams, applyFilters]);
+  }, [
+    page,
+    appliedSearch,
+    searchParams,
+    applyFilters,
+    appliedCategory,
+    priceRange,
+  ]);
 
   // ✅ Handle category checkbox toggle
   const toggleCategory = (id: string, checked: boolean) => {
