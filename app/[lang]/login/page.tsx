@@ -40,7 +40,7 @@ const Page = () => {
   };
 
   return (
-    <div className="border animate-slide-up-fade rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg ">
+    <div className="border animate-slide-up-fade rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg  content-center">
       {/* Title */}
       <h1 className="text-2xl font-bold text-center mb-6">
         {ar ? "تسجيل الدخول" : "Login"}

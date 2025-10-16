@@ -14,6 +14,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useState, useEffect } from "react";
+import { Search, Sparkles } from "lucide-react";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -47,6 +48,7 @@ export default function ProductsPage() {
       { id: "2", label: ar ? "منتجات للبي سي" : "PC Accessories" },
       { id: "3", label: ar ? "مستلزمات أخرى" : "Other" },
     ],
+    searchingFor: ar ? "البحث عن" : "Searching for",
   };
 
   // ✅ Fetch products whenever filters or pagination change
@@ -95,10 +97,6 @@ export default function ProductsPage() {
 
   return (
     <div className="p-8 container mx-auto min-h-[60vh]">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        {translations.title}
-      </h1>
-
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* 🔹 Left Sidebar Filters */}
         <aside className="md:col-span-1  rounded-lg p-4 h-fit">
@@ -150,7 +148,14 @@ export default function ProductsPage() {
               </div>
             </div>
           </div>
-
+          {searchParams.has("search") && searchParams.get("search") ? (
+            <h2 className="mb-4 text-xl flex  gap-2">
+              {translations.searchingFor} {searchParams.get("search")}{" "}
+              <Search />
+            </h2>
+          ) : (
+            ""
+          )}
           {/* Buttons */}
           <div className="flex justify-between">
             <Button

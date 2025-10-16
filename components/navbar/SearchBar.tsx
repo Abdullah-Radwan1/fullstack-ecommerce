@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Search, Sparkle } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import React, { useState } from "react";
 
 export function SearchBar({ ar }: { ar: boolean }) {
@@ -44,10 +44,10 @@ export function SearchBar({ ar }: { ar: boolean }) {
 
         {/* sparkle icon (right) — only show when input is empty */}
 
-        <Sparkle
+        <Sparkles
           className={`absolute ${
             ar ? "left-3" : "right-3"
-          } top-1/2 -translate-y-1/2 text-my-secondary animate-pulse transition-opacity duration-300`}
+          } top-1/2 -translate-y-1/2 text-my-secondary animate-pulse `}
         />
       </div>
     </form>

@@ -50,31 +50,19 @@ export default async function AdminPage({
   };
 
   return (
-    <div className=" py-8 px-2 w-full md:w-[100%] lg:w-[70%] m-auto min-h-[60vh]">
-      <Tabs defaultValue="users" className="w-full">
+    <div className=" py-8 px-2 mx-auto  container  ">
+      <Tabs defaultValue="users">
         <TabsList className="flex w-fit  items-center m-auto  p-2 rounded-md">
-          <TabsTrigger
-            value="users"
-            className="px-4 py-2 rounded-md  transition-colors"
-          >
+          <TabsTrigger className="hover:bg-my-secondary" value="users">
             {translations.users}
           </TabsTrigger>
-          <TabsTrigger
-            value="orders"
-            className="px-4 py-2 rounded-md  transition-colors "
-          >
+          <TabsTrigger className="hover:bg-my-secondary" value="orders">
             {translations.orders}
           </TabsTrigger>
-          <TabsTrigger
-            value="my orders"
-            className="px-4 py-2 rounded-md  transition-colors"
-          >
+          <TabsTrigger className="hover:bg-my-secondary" value="my orders">
             {translations.my_orders}
           </TabsTrigger>
-          <TabsTrigger
-            value="create-product"
-            className="px-4 py-2 rounded-md  transition-colors"
-          >
+          <TabsTrigger className="hover:bg-my-secondary" value="create-product">
             {translations.createProduct}
           </TabsTrigger>
         </TabsList>

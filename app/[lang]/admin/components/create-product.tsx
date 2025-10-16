@@ -215,7 +215,7 @@ const CreateProduct = () => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full border rounded px-3 py-2 min-h-[100px] bg-muted"
+            className="w-full border rounded px-3 py-2 min-h-[100px]"
             required
             minLength={50}
             maxLength={120}
