@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../globals.css";
 import { Navbar } from "@/components/navbar/Navebar";
 import SessionProvider from "@/lib/auth/SessionProvider";
 import { getServerSession } from "next-auth";
@@ -7,7 +7,7 @@ import Sidebar from "@/components/sidebar/AppSidebar";
 import { lato } from "@/app/font/font";
 import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
-import Loading from "./loading";
+import Loading from "../loading";
 
 export const metadata = {
   title: "Vogue-Haven Store",
