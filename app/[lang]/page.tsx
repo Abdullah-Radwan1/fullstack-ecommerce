@@ -10,7 +10,7 @@ import { Separator } from "@radix-ui/react-select";
 
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
-import Loading from "./loading";
+import Loading from "../loading";
 
 export const metadata: Metadata = {
   title: "Vogue-Haven Store",
