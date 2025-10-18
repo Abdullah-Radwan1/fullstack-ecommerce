@@ -9,13 +9,13 @@ const Banner = async ({ params }: { params: Promise<{ lang: string }> }) => {
 
   return (
     <div
-      className={`flex flex-col md:flex-row items-center justify-between gap-y-5 my-16 rounded-2xl overflow-hidden 
+      className={` flex flex-col md:flex-row items-center justify-between gap-y-5 my-16 rounded-2xl overflow-hidden 
       shadow-lg border`}
       style={{
         background: "var(--color-card)",
         borderColor: "var(--my-main)",
       }}
-      dir={ar ? "rtl" : "ltr"}
+      dir="ltr"
     >
       {/* Left Image */}
       <Image
