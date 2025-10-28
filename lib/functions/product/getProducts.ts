@@ -12,7 +12,7 @@ interface GetProductsParams {
   max?: string;
 }
 
-export const cachedpProducts = cache(async function getProducts({
+export const getProducts = cache(async function getProducts({
   page = 1,
   search = "",
   category = "",

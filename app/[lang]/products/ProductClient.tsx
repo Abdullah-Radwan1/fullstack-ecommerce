@@ -5,7 +5,7 @@ import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/prisma/src/generated/client";
 import { Loader2 } from "lucide-react";
-import { cachedpProducts } from "@/lib/functions/product/getProducts";
+import { getProducts } from "@/lib/functions/product/getProducts";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -70,7 +70,7 @@ export default function ProductsClient({
       const category = categoriesParam.join(",");
       const [min, max] = price;
 
-      const { products, hasMore } = await cachedpProducts({
+      const { products, hasMore } = await getProducts({
         page: newPage,
         category,
         min: String(min),
