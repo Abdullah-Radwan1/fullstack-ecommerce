@@ -46,11 +46,6 @@ export default function ProductsClient({
   ];
 
   // 🔹 Initialize search from URL param
-  useEffect(() => {
-    const searchParam = searchParams.get("search") || "";
-    setSearchQuery(searchParam);
-    handleFetch(1, searchParam);
-  }, [searchParams]);
 
   // 🔹 Handle category change
   const handleCategoryChange = (id: string) => {
@@ -104,7 +99,11 @@ export default function ProductsClient({
 
   const nextPage = () => handleFetch(page + 1, searchQuery);
   const prevPage = () => handleFetch(page - 1, searchQuery);
-
+  useEffect(() => {
+    const searchParam = searchParams.get("search") || "";
+    setSearchQuery(searchParam);
+    handleFetch(1, searchParam);
+  }, [searchParams, handleFetch]);
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       {/* 🔍 Filters Section */}
