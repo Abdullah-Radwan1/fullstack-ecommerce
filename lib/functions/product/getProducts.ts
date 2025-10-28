@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/prisma/db";
+import { cache } from "react";
 
 // Cache revalidation for 60 seconds
 interface GetProductsParams {
@@ -11,7 +12,7 @@ interface GetProductsParams {
   max?: string;
 }
 
-export async function getProducts({
+export const cachedpProducts = cache(async function getProducts({
   page = 1,
   search = "",
   category = "",
@@ -58,4 +59,4 @@ export async function getProducts({
   const hasMore = nextPageProducts.length > 0;
 
   return { products, hasMore };
-}
+});

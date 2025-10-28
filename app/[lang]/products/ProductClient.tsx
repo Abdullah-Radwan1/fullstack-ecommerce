@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/prisma/src/generated/client";
 import { Loader2 } from "lucide-react";
-import { getProducts } from "@/lib/functions/product/getProducts";
+import { cachedpProducts } from "@/lib/functions/product/getProducts";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -39,15 +39,18 @@ export default function ProductsClient({
   const [appliedCategory, setAppliedCategory] = useState<string[]>(["all"]);
   const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
 
-  const categories = [
-    { id: "all", labelEn: "All", labelAr: "الجميع" },
-    { id: "1", labelEn: "Laptops", labelAr: "لابات" },
-    { id: "2", labelEn: "Accessories", labelAr: "مستلزمات الكمبيوتر" },
-    { id: "3", labelEn: "Others", labelAr: "أخرى" },
-  ];
+  const categories = useMemo(
+    () => [
+      { id: "all", labelEn: "All", labelAr: "الجميع" },
+      { id: "1", labelEn: "Laptops", labelAr: "لابات" },
+      { id: "2", labelEn: "Accessories", labelAr: "مستلزمات الكمبيوتر" },
+      { id: "3", labelEn: "Others", labelAr: "أخرى" },
+    ],
+    []
+  );
 
   // Category toggle
-  const handleCategoryChange = (id: string) => {
+  const handleCategoryChange = useCallback((id: string) => {
     setAppliedCategory((prev) => {
       if (id === "all") return ["all"];
       const newCategories = prev.includes(id)
@@ -55,15 +58,19 @@ export default function ProductsClient({
         : [...prev.filter((c) => c !== "all"), id];
       return newCategories.length ? newCategories : ["all"];
     });
-  };
-
+  }, []);
   // Fetch products
-  const handleFetch = (newPage = 1, query = globalSearch) => {
+  const handleFetch = (
+    newPage = 1,
+    query = globalSearch,
+    price = priceRange,
+    categoriesParam = appliedCategory
+  ) => {
     startTransition(async () => {
-      const category = appliedCategory.join(",");
-      const [min, max] = priceRange;
+      const category = categoriesParam.join(",");
+      const [min, max] = price;
 
-      const { products, hasMore } = await getProducts({
+      const { products, hasMore } = await cachedpProducts({
         page: newPage,
         category,
         min: String(min),
@@ -74,11 +81,9 @@ export default function ProductsClient({
       setProducts(products);
       setHasMore(hasMore);
       setPage(newPage);
-      // Save the applied search to global store
       setSearchQuery(query);
     });
   };
-
   // Apply filters + search manually
   const handleApplyFilters = () => {
     router.push(
@@ -88,12 +93,19 @@ export default function ProductsClient({
   };
 
   const resetFilters = () => {
-    setAppliedCategory(["all"]);
-    setPriceRange([0, 1300]);
+    const defaultCategory = ["all"];
+    const defaultPrice = [0, 1300];
+    const defaultSearch = "";
+
+    setAppliedCategory(defaultCategory);
+    setPriceRange(defaultPrice);
     setSearchInput("");
     setSearchQuery("");
+
     router.push(`/${lang}/products?page=1`);
-    handleFetch(1, "");
+
+    // Pass new values directly
+    handleFetch(1, defaultSearch, defaultPrice, defaultCategory);
   };
 
   const nextPage = () => handleFetch(page + 1, globalSearch);
