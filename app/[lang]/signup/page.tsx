@@ -16,6 +16,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 const SignUpPage = () => {
   const { lang } = useParams() as { lang: string };
@@ -88,12 +89,10 @@ const SignUpPage = () => {
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Username Input */}
-        <div className="mb-4">
-          <label htmlFor="username" className="block text-sm font-medium mb-1">
-            {ar ? "اسم المستخدم" : "User name"}
-          </label>
+        <div className="space-y-4">
+          <Label htmlFor="username">{ar ? "اسم المستخدم" : "User name"}</Label>
           <Input
             id="username"
             type="text"
@@ -106,10 +105,8 @@ const SignUpPage = () => {
         </div>
 
         {/* Email Input */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            {ar ? "البريد الإلكتروني" : "Email"}
-          </label>
+        <div className="space-y-2">
+          <Label htmlFor="email">{ar ? "البريد الإلكتروني" : "Email"}</Label>
           <Input
             id="email"
             type="email"
@@ -122,10 +119,8 @@ const SignUpPage = () => {
         </div>
 
         {/* Role Select */}
-        <div className="mb-4">
-          <label htmlFor="role" className="block text-sm font-medium mb-1">
-            {ar ? "الدور" : "Role"}
-          </label>
+        <div className="space-y-2">
+          <Label htmlFor="role">{ar ? "الدور" : "Role"}</Label>
           <Select
             dir={ar ? "rtl" : "ltr"}
             onValueChange={(value) => setRole(value)}
@@ -144,10 +139,8 @@ const SignUpPage = () => {
         </div>
 
         {/* Password Input */}
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            {ar ? "كلمة المرور" : "Password"}
-          </label>
+        <div className="space-y-2">
+          <Label htmlFor="password">{ar ? "كلمة المرور" : "Password"}</Label>
           <Input
             id="password"
             type="password"
@@ -160,13 +153,10 @@ const SignUpPage = () => {
         </div>
 
         {/* Confirm Password Input */}
-        <div className="mb-6">
-          <label
-            htmlFor="confirmPassword"
-            className="block text-sm font-medium mb-1"
-          >
+        <div className="space-y-2">
+          <Label htmlFor="confirmPassword">
             {ar ? "تأكيد كلمة المرور" : "Confirm Password"}
-          </label>
+          </Label>
           <Input
             id="confirmPassword"
             type="password"
@@ -206,14 +196,14 @@ const SignUpPage = () => {
         <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
       </div>
 
-      {/* Login Link */}
+      {/* signin Link */}
       <p className="text-center text-sm ">
         {ar ? "لديك حساب بالفعل؟" : "Already have an account?"}{" "}
         <Link
-          href={`/${lang}/login`}
+          href={`/${lang}/signin`}
           className="text-my-main hover:text-my-secondary"
         >
-          {ar ? "سجل الدخول هنا" : "Login here"}
+          {ar ? "سجل الدخول هنا" : "signin here"}
         </Link>
       </p>
     </div>

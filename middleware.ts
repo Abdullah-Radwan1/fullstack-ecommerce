@@ -11,7 +11,7 @@ import { match } from "@formatjs/intl-localematcher";
  */
 export async function middleware(request: NextRequest) {
   // Extract the pathname from the incoming request URL.
-  // Example: for "https://example.com/en/login" → pathname = "/en/login"
+  // Example: for "https://example.com/en/signin" → pathname = "/en/signin"
   const { pathname } = request.nextUrl;
 
   // Redirect localized robots.txt files to the root "/robots.txt"
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
   const detectedLocale = match(languages, locales, defaultLocale);
 
   // Split the pathname into segments to extract the language from the URL
-  // Example: "/en/login" → ["", "en", "login"]
+  // Example: "/en/signin" → ["", "en", "signin"]
   const pathSegments = pathname.split("/");
   // Get the first segment after "/" to determine the language
   const lang = pathSegments[1];
@@ -56,8 +56,8 @@ export async function middleware(request: NextRequest) {
 
   // If the user is logged in (session exists)
   if (session) {
-    // Prevent logged-in users from accessing login/signup pages
-    if (pathname === `/${locale}/login` || pathname === `/${locale}/signup`) {
+    // Prevent logged-in users from accessing signin/signup pages
+    if (pathname === `/${locale}/signin` || pathname === `/${locale}/signup`) {
       return NextResponse.redirect(new URL(`/${locale}`, request.url)); // Redirect to homepage
     }
 
@@ -69,7 +69,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // If the URL does not contain a supported locale, redirect to localized version
-  // Example: "/login" → "/en/login" or "/ar/login" based on browser preference
+  // Example: "/signin" → "/en/signin" or "/ar/signin" based on browser preference
   if (!isSupportedLocale) {
     const newPathname = `/${locale}${pathname}`;
     request.nextUrl.pathname = newPathname; // Update the URL pathname

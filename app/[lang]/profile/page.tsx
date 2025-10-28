@@ -16,7 +16,7 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const ar = lang === "ar";
 
   if (!session || !session.user?.email) {
-    return redirect("/login");
+    return redirect("/signin");
   }
 
   const email = session.user.email;

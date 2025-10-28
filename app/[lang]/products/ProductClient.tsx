@@ -16,9 +16,10 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import CustomSkeleton from "@/components/CustomSkeleton";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSearchStore } from "@/zustand/store";
+import { Input } from "@/components/ui/input";
 
 export default function ProductsClient({
   initialProducts,
@@ -38,6 +39,7 @@ export default function ProductsClient({
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   const [appliedCategory, setAppliedCategory] = useState<string[]>(["all"]);
   const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
@@ -51,7 +53,7 @@ export default function ProductsClient({
     ],
     []
   );
-
+  console.log(triggerSearch);
   // Category toggle
   const handleCategoryChange = useCallback((id: string) => {
     setAppliedCategory((prev) => {
@@ -92,15 +94,7 @@ export default function ProductsClient({
   );
 
   // Trigger search when Enter is pressed in the search bar
-  useEffect(() => {
-    if (triggerSearch) {
-      handleFetch(1); // always fetch first page
-      toggleTrigger(); // reset trigger so it can fire again
-      router.push(
-        `/${lang}/products?page=1&search=${encodeURIComponent(searchQuery)}`
-      );
-    }
-  }, [triggerSearch]);
+  // ✅ Only trigger fetch when triggerSearch changes
 
   const handleApplyFilters = () => {
     handleFetch(1);
@@ -123,7 +117,19 @@ export default function ProductsClient({
 
   const nextPage = () => handleFetch(page + 1);
   const prevPage = () => handleFetch(page - 1);
+  useEffect(() => {
+    if (!triggerSearch) return;
 
+    // ✅ Only fetch if we are on the products page
+    if (!pathname.includes("/products")) return;
+
+    const runSearch = async () => {
+      await handleFetch(1); // fetch with current searchQuery
+      toggleTrigger(); // reset trigger to false AFTER fetch
+    };
+
+    runSearch();
+  }, [triggerSearch, pathname]);
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       {/* Filters Section */}
@@ -134,13 +140,12 @@ export default function ProductsClient({
 
         {/* Search Input */}
         <div className="mb-4">
-          <input
+          <Input
             type="text"
             placeholder={ar ? "ابحث عن منتج..." : "Search for a product..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && toggleTrigger()}
-            className="w-full border rounded px-3 py-2 focus:outline-none"
           />
         </div>
 

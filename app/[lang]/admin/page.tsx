@@ -52,17 +52,17 @@ export default async function AdminPage({
   return (
     <div className=" py-8 px-2 mx-auto  container  ">
       <Tabs defaultValue="users">
-        <TabsList className="flex w-fit  items-center m-auto  p-2 rounded-md">
-          <TabsTrigger className="hover:bg-my-secondary" value="users">
+        <TabsList className="text-white flex gap-2 w-fit  items-center m-auto  p-2 rounded-md">
+          <TabsTrigger className="hover:bg-slate-500" value="users">
             {translations.users}
           </TabsTrigger>
-          <TabsTrigger className="hover:bg-my-secondary" value="orders">
+          <TabsTrigger className="hover:bg-slate-500" value="orders">
             {translations.orders}
           </TabsTrigger>
-          <TabsTrigger className="hover:bg-my-secondary" value="my orders">
+          <TabsTrigger className="hover:bg-slate-500" value="my orders">
             {translations.my_orders}
           </TabsTrigger>
-          <TabsTrigger className="hover:bg-my-secondary" value="create-product">
+          <TabsTrigger className="hover:bg-slate-500" value="create-product">
             {translations.createProduct}
           </TabsTrigger>
         </TabsList>

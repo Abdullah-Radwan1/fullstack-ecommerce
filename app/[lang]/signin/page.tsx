@@ -7,6 +7,7 @@ import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 const Page = () => {
   const { lang } = useParams();
@@ -19,14 +20,15 @@ const Page = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg("");
 
     const res = await signIn("credentials", {
       email,
-      password, // Hash password before sending
+      password,
+      redirect: false, // Hash password before sending
     });
 
     if (res?.error) {
@@ -39,22 +41,20 @@ const Page = () => {
   };
 
   return (
-    <div className="border animate-slide-up-fade rounded-md mx-auto max-w-md p-6 mt-10 shadow-lg  content-center">
+    <div className="border animate-slide-up-fade rounded-md mx-auto max-w-md p-6  shadow-lg  ">
       {/* Title */}
       <h1 className="text-2xl font-bold text-center mb-6">
-        {ar ? "تسجيل الدخول" : "Login"}
+        {ar ? "تسجيل الدخول " : "Welcome Back "}
       </h1>
 
       {/* Error Message */}
       {errorMsg && <p className="text-red-500 text-center mb-4">{errorMsg}</p>}
 
-      {/* Login Form */}
-      <form onSubmit={handleLogin}>
+      {/* signin Form */}
+      <form className="space-y-4" onSubmit={handleSignin}>
         {/* Email Input */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            {ar ? "البريد الإلكتروني" : "Email"}
-          </label>
+        <div className="space-y-2">
+          <Label htmlFor="email">{ar ? "البريد الإلكتروني" : "Email"}</Label>
           <Input
             id="email"
             type="email"
@@ -67,10 +67,8 @@ const Page = () => {
         </div>
 
         {/* Password Input */}
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            {ar ? "كلمة المرور" : "Password"}
-          </label>
+        <div className="space-y-2">
+          <Label htmlFor="password">{ar ? "كلمة المرور" : "Password"}</Label>
           <Input
             id="password"
             type="password"
@@ -82,23 +80,19 @@ const Page = () => {
           />
         </div>
 
-        {/* Login Button */}
+        {/* signin Button */}
         <Button
-          name="login"
+          name="signin"
           type="submit"
           className="w-full bg-gradient-to-r from-my-main  to-my-secondary  hover:opacity-90 transition mb-4"
           disabled={loading}
         >
           {loading ? (
-            ar ? (
-              <Loader2 className="animate-spin mx-auto" />
-            ) : (
-              "Logging in..."
-            )
+            <Loader2 className="animate-spin mx-auto" />
           ) : ar ? (
             "تسجيل الدخول"
           ) : (
-            "Login"
+            "signin"
           )}
         </Button>
       </form>

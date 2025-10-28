@@ -38,7 +38,7 @@ export function Navbar() {
     home: ar ? "/ar" : "/en",
     products: ar ? "/ar/products" : "/products",
     admin: ar ? "/ar/admin" : "/admin",
-    login: ar ? "/ar/login" : "/login",
+    signin: ar ? "/ar/signin" : "/signin",
     profile: ar ? "/ar/profile" : "/profile",
     cart: ar ? "/ar/cart" : "/cart",
   };
@@ -101,7 +101,7 @@ export function Navbar() {
             {isMounted && <CartBadge quantity={quantity} />}
           </Link>
 
-          {/* Login / Profile */}
+          {/* signin / Profile */}
           {session ? (
             <Link href={routes.profile} className="border rounded-full">
               <Avatar className="size-8">
@@ -113,10 +113,10 @@ export function Navbar() {
             </Link>
           ) : (
             <Link
-              href={routes.login}
+              href={routes.signin}
               className="transition hover:bg-accent  p-1"
             >
-              <span className="sr-only">Login</span>
+              <span className="sr-only">signin</span>
               <User />
             </Link>
           )}

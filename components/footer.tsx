@@ -8,7 +8,7 @@ const Footer = async ({ lang }: { lang: string }) => {
   return (
     <footer>
       <div
-        className={`flex flex-col md:flex-row items-start justify-evenly px-6  gap-4 py-14 border-b border-gray-500/30 `}
+        className={`flex flex-col md:flex-row items-start justify-evenly px-6  gap-4 py-10 border-b border-gray-500/30 `}
       >
         {/* Title and Description */}
         <div className="w-4/5">

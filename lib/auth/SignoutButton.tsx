@@ -7,7 +7,7 @@ export default function signoutButton() {
     <Button
       name="sign-out"
       variant={"destructive"}
-      className="m-auto flex  justify-center"
+      className="m-auto flex hover:cursor-pointer hover:scale-105 transition ustify-center"
       onClick={async () => {
         await signOut();
       }}
