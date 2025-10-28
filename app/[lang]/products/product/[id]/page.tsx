@@ -1,10 +1,11 @@
 export const revalidate = 10;
+
 import { db } from "@/prisma/db";
 import React from "react";
 import Image from "next/image";
 import { assets } from "@/public/svg/assets";
 import { Loader2 } from "lucide-react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import ProductCard from "@/components/productCard";
 import { relatedProducts } from "@/lib/Functions";
 import AddtoCart from "@/zustand/AddtoCart";
@@ -12,17 +13,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 
-// Translation dictionary
-type Translations = {
-  [key: string]: {
-    productNotFound: string;
-    quantity: string;
-    addToCart: string;
-    checkout: string;
-    relatedProducts: string;
-  };
-};
-const translations: Translations = {
+// 🌍 Translation dictionary
+const translations = {
   en: {
     productNotFound: "Product not found",
     quantity: "Quantity",
@@ -37,16 +29,16 @@ const translations: Translations = {
     checkout: "الدفع",
     relatedProducts: "منتجات ذات صلة",
   },
-};
+} as const;
+
+// 🧠 Metadata for SEO
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ lang: string; id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const product = await db.product.findUnique({
-    where: { id: id },
-  });
+  const product = await db.product.findUnique({ where: { id } });
 
   if (!product) {
     return {
@@ -62,16 +54,13 @@ export async function generateMetadata({
       title: `${product.name} - Vogue Haven`,
       description: product.description || "Check out this product.",
       images: [
-        {
-          url: product.image,
-          width: 800,
-          height: 600,
-          alt: product.name,
-        },
+        { url: product.image, width: 800, height: 600, alt: product.name },
       ],
     },
   };
 }
+
+// 🧩 Page Component
 const Page = async ({
   params,
 }: {
@@ -79,87 +68,97 @@ const Page = async ({
 }) => {
   const { id, lang } = await params;
   const ar = lang === "ar";
+  const t = translations[lang as keyof typeof translations];
 
-  const t = translations[lang]; // Get translations for the current language
+  const product = await db.product.findUnique({ where: { id } });
+  if (!product)
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-center">
+        <Loader2 className="animate-spin mb-4" />
+        <p className="text-lg text-muted-foreground">{t.productNotFound}</p>
+      </div>
+    );
 
-  const product = await db.product.findUnique({
-    where: { id: id },
-  });
-
-  if (product == null) {
-    return <Loader2 />;
-  }
   const relatedFunc = await relatedProducts(product.categoryId);
 
   return (
     <main className="max-w-[80%] mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
-      <div className="mx-auto">
-        <div className="flex items-start lg:gap-16 gap-4  flex-col-reverse sm:flex-row">
-          {/* Left column - Product Image */}
-          {/* Right column - Product Details and Actions */}
-          <div className="p-6 space-y-4 flex-1 w-full ">
-            <div className="space-y-4">
-              <h1 className="scroll-m-20 text-4xl  font-bold">
-                {product.name}
-              </h1>
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Image
-                    key={index}
-                    className="h-4 w-4"
-                    src={
-                      index < Math.floor(4)
-                        ? assets.star_icon
-                        : assets.star_dull_icon
-                    }
-                    alt="star_icon"
-                  />
-                ))}
-              </div>
-              <p className="leading-7">{product.description}</p>
-              <p className="text-3xl font-bold">
-                ${Number(product.basePrice).toFixed(2)}
-              </p>
-            </div>
+      <section className="flex flex-col-reverse sm:flex-row items-start lg:gap-16 gap-4">
+        {/* ✅ Product Details */}
+        <div className="p-6 space-y-4 flex-1 w-full">
+          <h1 className="scroll-m-20 text-4xl font-bold">{product.name}</h1>
 
-            <div className="space-y-4">
-              <Separator className="h-[0.2px] bg-gray-200 w-full" />
-              <div className="flex items-center gap-2">
-                <AddtoCart
-                  classname="flex-1 bg-my-secondary hover:bg-my-secondary/90"
-                  item={product}
-                />
-                <Link
-                  className="flex-1 "
-                  href={ar ? `/ar/checkout` : `/en/checkout`}
-                >
-                  <Button name="checkout" className="w-full flex-1 bg-my-main">
-                    {ar ? "الدفع" : "Checkout"}
-                  </Button>
-                </Link>
-              </div>
-            </div>
+          {/* Rating (static demo) */}
+          <div className="flex items-center gap-0.5">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Image
+                key={index}
+                className="h-4 w-4"
+                src={
+                  index < Math.floor(4)
+                    ? assets.star_icon
+                    : assets.star_dull_icon
+                }
+                alt="star_icon"
+              />
+            ))}
           </div>
-          <div className="relative h-[265px] flex-1  rounded-lg ">
-            <Image
-              src={product.image}
-              alt={product.name}
-              width={500}
-              height={500}
-              loading="lazy" // Experimental lazy loading
-              className="object-contain py-2 w-full h-full"
+
+          <p className="leading-7 text-muted-foreground">
+            {product.description}
+          </p>
+
+          <p className="text-3xl font-bold">
+            ${Number(product.basePrice).toFixed(2)}
+          </p>
+
+          <Separator className="h-[0.2px] bg-gray-200 w-full my-4" />
+
+          <div className="flex items-center gap-2">
+            <AddtoCart
+              classname="flex-1 bg-my-main hover:bg-my-main/90"
+              item={product}
             />
+            <Link
+              href={ar ? `/ar/checkout` : `/en/checkout`}
+              className="flex-1"
+            >
+              <Button
+                name="checkout"
+                className="w-full bg-my-secondary hover:bg-my-secondary/90"
+              >
+                {t.checkout}
+              </Button>
+            </Link>
           </div>
         </div>
-      </div>
-      <Separator />
-      {/* Related Products Section */}
-      <h2 className="text-2xl font-bold mt-6">{t.relatedProducts}</h2>{" "}
-      {/* Use translation for "Related Products" */}
-      <div className="grid grid-cols-1 sm:grid-cols-2   lg:grid-cols-2 xl:grid-cols-3  2xl:grid-cols-4 gap-6 mt-6">
-        {relatedFunc.map((product) => (
-          <ProductCard lang={lang} key={product.id} product={product} />
-        ))}
+
+        {/* ✅ Product Image */}
+        <div className="relative h-[265px] flex-1 flex justify-center items-center">
+          <Image
+            src={product.image}
+            alt={product.name || "Product image"}
+            width={500}
+            height={500}
+            loading="lazy"
+            className="object-contain w-full h-full"
+          />
+        </div>
+      </section>
+
+      {/* ✅ Related Products */}
+      <Separator className="my-8" />
+      <h2 className="text-2xl font-bold mb-4">{t.relatedProducts}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        {relatedFunc.length > 0 ? (
+          relatedFunc.map((related) => (
+            <ProductCard key={related.id} product={related} lang={lang} />
+          ))
+        ) : (
+          <p className="text-muted-foreground">
+            {ar ? "لا توجد منتجات ذات صلة." : "No related products found."}
+          </p>
+        )}
       </div>
     </main>
   );
@@ -167,13 +166,9 @@ const Page = async ({
 
 export default Page;
 
-// ✅ This tells Next.js to statically build these params (or ISR them if revalidate is set)
+// ✅ ISR Static Params
 export async function generateStaticParams() {
-  const products = await db.product.findMany({
-    select: { id: true },
-  });
-
-  // You can support both English and Arabic
+  const products = await db.product.findMany({ select: { id: true } });
 
   return products.flatMap((product) => [
     { id: product.id, lang: "en" },

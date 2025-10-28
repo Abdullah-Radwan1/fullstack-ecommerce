@@ -180,6 +180,7 @@ function Form() {
           </CardContent>
           <CardFooter>
             <Button
+              variant={"outline"}
               name="purchase"
               className="w-full"
               size="lg"
@@ -195,7 +196,7 @@ function Form() {
         </Card>
       </form>
       {/* sep */}
-      <div className="flex-1 border  py-2 px-4 rounded-lg shadow-lg  space-y-4">
+      <div className="flex-1 border mt-5  py-2 px-4 rounded-lg shadow-lg  space-y-4">
         <h2 className="text-lg font-semibold border-b pb-2 text-center">
           {ar ? "المنتجات" : "Products"}
         </h2>

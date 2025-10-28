@@ -10,7 +10,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       style={
         {
-          "--normal-bg": "var(--my-secondary)",
+          "--normal-bg": "var(--my-main)",
           "--normal-text": "black",
           "--normal-border": "var(--border)",
           "--border-radius": "var(--radius)",

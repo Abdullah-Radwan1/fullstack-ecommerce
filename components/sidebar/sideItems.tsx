@@ -19,7 +19,7 @@ const Sideitem = ({ CartItem }: { CartItem: CartItem }) => {
 
   return (
     <>
-      <div className="p-4 mt-6 mb-6 bg-background/90 backdrop-blur-sm rounded-xl shadow-md flex justify-between items-center">
+      <div className="p-4 mt-6 mb-6 bg-background/90 backdrop-blur-sm  shadow-md flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Image
             width={50}
@@ -39,7 +39,7 @@ const Sideitem = ({ CartItem }: { CartItem: CartItem }) => {
           <Button
             variant={"ghost"}
             onClick={decrementQuantity}
-            className="p-1 rounded  transition"
+            className="p-1   transition"
           >
             <Minus size={16} />
           </Button>
@@ -49,7 +49,7 @@ const Sideitem = ({ CartItem }: { CartItem: CartItem }) => {
           <Button
             variant={"ghost"}
             onClick={incrementQuantity}
-            className="px-1  rounded  transition"
+            className="px-1    transition"
           >
             <Plus size={16} />
           </Button>

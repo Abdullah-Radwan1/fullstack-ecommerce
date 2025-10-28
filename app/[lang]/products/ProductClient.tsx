@@ -11,7 +11,7 @@ import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/prisma/src/generated/client";
 import { Loader2 } from "lucide-react";
-import { getProducts } from "@/lib/functions/product/getProducts"; // cached server function
+import { getProducts } from "@/lib/functions/product/getProducts";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -32,6 +32,8 @@ export default function ProductsClient({
 }) {
   const ar = lang === "ar";
   const router = useRouter();
+  const pathname = usePathname();
+
   const { searchQuery, setSearchQuery, triggerSearch, toggleTrigger } =
     useSearchStore();
 
@@ -39,7 +41,6 @@ export default function ProductsClient({
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
-  const pathname = usePathname();
 
   const [appliedCategory, setAppliedCategory] = useState<string[]>(["all"]);
   const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
@@ -53,8 +54,8 @@ export default function ProductsClient({
     ],
     []
   );
-  console.log(triggerSearch);
-  // Category toggle
+
+  // Category toggle logic
   const handleCategoryChange = useCallback((id: string) => {
     setAppliedCategory((prev) => {
       if (id === "all") return ["all"];
@@ -93,9 +94,7 @@ export default function ProductsClient({
     [appliedCategory, priceRange, searchQuery]
   );
 
-  // Trigger search when Enter is pressed in the search bar
-  // ✅ Only trigger fetch when triggerSearch changes
-
+  // Apply filters manually
   const handleApplyFilters = () => {
     handleFetch(1);
     router.push(
@@ -103,6 +102,7 @@ export default function ProductsClient({
     );
   };
 
+  // Reset filters
   const resetFilters = () => {
     const defaultCategory = ["all"];
     const defaultPrice = [0, 1300];
@@ -115,25 +115,39 @@ export default function ProductsClient({
     router.push(`/${lang}/products?page=1`);
   };
 
-  const nextPage = () => handleFetch(page + 1);
-  const prevPage = () => handleFetch(page - 1);
-  useEffect(() => {
-    if (!triggerSearch) return;
+  // Pagination
+  const nextPage = () =>
+    handleFetch(page + 1, searchQuery, appliedCategory, priceRange);
+  const prevPage = () =>
+    handleFetch(page - 1, searchQuery, appliedCategory, priceRange);
 
-    // ✅ Only fetch if we are on the products page
-    if (!pathname.includes("/products")) return;
+  // Handle cross-page search (Zustand trigger)
+  useEffect(() => {
+    if (!triggerSearch || !pathname.includes("/products")) return;
 
     const runSearch = async () => {
-      await handleFetch(1); // fetch with current searchQuery
-      toggleTrigger(); // reset trigger to false AFTER fetch
+      await handleFetch(1);
+      toggleTrigger(); // reset Zustand trigger
     };
 
     runSearch();
   }, [triggerSearch, pathname]);
+
+  // Optional: debounce search (if user types fast)
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.trim().length > 2) {
+        handleFetch(1);
+      }
+    }, 600);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       {/* Filters Section */}
-      <section className="w-full lg:w-80 bg-muted/50 p-6 rounded-xl shadow-sm h-fit">
+      <section className="w-full lg:w-80 bg-muted/50 p-6 shadow-sm h-fit rounded-md">
         <h2 className="text-lg font-semibold mb-4">
           {ar ? "تصفية النتائج" : "Filters"}
         </h2>
@@ -185,7 +199,7 @@ export default function ProductsClient({
           </div>
         </div>
 
-        {/* Apply & Reset */}
+        {/* Apply & Reset Buttons */}
         <div className="mt-6 flex gap-3">
           <Button onClick={handleApplyFilters} disabled={isPending}>
             {isPending ? (
@@ -209,21 +223,26 @@ export default function ProductsClient({
         ) : products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} lang={ar ? "ar" : "en"} />
+              <ProductCard key={p.id} product={p} lang={lang} />
             ))}
           </div>
         ) : (
-          <Image
-            src="/no-product.png"
-            width={300}
-            height={300}
-            alt="no product found"
-            className="mx-auto"
-          />
+          <div className="text-center mt-8">
+            <Image
+              src="/no-product.png"
+              width={300}
+              height={300}
+              alt="no product found"
+              className="mx-auto opacity-70"
+            />
+            <p className="mt-4 text-muted-foreground">
+              {ar ? "لا توجد منتجات مطابقة" : "No matching products found."}
+            </p>
+          </div>
         )}
 
         {/* Pagination */}
-        <div className="flex flex-1 items-end justify-between mt-8">
+        <div className="flex justify-between mt-8">
           <Button
             variant="outline"
             onClick={prevPage}

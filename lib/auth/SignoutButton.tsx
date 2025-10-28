@@ -1,16 +1,14 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
-export default function signoutButton() {
+export default function SignOutButton() {
   return (
     <Button
-      name="sign-out"
-      variant={"destructive"}
-      className="m-auto flex hover:cursor-pointer hover:scale-105 transition ustify-center"
-      onClick={async () => {
-        await signOut();
-      }}
+      variant="destructive"
+      className="flex m-auto hover:scale-105 transition-transform my-4"
+      onClick={() => signOut()}
     >
       Sign Out
     </Button>

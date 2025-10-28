@@ -1,15 +1,19 @@
 @import "tailwindcss";
-
 @plugin "tailwindcss-animate";
 @import "tw-animate-css";
 
+/* ✅ Dark mode variant */
 @custom-variant dark (&:is(.dark *));
 
+/* ===========================
+   🎨 THEME VARIABLES
+   =========================== */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -26,82 +30,83 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --color-destructive: var(--destructive);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
-/* --my-main: oklch(65.833% 0.2005 144.324);
---my-secondary: oklch(41.182% 0.15632 265.188); */
-:root {
-  /* Base background & text */
-  --background: #1a1a1a; /* dark charcoal */
-  --foreground: #f5f5f5; /* off-white for readability */
 
-  /* Cards & Popovers */
-  --card: #2a2a2a; /* slightly lighter than background */
+/* ===========================
+   🌙 COLOR PALETTE
+   =========================== */
+:root {
+  --radius: 0.625rem;
+
+  /* Background & foreground */
+  --background: #111; /* darker charcoal for luxury tone */
+  --foreground: #f9f9f9;
+
+  /* Card & popover */
+  --card: #1c1c1c;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
 
-  /* Primary & secondary colors */
-  --my-main: #ffd700; /* classic gold for main CTA */
-  --my-secondary: #ffa500; /* darker amber/gold for accents */
+  /* Gold theme core */
+  --my-main: #ffd700; /* pure gold */
+  --my-secondary: #ffb800; /* warm amber-gold */
+  --accent: #ffcc33; /* lighter gold accent */
 
-  /* Buttons, links, accents */
+  /* Button / link / interactive */
   --primary: var(--my-main);
   --primary-foreground: var(--background);
   --secondary: var(--my-secondary);
   --secondary-foreground: var(--foreground);
-  --accent: #ffc107; /* slightly lighter gold for hover/highlights */
   --accent-foreground: var(--background);
 
-  /* Muted & borders */
-  --muted: #555555;
-  --muted-foreground: #bbbbbb;
-  --border: #444444;
+  /* Borders & muted tones */
+  --border: #3a3a3a;
+  --muted: #555;
+  --muted-foreground: #bfbfbf;
   --input: var(--border);
   --ring: var(--my-main);
 
-  /* Sidebar */
-  --sidebar: var(--card);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--my-main);
-  --sidebar-primary-foreground: var(--background);
-  --sidebar-accent: var(--my-secondary);
-  --sidebar-accent-foreground: var(--foreground);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--my-main);
-
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: #ef4444; /* Tailwind red-500 أو أي لون تحبه */
+  --destructive-hover: #f87171; /* اختياري للـ hover */
 }
 
-/* Body and typography */
-body {
-  background-color: var(--background);
-  font-family: "Inter", sans-serif;
+/* ===========================
+   🖋️ Base Styling
+   =========================== */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: "Inter", sans-serif;
+    background: radial-gradient(circle at top left, #1b1b1b 0%, #111 100%);
+  }
 }
-.button-primary:hover {
-  background-color: var(--accent); /* brighter gold on hover */
+
+/* Subtle link hover */
+a {
+  transition: color 0.2s ease;
 }
 a:hover {
+  color: var(--my-main);
   text-decoration: underline;
 }
-/* Scrollbar */
+
+/* Buttons */
+button:hover {
+  cursor: pointer;
+}
+
+/* ===========================
+   ✨ Scrollbar
+   =========================== */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -113,42 +118,35 @@ a:hover {
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffee33;
+  background: #ffee58;
 }
 
-/* Animations */
+/* ===========================
+   🎬 Animations
+   =========================== */
 @keyframes fade-in {
-  0% {
+  from {
     transform: translateY(20px);
     opacity: 0;
   }
-  100% {
+  to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 @keyframes slide-up {
-  0% {
+  from {
     transform: translateY(30px);
     opacity: 0;
   }
-  100% {
+  to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 .animate-fade-in {
-  animation: fade-in 0.9s ease forwards;
+  animation: fade-in 0.8s ease-out forwards;
 }
 .animate-slide-up {
-  animation: slide-up 0.9s ease forwards;
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  animation: slide-up 0.8s ease-out forwards;
 }
