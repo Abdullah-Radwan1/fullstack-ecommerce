@@ -27,6 +27,25 @@ type CartState = {
   getQuantity: () => number; // Getter for total quantity
   getTotalPrice: () => number; // Getter for total price
 };
+// store.ts
+
+interface SearchStore {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}
+
+export const useSearchStore = create<SearchStore>()(
+  persist(
+    (set) => ({
+      searchQuery: "",
+      setSearchQuery: (query) => set({ searchQuery: query }),
+    }),
+    {
+      name: "search-storage", // the key in localStorage
+      partialize: (state) => ({ searchQuery: state.searchQuery }), // only persist searchQuery
+    }
+  )
+);
 
 const useCartStore = create<CartState>()(
   persist(
@@ -44,17 +63,17 @@ const useCartStore = create<CartState>()(
           set({ items: [...get().items, { ...item, quantity: 1 }] });
         }
       },
-      removeCartItem: (id) => {
-        set({
-          items: get()
-            .items.map((i) =>
-              i.id === id && i.quantity && i.quantity > 0
-                ? { ...i, quantity: i.quantity - 1 }
-                : i
-            )
-            .filter((i) => !(i.id === id && i.quantity === 0)),
-        });
-      },
+      removeCartItem: (id) =>
+        set((state) => ({
+          items: state.items.reduce((acc, i) => {
+            if (i.id === id && i.quantity && i.quantity > 1) {
+              acc.push({ ...i, quantity: i.quantity - 1 });
+            } else if (i.id !== id || (i.quantity && i.quantity > 1)) {
+              acc.push(i);
+            }
+            return acc;
+          }, [] as CartItem[]),
+        })),
       removeItemFromCart: (id) => {
         set({ items: get().items.filter((i) => i.id !== id) });
       },

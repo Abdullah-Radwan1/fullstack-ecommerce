@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useTransition } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/prisma/src/generated/client";
@@ -10,9 +10,10 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import CustomSkeleton from "@/components/CustomSkeleton";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { useSearchStore } from "@/zustand/store";
 
 export default function ProductsClient({
   initialProducts,
@@ -24,20 +25,20 @@ export default function ProductsClient({
   lang: string;
 }) {
   const ar = lang === "ar";
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const { searchQuery: globalSearch, setSearchQuery } = useSearchStore();
 
   const [products, setProducts] = useState(initialProducts);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
 
-  // 🔹 Filters
+  // Local state for the search input, so it doesn't trigger fetch automatically
+  const [searchInput, setSearchInput] = useState(globalSearch || "");
+
   const [appliedCategory, setAppliedCategory] = useState<string[]>(["all"]);
   const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  // 🔹 Categories list
   const categories = [
     { id: "all", labelEn: "All", labelAr: "الجميع" },
     { id: "1", labelEn: "Laptops", labelAr: "لابات" },
@@ -45,9 +46,7 @@ export default function ProductsClient({
     { id: "3", labelEn: "Others", labelAr: "أخرى" },
   ];
 
-  // 🔹 Initialize search from URL param
-
-  // 🔹 Handle category change
+  // Category toggle
   const handleCategoryChange = (id: string) => {
     setAppliedCategory((prev) => {
       if (id === "all") return ["all"];
@@ -58,8 +57,8 @@ export default function ProductsClient({
     });
   };
 
-  // 🔹 Fetch products
-  const handleFetch = (newPage = 1, query = searchQuery) => {
+  // Fetch products
+  const handleFetch = (newPage = 1, query = globalSearch) => {
     startTransition(async () => {
       const category = appliedCategory.join(",");
       const [min, max] = priceRange;
@@ -75,56 +74,46 @@ export default function ProductsClient({
       setProducts(products);
       setHasMore(hasMore);
       setPage(newPage);
+      // Save the applied search to global store
       setSearchQuery(query);
     });
   };
 
-  // 🔹 Apply filters & search
+  // Apply filters + search manually
   const handleApplyFilters = () => {
-    // Update URL param
     router.push(
-      `/${lang}/products?page=1&search=${encodeURIComponent(searchQuery)}`
+      `/${lang}/products?page=1&search=${encodeURIComponent(searchInput)}`
     );
-    handleFetch(1, searchQuery);
+    handleFetch(1, searchInput);
   };
 
-  // 🔹 Reset all
   const resetFilters = () => {
     setAppliedCategory(["all"]);
     setPriceRange([0, 1300]);
+    setSearchInput("");
     setSearchQuery("");
     router.push(`/${lang}/products?page=1`);
     handleFetch(1, "");
   };
 
-  const nextPage = () => handleFetch(page + 1, searchQuery);
-  const prevPage = () => handleFetch(page - 1, searchQuery);
-  useEffect(() => {
-    const searchParam = searchParams.get("search") || "";
-
-    // استعمل startTransition مباشرة للfetch مع القيمة من الURL
-    startTransition(() => {
-      handleFetch(1, searchParam); // handleFetch هي اللي هتعمل setProducts و setSearchQuery
-    });
-  }, [searchParams]);
+  const nextPage = () => handleFetch(page + 1, globalSearch);
+  const prevPage = () => handleFetch(page - 1, globalSearch);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
-      {/* 🔍 Filters Section */}
+      {/* Filters Section */}
       <section className="w-full lg:w-80 bg-muted/50 p-6 rounded-xl shadow-sm h-fit">
         <h2 className="text-lg font-semibold mb-4">
           {ar ? "تصفية النتائج" : "Filters"}
         </h2>
 
-        {/* 🔎 Search Input */}
+        {/* Search Input */}
         <div className="mb-4">
           <Input
             placeholder={ar ? "ابحث عن منتج..." : "Search for a product..."}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleApplyFilters();
-            }}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleApplyFilters()}
           />
         </div>
 
@@ -181,7 +170,7 @@ export default function ProductsClient({
         </div>
       </section>
 
-      {/* 🛍 Product Grid */}
+      {/* Product Grid */}
       <section className="flex-1 flex flex-col">
         {isPending ? (
           <CustomSkeleton />
