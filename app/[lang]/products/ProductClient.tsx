@@ -101,14 +101,13 @@ export default function ProductsClient({
   const prevPage = () => handleFetch(page - 1, searchQuery);
   useEffect(() => {
     const searchParam = searchParams.get("search") || "";
-    // فقط حدد قيمة الـ state
-    setSearchQuery(searchParam);
 
-    // بعد ما تغير الـ state، استدعي fetch
+    // استعمل startTransition مباشرة للfetch مع القيمة من الURL
     startTransition(() => {
-      handleFetch(1, searchParam);
+      handleFetch(1, searchParam); // handleFetch هي اللي هتعمل setProducts و setSearchQuery
     });
   }, [searchParams]);
+
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       {/* 🔍 Filters Section */}
