@@ -24,8 +24,13 @@ export function Navbar() {
   const quantity = useCartStore((state) => state.getQuantity());
 
   useEffect(() => {
-    setIsMounted(true);
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      // only set state if the value actually changes
+      setScrolled((prev) => {
+        const next = window.scrollY > 10;
+        return prev === next ? prev : next;
+      });
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
