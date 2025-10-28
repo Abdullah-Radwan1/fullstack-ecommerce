@@ -147,7 +147,7 @@ export default function ProductsClient({
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       {/* Filters Section */}
-      <section className="w-full lg:w-80 bg-muted/50 p-6 shadow-sm h-fit rounded-md">
+      <section className="w-full lg:w-80  p-6 shadow-sm h-fit rounded-md">
         <h2 className="text-lg font-semibold mb-4">
           {ar ? "تصفية النتائج" : "Filters"}
         </h2>
@@ -158,6 +158,7 @@ export default function ProductsClient({
             type="text"
             placeholder={ar ? "ابحث عن منتج..." : "Search for a product..."}
             value={searchQuery}
+            className="bg-transparent  "
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && toggleTrigger()}
           />
