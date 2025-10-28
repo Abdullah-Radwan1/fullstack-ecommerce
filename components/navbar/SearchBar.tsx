@@ -8,11 +8,12 @@ import React, { useState } from "react";
 export function SearchBar({ ar }: { ar: boolean }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    router.push(`/products?search=${encodeURIComponent(query)}&page=1`);
+    router.push(
+      `/${ar ? "ar" : "en"}/products?search=${encodeURIComponent(query)}&page=1`
+    );
     setQuery("");
   };
 

@@ -27,7 +27,6 @@ const Page = () => {
     const res = await signIn("credentials", {
       email,
       password, // Hash password before sending
-      redirect: false, // Avoid page reload
     });
 
     if (res?.error) {

@@ -42,7 +42,7 @@ export default function ProductCard({
       </p>
 
       {/* Product Description */}
-      <p className="w-full text-xs text-muted-foreground line-clamp-2 px-2 max-sm:hidden">
+      <p className="w-full text-xs text-muted-foreground line-clamp-2 px-2 ">
         {product.description}
       </p>
 
