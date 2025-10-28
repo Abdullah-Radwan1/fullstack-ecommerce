@@ -1,18 +1,23 @@
 "use client";
 
-import { useCallback, useMemo, useState, useTransition } from "react";
+import {
+  useCallback,
+  useMemo,
+  useState,
+  useTransition,
+  useEffect,
+} from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/prisma/src/generated/client";
 import { Loader2 } from "lucide-react";
-import { getProducts } from "@/lib/functions/product/getProducts";
+import { getProducts } from "@/lib/functions/product/getProducts"; // cached server function
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import CustomSkeleton from "@/components/CustomSkeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
 import { useSearchStore } from "@/zustand/store";
 
 export default function ProductsClient({
@@ -26,15 +31,13 @@ export default function ProductsClient({
 }) {
   const ar = lang === "ar";
   const router = useRouter();
-  const { searchQuery: globalSearch, setSearchQuery } = useSearchStore();
+  const { searchQuery, setSearchQuery, triggerSearch, toggleTrigger } =
+    useSearchStore();
 
   const [products, setProducts] = useState(initialProducts);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
-
-  // Local state for the search input, so it doesn't trigger fetch automatically
-  const [searchInput, setSearchInput] = useState(globalSearch || "");
 
   const [appliedCategory, setAppliedCategory] = useState<string[]>(["all"]);
   const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
@@ -59,57 +62,67 @@ export default function ProductsClient({
       return newCategories.length ? newCategories : ["all"];
     });
   }, []);
-  // Fetch products
-  const handleFetch = (
-    newPage = 1,
-    query = globalSearch,
-    price = priceRange,
-    categoriesParam = appliedCategory
-  ) => {
-    startTransition(async () => {
-      const category = categoriesParam.join(",");
-      const [min, max] = price;
 
-      const { products, hasMore } = await getProducts({
-        page: newPage,
-        category,
-        min: String(min),
-        max: String(max),
-        search: query,
+  // Core fetch function
+  const handleFetch = useCallback(
+    async (
+      newPage = 1,
+      search = searchQuery,
+      categoriesParam = appliedCategory,
+      price = priceRange
+    ) => {
+      startTransition(async () => {
+        const category = categoriesParam.join(",");
+        const [min, max] = price;
+
+        const { products, hasMore } = await getProducts({
+          page: newPage,
+          category,
+          min: String(min),
+          max: String(max),
+          search,
+        });
+
+        setProducts(products);
+        setHasMore(hasMore);
+        setPage(newPage);
       });
+    },
+    [appliedCategory, priceRange, searchQuery]
+  );
 
-      setProducts(products);
-      setHasMore(hasMore);
-      setPage(newPage);
-      setSearchQuery(query);
-    });
-  };
-  // Apply filters + search manually
+  // Trigger search when Enter is pressed in the search bar
+  useEffect(() => {
+    if (triggerSearch) {
+      handleFetch(1); // always fetch first page
+      toggleTrigger(); // reset trigger so it can fire again
+      router.push(
+        `/${lang}/products?page=1&search=${encodeURIComponent(searchQuery)}`
+      );
+    }
+  }, [triggerSearch]);
+
   const handleApplyFilters = () => {
+    handleFetch(1);
     router.push(
-      `/${lang}/products?page=1&search=${encodeURIComponent(searchInput)}`
+      `/${lang}/products?page=1&search=${encodeURIComponent(searchQuery)}`
     );
-    handleFetch(1, searchInput);
   };
 
   const resetFilters = () => {
     const defaultCategory = ["all"];
     const defaultPrice = [0, 1300];
-    const defaultSearch = "";
 
     setAppliedCategory(defaultCategory);
     setPriceRange(defaultPrice);
-    setSearchInput("");
     setSearchQuery("");
 
+    handleFetch(1, "", defaultCategory, defaultPrice);
     router.push(`/${lang}/products?page=1`);
-
-    // Pass new values directly
-    handleFetch(1, defaultSearch, defaultPrice, defaultCategory);
   };
 
-  const nextPage = () => handleFetch(page + 1, globalSearch);
-  const prevPage = () => handleFetch(page - 1, globalSearch);
+  const nextPage = () => handleFetch(page + 1);
+  const prevPage = () => handleFetch(page - 1);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
@@ -121,11 +134,13 @@ export default function ProductsClient({
 
         {/* Search Input */}
         <div className="mb-4">
-          <Input
+          <input
+            type="text"
             placeholder={ar ? "ابحث عن منتج..." : "Search for a product..."}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleApplyFilters()}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && toggleTrigger()}
+            className="w-full border rounded px-3 py-2 focus:outline-none"
           />
         </div>
 
@@ -194,7 +209,7 @@ export default function ProductsClient({
           </div>
         ) : (
           <Image
-            src={"/no-product.png"}
+            src="/no-product.png"
             width={300}
             height={300}
             alt="no product found"

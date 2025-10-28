@@ -29,23 +29,20 @@ type CartState = {
 };
 // store.ts
 
-interface SearchStore {
+interface SearchState {
   searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  setSearchQuery: (value: string) => void;
+  triggerSearch: boolean;
+  toggleTrigger: () => void;
 }
 
-export const useSearchStore = create<SearchStore>()(
-  persist(
-    (set) => ({
-      searchQuery: "",
-      setSearchQuery: (query) => set({ searchQuery: query }),
-    }),
-    {
-      name: "search-storage", // the key in localStorage
-      partialize: (state) => ({ searchQuery: state.searchQuery }), // only persist searchQuery
-    }
-  )
-);
+export const useSearchStore = create<SearchState>((set) => ({
+  searchQuery: "",
+  setSearchQuery: (value) => set({ searchQuery: value }),
+  triggerSearch: false,
+  toggleTrigger: () =>
+    set((state) => ({ triggerSearch: !state.triggerSearch })),
+}));
 
 const useCartStore = create<CartState>()(
   persist(
