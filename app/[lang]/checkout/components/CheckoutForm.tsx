@@ -50,13 +50,13 @@ export default function CheckoutForm({
         }}
         stripe={stripePromise}
       >
-        <Form />
+        <Form ar={ar} />
       </Elements>
     </div>
   );
 }
 
-function Form() {
+function Form({ ar }: { ar?: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [email, setEmail] = useState<string>("");
@@ -67,8 +67,8 @@ function Form() {
   const stripe = useStripe();
   const elements = useElements();
   const params = useParams();
-  const lang = (params as any)?.lang as string | undefined;
-  const ar = lang === "ar";
+
+  const lang = ar ? "ar" : "en";
 
   // === Your preferred style (multiple selectors), but fixed:
   // Note: we return function references for actions (no parentheses)
@@ -147,8 +147,8 @@ function Form() {
       // Code after confirmPayment may not run because of the redirect.
       // We still call clearCart() here as a best-effort:
       clearCart();
-    } catch (err: any) {
-      setErrorMessage(String(err.message ?? err));
+    } catch (err) {
+      setErrorMessage(String(err instanceof Error ? err.message : err));
     } finally {
       setIsLoading(false);
     }
@@ -176,7 +176,7 @@ function Form() {
             <PaymentElement />
             <div className="mt-4">
               <LinkAuthenticationElement
-                onChange={(e: any) => setEmail(e.value?.email ?? "")}
+                onChange={(e) => setEmail(e.value?.email ?? "")}
               />
             </div>
             <section className="grid grid-cols-2 items-center gap-2 mt-3">
