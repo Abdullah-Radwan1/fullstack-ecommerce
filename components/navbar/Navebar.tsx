@@ -18,7 +18,6 @@ export function Navbar() {
   const ar = lang === "ar";
   const role = session?.user?.role;
 
-  const [isMounted, setIsMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { setTogglestate } = useSidebarStore();
 
@@ -29,7 +28,6 @@ export function Navbar() {
 
   useEffect(() => {
     // mark mounted (fixes SSR hydration / conditional UI)
-    setIsMounted(true);
 
     const handleScroll = () => {
       setScrolled((prev) => {
