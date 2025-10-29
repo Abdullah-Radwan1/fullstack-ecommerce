@@ -45,7 +45,7 @@ export function MyCarousel() {
       },
       buttonText1: { en: "Shop Now", ar: "تسوق الآن" },
       buttonText2: { en: "Explore!", ar: "اكتشف!" },
-      imgSrc: "/slider-images/gaming_monitor2-transformed.png",
+      imgSrc: "/slider-images/gaming_monitor2.png",
       link: "/products",
     },
     {
@@ -121,7 +121,7 @@ export function MyCarousel() {
                   src={slide.imgSrc}
                   alt={`Slide ${slide.id}`}
                   fill
-                  priority={index === 0}
+                  priority
                   className="object-contain"
                 />
               </div>

@@ -21,16 +21,23 @@ export function Navbar() {
   const [isMounted, setIsMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { setTogglestate } = useSidebarStore();
-  const quantity = useCartStore((state) => state.getQuantity());
+
+  // ✅ Derive quantity from items so Zustand tracks items and re-renders correctly
+  const quantity = useCartStore((state) =>
+    state.items.reduce((acc, it) => acc + (it.quantity || 0), 0)
+  );
 
   useEffect(() => {
+    // mark mounted (fixes SSR hydration / conditional UI)
+    setIsMounted(true);
+
     const handleScroll = () => {
-      // only set state if the value actually changes
       setScrolled((prev) => {
         const next = window.scrollY > 10;
         return prev === next ? prev : next;
       });
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -44,7 +51,6 @@ export function Navbar() {
     profile: ar ? "/ar/profile" : "/profile",
     cart: ar ? "/ar/cart" : "/cart",
   };
-
   return (
     <header
       className={cn(
@@ -99,7 +105,9 @@ export function Navbar() {
             <Button name="cart" variant="ghost" size="icon">
               <ShoppingBasket className="size-5" />
             </Button>
-            {isMounted && quantity > 0 && <CartBadge quantity={quantity} />}
+
+            {/* render badge only after mount to avoid SSR mismatch */}
+            {quantity > 0 && <CartBadge quantity={quantity} />}
           </Link>
 
           {/* Profile / Signin */}

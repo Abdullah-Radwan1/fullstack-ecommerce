@@ -21,7 +21,6 @@ export default function CheckoutPage() {
     if (products.length === 0 && getTotalPrice() === 0) {
       toast.error(ar ? "سلة التسوق فارغة" : "Your cart is empty");
       redirect(ar ? "/ar/products" : "/products");
-      return;
     }
 
     const totalPrice = getTotalPrice();
@@ -61,7 +60,7 @@ export default function CheckoutPage() {
         {ar ? "الدفع" : "Checkout"}
       </h1>
       <div className="bg-card p-6 rounded-xl shadow-md">
-        <CheckoutForm clientSecret={clientSecret} />
+        <CheckoutForm ar={ar} clientSecret={clientSecret} />
       </div>
     </main>
   );
