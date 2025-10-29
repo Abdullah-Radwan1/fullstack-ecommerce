@@ -1,7 +1,7 @@
 import { Tajawal } from "next/font/google";
 
 export const lato = Tajawal({
-  weight: ["400", "700", "900"],
-  subsets: ["latin"],
-  fallback: ["Arial", "sans-serif"], // optional but recommended
+  weight: ["500", "700", "900"],
+  subsets: ["latin", "arabic"],
+  fallback: ["Arial"], // optional but recommended
 });

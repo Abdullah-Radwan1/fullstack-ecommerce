@@ -68,15 +68,15 @@ export function MyCarousel() {
       className="w-full relative overflow-hidden"
     >
       <CarouselContent dir="ltr">
-        {sliderData.map((slide, index) => (
-          <CarouselItem key={slide.id} className="bg-card ">
+        {sliderData.map((slide) => (
+          <CarouselItem key={slide.id} className="bg-card">
             <div
               dir={ar ? "rtl" : "ltr"}
-              className="relative flex flex-col-reverse lg:flex-row items-center justify-between px-6 md:px-14 py-10 md:py-16"
+              className="relative flex flex-1 flex-col lg:flex-row items-center justify-between px-6 md:px-14 py-10 md:py-16 gap-8"
             >
-              {/* Text Section */}
+              {/* Text Section - أصبحت متساوية مع الصورة */}
               <div
-                className="max-w-xl animate-fade-in"
+                className="flex-1 max-w-xl animate-fade-in"
                 style={{
                   animationDelay: "0.3s",
                   animationDuration: "0.8s",
@@ -93,23 +93,23 @@ export function MyCarousel() {
                 <div className="flex items-center mt-4 gap-3">
                   <Link
                     href={slide.link}
-                    className="font-medium rounded  bg-accent text-black  px-4 py-2"
+                    className="font-medium rounded bg-accent text-black px-4 py-2 hover:bg-accent/90 transition-colors"
                   >
                     {slide.buttonText1[lang as keyof typeof slide.buttonText1]}
                   </Link>
                   <button
                     name="arrow"
-                    className="flex items-center gap-2 text-my-main font-medium"
+                    className="flex items-center gap-2 text-my-main font-medium hover:text-my-main/80 transition-colors"
                   >
                     {slide.buttonText2[lang as keyof typeof slide.buttonText2]}
-                    {ar ? <ArrowLeft /> : <ArrowRight />}
+                    {ar ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
                   </button>
                 </div>
               </div>
 
-              {/* Image Section */}
+              {/* Image Section - أصبحت متساوية مع النص */}
               <div
-                className="relative w-full h-[280px] sm:h-[350px] md:h-[420px] lg:h-[520px] animate-slide-up"
+                className="flex-1 relative w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[420px] animate-slide-up"
                 style={{
                   animationDelay: "0.1s",
                   animationDuration: "0.9s",
