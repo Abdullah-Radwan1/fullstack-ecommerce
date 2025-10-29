@@ -20,7 +20,6 @@ export function SearchBar({ ar }: { ar: boolean }) {
         )}`
       );
       toggleTrigger();
-      console.log("trigger1");
     }
   };
 

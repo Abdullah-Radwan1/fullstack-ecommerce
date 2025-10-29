@@ -98,6 +98,7 @@ const Page = () => {
                 <TableCell>
                   <div className="flex justify-center gap-2">
                     <Button
+                      name="decrease"
                       variant="outline"
                       size="sm"
                       onClick={() => removeCartItem(item.id)}
@@ -106,6 +107,7 @@ const Page = () => {
                       <Minus className="w-4 h-4" />
                     </Button>
                     <Button
+                      name="increase"
                       variant="outline"
                       size="sm"
                       onClick={() => addCartItem(item)}
@@ -114,6 +116,7 @@ const Page = () => {
                       <Plus className="w-4 h-4" />
                     </Button>
                     <Button
+                      name="remove item"
                       variant="outline"
                       size="sm"
                       onClick={() => removeItemFromCart(item.id)}
@@ -133,7 +136,10 @@ const Page = () => {
                 {ar ? "الإجمالي" : "Total"}:{" "}
                 <span className="text-foreground">${totalPrice}</span>
               </h1>
-              <Button className="bg-my-main text-background hover:bg-accent transition">
+              <Button
+                name="checkout"
+                className="bg-my-main text-background hover:bg-accent transition"
+              >
                 <Link href={ar ? `/ar/checkout` : `/en/checkout`}>
                   {ar ? "الدفع" : "Checkout"}
                 </Link>
@@ -146,6 +152,7 @@ const Page = () => {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
+              name="empty cart"
               variant="outline"
               className="mx-auto mt-6 flex items-center hover:bg-destructive hover:text-white transition"
             >

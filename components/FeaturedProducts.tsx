@@ -70,36 +70,32 @@ const FeaturedProduct = async ({
           ({ id, image, title, link, description, badgeLeft, badgeRight }) => (
             <Card
               key={id}
-              className="group relative hover:scale-105 transition-transform overflow-hidden shadow-lg"
+              className="group flex flex-col justify-between relative hover:scale-105 transition-transform overflow-hidden shadow-lg"
             >
-              {badgeLeft && (
-                <div className="absolute top-2 left-2 bg-my-secondary text-background px-2 py-1 text-xs font-bold z-10">
-                  {badgeLeft}
-                </div>
-              )}
-              {badgeRight && (
-                <div className="absolute top-2 right-2 bg-my-main text-background px-2 py-1 text-xs font-bold z-10">
-                  {badgeRight}
-                </div>
-              )}
+              <div className="absolute rounded-lg top-2 left-2 bg-my-secondary text-background px-2 py-1 text-xs font-bold z-10">
+                {badgeLeft}
+              </div>
+              <div className="absolute rounded top-2 right-2 bg-my-main text-background px-2 py-1 text-xs font-bold z-10">
+                {badgeRight}
+              </div>
 
-              <CardContent className="flex flex-col items-center">
+              <CardContent className="flex flex-col items-center ">
                 <Image
                   src={image}
                   alt={title[lang as keyof typeof title]}
                   width={300}
                   height={300}
-                  className="object-contain p-4 transition duration-300 group-hover:brightness-90"
+                  className="object-contain  transition duration-300 group-hover:brightness-90"
                 />
-                <p className="font-semibold text-xl lg:text-2xl text-my-main mt-2 text-center">
-                  {title[lang as keyof typeof title]}
-                </p>
-                <p className="text-sm lg:text-base text-foreground mt-1 text-center">
-                  {description[lang as keyof typeof description]}
-                </p>
               </CardContent>
 
-              <CardFooter className="flex justify-center">
+              <CardFooter className="flex justify-center flex-col gap-3">
+                <p className="font-semibold text-xl lg:text-2xl text-my-main  text-center">
+                  {title[lang as keyof typeof title]}
+                </p>
+                <p className="text-sm lg:text-base text-foreground  text-center">
+                  {description[lang as keyof typeof description]}
+                </p>
                 <Link
                   href={link[lang as keyof typeof link] || "/products"}
                   className="inline-flex items-center gap-2 bg-my-main text-black px-4 py-2 transition-colors hover:opacity-90"

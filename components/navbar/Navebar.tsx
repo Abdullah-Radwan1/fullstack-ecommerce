@@ -71,7 +71,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {/* Products Button */}
           <Link href={routes.products} className="hidden md:block">
-            <Button>{t("تسوق الآن", "Shop Now")}</Button>
+            <Button name="shop now">{t("تسوق الآن", "Shop Now")}</Button>
           </Link>
 
           {/* Admin Link */}
@@ -86,6 +86,7 @@ export function Navbar() {
 
           {/* Sidebar Toggle */}
           <Button
+            name="sidebar"
             variant="ghost"
             size="icon"
             onClick={() => setTogglestate(true)}
@@ -95,7 +96,7 @@ export function Navbar() {
 
           {/* Cart */}
           <Link href={routes.cart} className="relative">
-            <Button variant="ghost" size="icon">
+            <Button name="cart" variant="ghost" size="icon">
               <ShoppingBasket className="size-5" />
             </Button>
             {isMounted && quantity > 0 && <CartBadge quantity={quantity} />}
@@ -105,7 +106,10 @@ export function Navbar() {
           {session ? (
             <Link href={routes.profile}>
               <Avatar className="size-8">
-                <AvatarImage src={session.user?.image || "/png.png"} />
+                <AvatarImage
+                  alt="user image"
+                  src={session.user?.image || "/png.png"}
+                />
                 <AvatarFallback>
                   <Loader2 className="size-4 animate-spin" />
                 </AvatarFallback>
@@ -113,7 +117,7 @@ export function Navbar() {
             </Link>
           ) : (
             <Link href={routes.signin}>
-              <Button variant="ghost" size="icon">
+              <Button name="signin" variant="ghost" size="icon">
                 <User className="size-5" />
               </Button>
             </Link>

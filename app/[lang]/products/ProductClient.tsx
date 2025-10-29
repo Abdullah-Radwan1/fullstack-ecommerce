@@ -245,6 +245,7 @@ export default function ProductsClient({
         {/* Pagination */}
         <div className="flex justify-between mt-8">
           <Button
+            name="previous"
             variant="outline"
             onClick={prevPage}
             disabled={page === 1 || isPending}
@@ -252,6 +253,7 @@ export default function ProductsClient({
             {ar ? "السابق" : "Previous"}
           </Button>
           <Button
+            name="next"
             variant="outline"
             onClick={nextPage}
             disabled={!hasMore || isPending}

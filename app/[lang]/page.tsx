@@ -2,15 +2,18 @@ import "../globals.css";
 
 import { MyCarousel } from "@/components/carousel/Carousel";
 
-import ProductCard from "@/components/productCard";
-
-import { first_8_products } from "@/lib/Functions";
-
 import { Separator } from "@radix-ui/react-select";
 
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Loading from "../loading";
+const LazyFirst8Products = dynamic(
+  () => import("@/components/lazyProducts/First8Products"),
+  {
+    ssr: true,
+    loading: () => <Loading />,
+  }
+);
 
 export const metadata: Metadata = {
   title: "Vogue-Haven Store",
@@ -45,8 +48,6 @@ export default async function Home({
     loading: () => <Loading />,
   });
 
-  const ten_products = await first_8_products();
-
   return (
     <main>
       {/* Hero Section */}
@@ -59,11 +60,8 @@ export default async function Home({
           <Separator className="w-28 h-0.5 bg-gradient-to-r from-my-main to-my-secondary mt-2 mx-auto"></Separator>
         </h2>
 
-        <div className=" mx-auto grid  sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {ten_products.map((product) => (
-            <ProductCard lang={lang} key={product.id} product={product} />
-          ))}
-        </div>
+        {/* Lazy-loaded server data */}
+        <LazyFirst8Products lang={lang} />
       </div>
       <Banner params={params} />
     </main>

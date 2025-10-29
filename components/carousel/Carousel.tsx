@@ -93,11 +93,14 @@ export function MyCarousel() {
                 <div className="flex items-center mt-4 gap-3">
                   <Link
                     href={slide.link}
-                    className="font-medium  bg-accent text-black  px-4 py-2"
+                    className="font-medium rounded  bg-accent text-black  px-4 py-2"
                   >
                     {slide.buttonText1[lang as keyof typeof slide.buttonText1]}
                   </Link>
-                  <button className="flex items-center gap-2 text-my-main font-medium">
+                  <button
+                    name="arrow"
+                    className="flex items-center gap-2 text-my-main font-medium"
+                  >
                     {slide.buttonText2[lang as keyof typeof slide.buttonText2]}
                     {ar ? <ArrowLeft /> : <ArrowRight />}
                   </button>

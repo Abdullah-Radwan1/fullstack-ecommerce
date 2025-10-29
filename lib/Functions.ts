@@ -1,11 +1,12 @@
 // lib/data.ts (for example)
 
 import { db } from "@/prisma/db";
+import { cache } from "react";
 
 // Internal db calls
-async function getFirst8Products() {
+export const getFirst8Products = cache(async function getFirst8Products() {
   return await db.product.findMany({ take: 8 });
-}
+});
 export const first_8_products = getFirst8Products;
 
 async function getRelatedProducts(categoryId: number) {

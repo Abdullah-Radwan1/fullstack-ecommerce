@@ -213,6 +213,7 @@ const CreateProduct = () => {
 
           {/* Submit */}
           <Button
+            name="submit"
             type="submit"
             disabled={isLoading}
             className="flex items-center justify-center gap-2 w-full"

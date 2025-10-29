@@ -31,7 +31,7 @@ export function DropdownMenuRadioGroupDemo({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button name="phone" variant="outline">
           <p dir="ltr">
             {countryCodes.findLast((code) => country_code == code.code)?.flag ||
               "🇪🇬 +20"}

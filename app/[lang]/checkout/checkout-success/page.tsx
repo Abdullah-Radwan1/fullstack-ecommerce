@@ -24,9 +24,7 @@ const SuccessPage = async ({
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center p-6 ${
-        ar ? "rtl" : "ltr"
-      }`}
+      className={` flex items-center justify-center p-6 ${ar ? "rtl" : "ltr"}`}
     >
       <div className="bg-card border border-border p-8 rounded-xl shadow-lg max-w-md w-full text-center animate-fade-in">
         {/* Icon */}
