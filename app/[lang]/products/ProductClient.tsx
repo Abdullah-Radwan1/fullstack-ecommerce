@@ -21,12 +21,14 @@ import Image from "next/image";
 import { useSearchStore } from "@/zustand/store";
 import { Input } from "@/components/ui/input";
 
+type selectedProducts = Omit<Product, "createdAt" | "updatedAt" | "userId">;
+
 export default function ProductsClient({
   initialProducts,
   hasMore: initialHasMore,
   lang,
 }: {
-  initialProducts: Product[];
+  initialProducts: selectedProducts[];
   hasMore: boolean;
   lang: string;
 }) {

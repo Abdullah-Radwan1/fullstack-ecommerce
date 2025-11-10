@@ -31,35 +31,6 @@ const translations = {
   },
 } as const;
 
-// 🧠 Metadata for SEO
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ lang: string; id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const product = await db.product.findUnique({ where: { id } });
-
-  if (!product) {
-    return {
-      title: "Product Not Found - Vogue Haven",
-      description: "This product does not exist in the store.",
-    };
-  }
-
-  return {
-    title: `${product.name} - Vogue Haven`,
-    description: product.description || "Find out more about this product.",
-    openGraph: {
-      title: `${product.name} - Vogue Haven`,
-      description: product.description || "Check out this product.",
-      images: [
-        { url: product.image, width: 800, height: 600, alt: product.name },
-      ],
-    },
-  };
-}
-
 // 🧩 Page Component
 const Page = async ({
   params,
@@ -70,7 +41,17 @@ const Page = async ({
   const ar = lang === "ar";
   const t = translations[lang as keyof typeof translations];
 
-  const product = await db.product.findUnique({ where: { id } });
+  const product = await db.product.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      basePrice: true,
+      image: true,
+      categoryId: true,
+    },
+  });
   if (!product)
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center">
@@ -82,10 +63,10 @@ const Page = async ({
   const relatedFunc = await relatedProducts(product.categoryId);
 
   return (
-    <main className="max-w-[80%] mx-auto p-4" dir={ar ? "rtl" : "ltr"}>
-      <section className="flex flex-col-reverse sm:flex-row items-start lg:gap-16 gap-4">
+    <main className="max-w-[80%] mx-auto " dir={ar ? "rtl" : "ltr"}>
+      <section className="flex flex-col-reverse items-center lg:flex-row  lg:gap-16 gap-4">
         {/* ✅ Product Details */}
-        <div className="p-6 space-y-4 flex-1 w-full">
+        <div className="py-8 space-y-4 flex-1 w-full">
           <h1 className="scroll-m-20 text-4xl font-bold">{product.name}</h1>
 
           {/* Rating (static demo) */}
@@ -104,7 +85,7 @@ const Page = async ({
             ))}
           </div>
 
-          <p className="leading-7 text-muted-foreground">
+          <p className="leading-7  text-muted-foreground">
             {product.description}
           </p>
 
@@ -134,13 +115,13 @@ const Page = async ({
         </div>
 
         {/* ✅ Product Image */}
-        <div className="relative h-[265px] flex-1 flex justify-center items-center">
+        <div className="relative h-[265px] flex-1 flex justify-center mx-auto items-center">
           <Image
             src={product.image}
             alt={product.name || "Product image"}
-            width={500}
-            height={500}
-            loading="lazy"
+            width={300}
+            height={300}
+            priority
             className="object-contain w-full h-full"
           />
         </div>
@@ -165,6 +146,35 @@ const Page = async ({
 };
 
 export default Page;
+
+// 🧠 Metadata for SEO
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const product = await db.product.findUnique({ where: { id } });
+
+  if (!product) {
+    return {
+      title: "Product Not Found - Vogue Haven",
+      description: "This product does not exist in the store.",
+    };
+  }
+
+  return {
+    title: `${product.name} - Vogue Haven`,
+    description: product.description || "Find out more about this product.",
+    openGraph: {
+      title: `${product.name} - Vogue Haven`,
+      description: product.description || "Check out this product.",
+      images: [
+        { url: product.image, width: 800, height: 600, alt: product.name },
+      ],
+    },
+  };
+}
 
 // ✅ ISR Static Params
 export async function generateStaticParams() {

@@ -52,18 +52,19 @@ export default async function Home({
     <main>
       {/* Hero Section */}
       <MyCarousel />
-      <FeaturedProduct params={params} />
-      {/* Product Grid */}
-      <div className=" mx-auto p-6">
-        <h2 className="text-4xl font-semibold text-center  mb-6">
-          {lang === "ar" ? "المنتجات" : "Products"}
+
+      <div className="  mx-auto p-12">
+        <FeaturedProduct params={params} />
+        {/* Product Grid */}
+        <h2 className="text-4xl font-semibold text-center  my-6">
+          {lang === "ar" ? "احدث منتجاتنا" : "Our Latest Products"}
           <Separator className="w-28 h-0.5 bg-gradient-to-r from-my-main to-my-secondary mt-2 mx-auto"></Separator>
         </h2>
 
         {/* Lazy-loaded server data */}
         <LazyFirst8Products lang={lang} />
+        <Banner params={params} />
       </div>
-      <Banner params={params} />
     </main>
   );
 }

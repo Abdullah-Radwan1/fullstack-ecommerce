@@ -5,7 +5,18 @@ import { cache } from "react";
 
 // Internal db calls
 export const getFirst8Products = cache(async function getFirst8Products() {
-  return await db.product.findMany({ take: 8 });
+  return await db.product.findMany({
+    take: 8,
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      basePrice: true,
+      image: true,
+      categoryId: true,
+    },
+  });
 });
 export const first_8_products = getFirst8Products;
 

@@ -1,4 +1,3 @@
-// components/First8Products.tsx
 import { getFirst8Products } from "@/lib/Functions";
 import ProductCard from "@/components/productCard";
 

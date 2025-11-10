@@ -6,10 +6,12 @@ import useCartStore from "@/zustand/store";
 import { useParams } from "next/navigation";
 import { Product } from "@/prisma/src/generated/client";
 import { toast } from "sonner";
+import { selectedprismaProduct } from "@/lib/types";
 
 // Define the props for the component
+
 interface AddtoCartProps {
-  item: Product;
+  item: selectedprismaProduct;
   classname?: string;
   varient?: "default" | "outline" | "ghost" | "link" | "destructive";
 }

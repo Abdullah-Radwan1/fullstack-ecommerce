@@ -24,6 +24,10 @@ export function MyCarousel() {
         en: "Experience Pure Sound - Your Perfect Headphones Awaits!",
         ar: "جرب الصوت النقي - سماعاتك المثالية في انتظارك!",
       },
+      description: {
+        en: "Enjoy crystal-clear audio with noise-cancelling technology and long battery life.",
+        ar: "استمتع بصوت واضح مع تقنية إلغاء الضوضاء وعمر بطارية طويل.",
+      },
       offer: {
         en: "Limited Time Offer 30% Off",
         ar: "عرض لفترة محدودة خصم 30%",
@@ -39,6 +43,10 @@ export function MyCarousel() {
         en: "Ghost Gaming Experience - Discover the Ultimate Gaming Monitor!",
         ar: "ارتقِ بتجربة الألعاب الخاصة بك - اكتشف أفضل شاشة ألعاب!",
       },
+      description: {
+        en: "High refresh rate and ultra-wide screen for the ultimate gaming experience.",
+        ar: "معدل تحديث عالي وشاشة واسعة للغاية لتجربة ألعاب مثالية.",
+      },
       offer: {
         en: "Hurry up, limited stock available!",
         ar: "أسرع، الكمية محدودة!",
@@ -53,6 +61,10 @@ export function MyCarousel() {
       title: {
         en: "Unleash Creativity and Power - 3Labs Workstation for Professionals!",
         ar: "أطلق العنان للإبداع والقوة - عروض اللابات الحصرية للمحترفين!",
+      },
+      description: {
+        en: "Powerful workstation optimized for designers, developers, and content creators.",
+        ar: "كمبيوتر قوي مخصص للمصممين والمطورين ومنشئي المحتوى.",
       },
       offer: { en: "Exclusive Deal 40% Off", ar: "صفقة حصرية خصم 40%" },
       buttonText1: { en: "Order Now", ar: "اطلب الآن" },
@@ -72,11 +84,11 @@ export function MyCarousel() {
           <CarouselItem key={slide.id} className="bg-card">
             <div
               dir={ar ? "rtl" : "ltr"}
-              className="relative flex flex-1 flex-col lg:flex-row items-center justify-between px-6 md:px-14 py-10 md:py-16 gap-8"
+              className="relative flex flex-col-reverse lg:flex-row items-center justify-between px-6 md:px-14 py-10 md:py-16 gap-8"
             >
               {/* Text Section - أصبحت متساوية مع الصورة */}
               <div
-                className="flex-1 max-w-xl animate-fade-in"
+                className="max-w-xl animate-fade-in"
                 style={{
                   animationDelay: "0.3s",
                   animationDuration: "0.8s",
@@ -87,9 +99,12 @@ export function MyCarousel() {
                 <p className="text-sm md:text-base font-bold bg-clip-text text-my-main pb-1 uppercase tracking-wide">
                   {slide.offer[lang as keyof typeof slide.offer]}
                 </p>
-                <h1 className="text-2xl md:text-4xl font-semibold leading-snug text-foreground mb-4">
+                <h1 className="text-2xl md:text-4xl font-semibold leading-snug text-foreground mb-2">
                   {slide.title[lang as keyof typeof slide.title]}
                 </h1>
+                <p className="text-base md:text-lg text-muted-foreground mb-4">
+                  {slide.description[lang as keyof typeof slide.description]}
+                </p>
                 <div className="flex items-center mt-4 gap-3">
                   <Link
                     href={slide.link}
@@ -107,9 +122,9 @@ export function MyCarousel() {
                 </div>
               </div>
 
-              {/* Image Section - أصبحت متساوية مع النص */}
+              {/* Image Section */}
               <div
-                className="flex-1 relative w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[420px] animate-slide-up"
+                className="relative w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[420px] animate-slide-up"
                 style={{
                   animationDelay: "0.1s",
                   animationDuration: "0.9s",
@@ -122,7 +137,7 @@ export function MyCarousel() {
                   alt={`Slide ${slide.id}`}
                   fill
                   priority
-                  className="object-contain"
+                  className="object-contain h-full"
                 />
               </div>
             </div>

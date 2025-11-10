@@ -81,9 +81,11 @@ export async function middleware(request: NextRequest) {
 }
 
 // Configure the middleware matcher
-// Exclude internal Next.js paths, API routes, Stripe webhooks, and static files
+// Exclude internal Next.js paths, API routes, Stripe webhooks, and static files *negative lookahead regex*
 export const config = {
   matcher: [
     "/((?!_next/|api/|webhooks/stripe|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
   ],
+  // /((?! ... ).*)
+  // دي صيغة regex معناها "اختار كل المسارات ما عدا اللي جوه الأقواس".
 };

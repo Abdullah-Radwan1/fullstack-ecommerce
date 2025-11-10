@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/prisma/src/generated/client";
 import AddtoCart from "@/zustand/AddtoCart"; // Client Component
+import { selectedprismaProduct } from "@/lib/types";
 
 export default function ProductCard({
   product,
   lang,
 }: {
-  product: Product;
+  product: selectedprismaProduct;
   lang: string;
 }) {
   const ar = lang === "ar";

@@ -65,7 +65,7 @@ const FeaturedProduct = async ({
         {ar ? "منتجات مميزة" : "Featured Products"}
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 lg:gap-14 mt-8 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-8 lg:gap-14 mt-8 ">
         {products.map(
           ({ id, image, title, link, description, badgeLeft, badgeRight }) => (
             <Card
@@ -93,7 +93,7 @@ const FeaturedProduct = async ({
                 <p className="font-semibold text-xl lg:text-2xl text-my-main  text-center">
                   {title[lang as keyof typeof title]}
                 </p>
-                <p className="text-sm lg:text-base text-foreground  text-center">
+                <p className="text-sm lg:text-base text-foreground line-clamp-3  text-center">
                   {description[lang as keyof typeof description]}
                 </p>
                 <Link

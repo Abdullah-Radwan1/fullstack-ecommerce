@@ -48,6 +48,14 @@ export const getProducts = cache(async function getProducts({
     take,
     where: baseWhere,
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      basePrice: true,
+      image: true,
+      categoryId: true,
+    },
   });
 
   const nextPageProducts = await db.product.findMany({
