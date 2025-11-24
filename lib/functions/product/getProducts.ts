@@ -3,7 +3,6 @@
 import { db } from "@/prisma/db";
 import { cache } from "react";
 
-// Cache revalidation for 60 seconds
 interface GetProductsParams {
   page?: number;
   search?: string;
@@ -31,8 +30,14 @@ export const getProducts = cache(async function getProducts({
     AND: [
       {
         OR: [
-          { name: { contains: search, mode: "insensitive" as const } },
-          { description: { contains: search, mode: "insensitive" as const } },
+          { name_en: { contains: search, mode: "insensitive" as const } },
+          { name_ar: { contains: search, mode: "insensitive" as const } },
+          {
+            description_en: { contains: search, mode: "insensitive" as const },
+          },
+          {
+            description_ar: { contains: search, mode: "insensitive" as const },
+          },
         ],
       },
       ...(categories.length > 0 && !category.includes("all")
@@ -50,8 +55,10 @@ export const getProducts = cache(async function getProducts({
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
-      name: true,
-      description: true,
+      name_en: true,
+      name_ar: true,
+      description_en: true,
+      description_ar: true,
       basePrice: true,
       image: true,
       categoryId: true,
@@ -64,7 +71,8 @@ export const getProducts = cache(async function getProducts({
     where: baseWhere,
   });
 
-  const hasMore = nextPageProducts.length > 0;
-
-  return { products, hasMore };
+  return {
+    products,
+    hasMore: nextPageProducts.length > 0,
+  };
 });

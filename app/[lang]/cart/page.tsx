@@ -81,11 +81,13 @@ const Page = () => {
                 key={item.id}
                 className="text-center hover:bg-muted/10 transition-colors"
               >
-                <TableCell className="font-semibold">{item.name}</TableCell>
+                <TableCell className="font-semibold">
+                  {ar ? item.name_ar : item.name_en}
+                </TableCell>
                 <TableCell className="flex justify-center">
                   <Image
                     src={item.image}
-                    alt={item.name}
+                    alt={ar ? item.name_ar : item.name_en}
                     width={100}
                     height={100}
                     className="w-16 h-16 object-contain rounded-md border border-border bg-background"

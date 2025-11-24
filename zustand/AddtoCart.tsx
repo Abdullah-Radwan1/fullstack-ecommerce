@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import useCartStore from "@/zustand/store";
 import { useParams } from "next/navigation";
-import { Product } from "@/prisma/src/generated/client";
 import { toast } from "sonner";
 import { selectedprismaProduct } from "@/lib/types";
 

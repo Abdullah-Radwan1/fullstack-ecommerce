@@ -1,23 +1,28 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// Updated CartItem for bilingual support
 export type CartItem = {
-  name: string;
   id: string;
+  name_ar: string;
+  name_en: string;
   image: string;
   basePrice: number;
   quantity?: number;
 };
+
 export type sidebarState = {
   togglestate: boolean;
   setTogglestate: (togglestate: boolean) => void;
 };
+
 type imageState = {
   setImageUrl: (imageUrl: string) => void;
   imageUrl: string;
   setImageName: (imageName: string) => void;
   imageName: string;
 };
+
 type CartState = {
   items: CartItem[];
   addCartItem: (item: CartItem) => void;
@@ -27,8 +32,8 @@ type CartState = {
   getQuantity: () => number; // Getter for total quantity
   getTotalPrice: () => number; // Getter for total price
 };
-// store.ts
 
+// Search Store
 interface SearchState {
   searchQuery: string;
   setSearchQuery: (value: string) => void;
@@ -44,6 +49,7 @@ export const useSearchStore = create<SearchState>((set) => ({
     set((state) => ({ triggerSearch: !state.triggerSearch })),
 }));
 
+// Cart Store
 const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
@@ -85,11 +91,11 @@ const useCartStore = create<CartState>()(
         );
       },
     }),
-    {
-      name: "cart-storage",
-    }
+    { name: "cart-storage" }
   )
 );
+
+// Image Store
 const useImageStore = create<imageState>()(
   persist(
     (set) => ({
@@ -98,21 +104,20 @@ const useImageStore = create<imageState>()(
       setImageUrl: (imageUrl) => set({ imageUrl }),
       setImageName: (imageName) => set({ imageName }),
     }),
-    {
-      name: "image-storage",
-    }
+    { name: "image-storage" }
   )
 );
+
+// Sidebar Store
 const useSidebarStore = create<sidebarState>()(
   persist(
     (set) => ({
       togglestate: false,
       setTogglestate: (togglestate) => set({ togglestate }),
     }),
-    {
-      name: "sidebar-storage",
-    }
+    { name: "sidebar-storage" }
   )
 );
+
 export default useCartStore;
 export { useImageStore, useSidebarStore };

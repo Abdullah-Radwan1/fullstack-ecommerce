@@ -1,4 +1,4 @@
-import { Product } from "@/prisma/src/generated/client";
+import { Product } from "./generated/prisma/browser";
 
 export type selectedprismaProduct = Omit<
   Product,

@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth/Authoptions";
 import AuthButton from "@/lib/auth/SignoutButton";
-import { myOrders } from "@/lib/Functions";
+import { getMyOrders } from "@/lib/Functions";
 import { Separator } from "@/components/ui/separator";
 import { Lock } from "lucide-react";
 import { getServerSession } from "next-auth";
@@ -17,10 +17,10 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
   const { lang } = await params;
   const ar = lang === "ar";
 
-  if (!session?.user?.email) redirect("/signin");
+  if (!session?.user?.email) redirect(ar ? "/ar/signin" : "/en/signin");
 
   const { email, name, image, role } = session.user;
-  const orders = await myOrders(email);
+  const orders = await getMyOrders(email);
 
   return (
     <div className="space-y-8 mt-10 min-h-[55vh] max-w-3xl mx-auto text-center">

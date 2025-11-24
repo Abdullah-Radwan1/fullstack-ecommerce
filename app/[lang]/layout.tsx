@@ -36,15 +36,15 @@ export default async function RootLayout({
       dir={lang === "ar" ? "rtl" : "ltr"}
       lang={lang}
     >
-      <SessionProvider session={session}>
-        <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col">
+        <Sidebar />
+        <SessionProvider session={session}>
           <Navbar />
-          <Sidebar />
           <main className="flex-1  content-center">{children}</main>
-          <Footer lang={lang} />
-          <Toaster />
-        </body>
-      </SessionProvider>
+        </SessionProvider>
+        <Footer lang={lang} />
+        <Toaster />
+      </body>
     </html>
   );
 }

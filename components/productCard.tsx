@@ -28,7 +28,7 @@ export default function ProductCard({
         <div className="w-full h-full bg-card rounded-lg flex items-center justify-center overflow-hidden relative">
           <Image
             src={product.image}
-            alt={product.name}
+            alt={ar ? product.name_ar : product.name_en}
             className="object-contain h-full w-full p-2"
             width={700}
             height={700}
@@ -38,17 +38,17 @@ export default function ProductCard({
 
       {/* Product Name */}
       <p className="font-semibold pt-2 text-foreground truncate px-2">
-        {product.name}
+        {ar ? product.name_ar : product.name_en}
       </p>
 
       {/* Product Description */}
-      <p className="w-full text-xs text-muted-foreground line-clamp-2 px-2 ">
-        {product.description}
+      <p className="w-full text-sm text-muted-foreground line-clamp-2 px-2">
+        {ar ? product.description_ar : product.description_en}
       </p>
 
       {/* Price and Add to Cart Button */}
       <div className="flex items-center justify-between w-full mt-2 px-2">
-        <AddtoCart item={product} classname="text-my-main " varient="outline" />
+        <AddtoCart item={product} classname="text-my-main" varient="outline" />
         <span className="bg-my-secondary text-background px-3 py-1 rounded-lg text-sm font-medium shadow-sm">
           ${Number(product.basePrice)}
         </span>

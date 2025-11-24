@@ -1,6 +1,6 @@
-// lib/data.ts (for example)
-
+// lib/data.ts
 import { db } from "@/prisma/db";
+import { randomUUID } from "crypto";
 import { cache } from "react";
 
 // Internal db calls
@@ -10,8 +10,10 @@ export const getFirst8Products = cache(async function getFirst8Products() {
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
-      name: true,
-      description: true,
+      name_ar: true,
+      name_en: true,
+      description_ar: true,
+      description_en: true,
       basePrice: true,
       image: true,
       categoryId: true,
@@ -20,60 +22,69 @@ export const getFirst8Products = cache(async function getFirst8Products() {
 });
 export const first_8_products = getFirst8Products;
 
-async function getRelatedProducts(categoryId: number) {
+export async function relatedProducts(categoryId: number) {
   return await db.product.findMany({
     where: { categoryId },
     take: 4,
+    select: {
+      id: true,
+      name_ar: true,
+      name_en: true,
+      description_ar: true,
+      description_en: true,
+      basePrice: true,
+      image: true,
+      categoryId: true,
+    },
   });
 }
-export const relatedProducts = getRelatedProducts;
-// admin function
-async function getAllUsers() {
+
+// Admin functions
+export async function getAllUsers() {
   return await db.user.findMany();
 }
-export const allUsers = getAllUsers;
 
-async function getAllOrders() {
+export async function getAllOrders() {
   return await db.order.findMany({
     include: {
-      user: true,
-      orderItems: {
+      User: true, // updated to match model casing
+      OrderItem: {
         include: {
-          product: true,
+          Product: true,
         },
       },
     },
   });
 }
-export const allOrders = getAllOrders;
 
-async function getMyOrders(userEmail: string) {
+export async function getMyOrders(userEmail: string) {
   return await db.order.findMany({
     where: {
-      user: {
-        email: userEmail,
-      },
+      User: { email: userEmail },
     },
     include: {
-      user: true,
-      orderItems: {
+      User: true,
+      OrderItem: {
         include: {
-          product: true,
+          Product: true,
         },
       },
     },
   });
 }
-export const myOrders = getMyOrders;
-// auth function
-async function getUserFunc(email: string) {
+
+// Auth function
+export async function getUser(email: string) {
   return await db.user.upsert({
     where: { email },
-    create: { email },
+    create: {
+      email,
+      updatedAt: new Date(), // required
+    },
     update: {},
   });
 }
-export const getUser = getUserFunc;
+
 type OrderItemInput = {
   productId: string;
   quantity: number;
@@ -82,19 +93,19 @@ type OrderItemInput = {
 export const hasMatchingOrder = async (orderItems: OrderItemInput[]) => {
   const orders = await db.order.findMany({
     include: {
-      orderItems: {
+      OrderItem: {
         include: {
-          product: true,
+          Product: true,
         },
       },
     },
   });
 
   for (const order of orders) {
-    if (order.orderItems.length !== orderItems.length) continue;
+    if (order.OrderItem.length !== orderItems.length) continue;
 
     const isMatch = orderItems.every((inputItem) => {
-      const orderItem = order.orderItems.find(
+      const orderItem = order.OrderItem.find(
         (item) => item.productId === inputItem.productId
       );
       return orderItem && orderItem.quantity === inputItem.quantity;

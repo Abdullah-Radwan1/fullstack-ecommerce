@@ -56,7 +56,7 @@ export function SearchBar({ ar }: { ar: boolean }) {
           size={30}
           className={`absolute ${
             ar ? "right-4" : "left-4"
-          } top-1/2 -translate-y-1/2 text-muted-foreground hover:bg-accent p-1 hover:cursor-pointer transition`}
+          } top-1/2 -translate-y-1/2 text-muted-foreground hover:bg-accent p-1  transition rounded-lg hover:text-white`}
         />
 
         {/* sparkle icon (right) */}

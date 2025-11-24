@@ -30,15 +30,16 @@ export async function POST(req: Request) {
       streetAddress,
       phone,
       userId: user.id,
-      orderItems: {
+      OrderItem: {
+        // ✅ match your Prisma model
         create: products.map((product: { id: string; quantity: number }) => ({
           quantity: product.quantity,
-          product: { connect: { id: product.id } },
+          Product: { connect: { id: product.id } }, // also match relation name in OrderItem
         })),
       },
     },
     include: {
-      orderItems: { include: { product: true } },
+      OrderItem: { include: { Product: true } },
     },
   });
   if (!order) {

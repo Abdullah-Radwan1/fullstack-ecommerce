@@ -7,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { allOrders, allUsers, myOrders } from "@/lib/Functions";
+import { getAllOrders, getAllUsers, getMyOrders } from "@/lib/Functions";
 import CreateProduct from "./components/create-product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/Authoptions";
-import { User } from "@/prisma/src/generated/client";
+import { User } from "@/lib/generated/prisma/client";
 export const metadata = {
   title: "Vogue-Haven Admin page",
   description:
@@ -26,9 +26,9 @@ export default async function AdminPage({
   const ar = lang === "ar";
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;
-  const users = await allUsers();
-  const orders = await allOrders();
-  const my_orders = await myOrders(email || "");
+  const users = await getAllUsers();
+  const orders = await getAllOrders();
+  const my_orders = await getMyOrders(email || "");
 
   const translations = {
     dashboard: ar ? "لوحة التحكم" : "Admin Dashboard",
@@ -124,12 +124,13 @@ export default async function AdminPage({
                     <TableRow key={order.id}>
                       <TableCell>{order.id}</TableCell>
                       <TableCell>${order.totalPrice}</TableCell>
-                      <TableCell>{order.user.email}</TableCell>
+                      <TableCell>{order.User.email}</TableCell>
                       <TableCell>
                         <ul className="list-disc list-inside">
-                          {order.orderItems.map((item) => (
+                          {order.OrderItem.map((item) => (
                             <li key={item.id}>
-                              {item.product.name} x {item.quantity}
+                              {ar ? item.Product.name_ar : item.Product.name_en}{" "}
+                              x {item.quantity}
                             </li>
                           ))}
                         </ul>
@@ -170,12 +171,13 @@ export default async function AdminPage({
                     <TableRow key={order.id}>
                       <TableCell>{order.id}</TableCell>
                       <TableCell>${order.totalPrice}</TableCell>
-                      <TableCell>{order.user.email}</TableCell>
+                      <TableCell>{order.User.email}</TableCell>
                       <TableCell>
                         <ul className="list-disc list-inside">
-                          {order.orderItems.map((item) => (
+                          {order.OrderItem.map((item) => (
                             <li key={item.id}>
-                              {item.product.name} x {item.quantity}
+                              {ar ? item.Product.name_ar : item.Product.name_en}
+                              x {item.quantity}
                             </li>
                           ))}
                         </ul>

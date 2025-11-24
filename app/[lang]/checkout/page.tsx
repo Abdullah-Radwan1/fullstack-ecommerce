@@ -24,7 +24,9 @@ export default function CheckoutPage() {
     }
 
     const totalPrice = getTotalPrice();
-    const productsNames = products.map((item) => item.name);
+    const productsNames = products.map((item) =>
+      ar ? item.name_ar : item.name_en
+    );
 
     const createPaymentIntent = async () => {
       try {

@@ -28,7 +28,9 @@ const SideCart = () => {
       );
     }
 
-    return products.map((item) => <Sideitem key={item.name} CartItem={item} />);
+    return products.map((item) => (
+      <Sideitem ar={ar} key={item.name_ar} CartItem={item} />
+    ));
   }, [products, ar]);
 
   useEffect(() => {

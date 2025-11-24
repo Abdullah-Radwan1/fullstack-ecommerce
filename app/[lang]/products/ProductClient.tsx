@@ -9,7 +9,7 @@ import {
 } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
-import { Product } from "@/prisma/src/generated/client";
+import { Product } from "@/lib/generated/prisma/browser";
 import { Loader2 } from "lucide-react";
 import { getProducts } from "@/lib/functions/product/getProducts";
 import { Slider } from "@/components/ui/slider";

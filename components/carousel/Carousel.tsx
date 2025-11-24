@@ -124,7 +124,7 @@ export function MyCarousel() {
 
               {/* Image Section */}
               <div
-                className="relative w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[420px] animate-slide-up"
+                className="relative w-full h-[280px] sm:h-[200px] md:h-[350px] lg:h-[350px] animate-slide-up"
                 style={{
                   animationDelay: "0.1s",
                   animationDuration: "0.9s",

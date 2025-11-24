@@ -66,7 +66,6 @@ function Form({ ar }: { ar?: boolean }) {
 
   const stripe = useStripe();
   const elements = useElements();
-  const params = useParams();
 
   const lang = ar ? "ar" : "en";
 
@@ -236,17 +235,20 @@ function Form({ ar }: { ar?: boolean }) {
         <div className="space-y-4 max-h-[250px] overflow-y-auto">
           {products.map((item, idx) => (
             <main key={item.id}>
-              <div className="flex items-center gap-4">
+              <div
+                className="flex p-2
+               items-center gap-4"
+              >
                 <Image
                   src={item.image}
-                  alt={item.name}
+                  alt={ar ? item.name_ar : item.name_en}
                   width={100}
                   height={100}
-                  className="rounded-md object-cover"
+                  className="object-center"
                 />
                 <div className="flex-1">
                   <p className="font-medium text-muted-foreground text-base">
-                    {item.name}
+                    {ar ? item.name_ar : item.name_en}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     ${item.basePrice}{" "}

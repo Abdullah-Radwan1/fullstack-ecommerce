@@ -1,0 +1,7 @@
+node_modules
+.next
+npm-debug.log
+dockerfile
+docker-compose.yml
+.git
+.env.local

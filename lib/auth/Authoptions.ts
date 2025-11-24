@@ -4,7 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { db } from "@/prisma/db";
 import bcrypt from "bcrypt";
-import { UserRole } from "@/prisma/src/generated/client";
+import { UserRole } from "../generated/prisma/enums";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),

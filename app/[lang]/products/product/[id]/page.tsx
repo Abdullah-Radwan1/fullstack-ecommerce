@@ -21,6 +21,7 @@ const translations = {
     addToCart: "Add to Cart",
     checkout: "Checkout",
     relatedProducts: "Related Products",
+    noRelated: "No related products found.",
   },
   ar: {
     productNotFound: "المنتج غير موجود",
@@ -28,16 +29,13 @@ const translations = {
     addToCart: "أضف إلى السلة",
     checkout: "الدفع",
     relatedProducts: "منتجات ذات صلة",
+    noRelated: "لا توجد منتجات ذات صلة.",
   },
 } as const;
 
 // 🧩 Page Component
-const Page = async ({
-  params,
-}: {
-  params: Promise<{ lang: string; id: string }>;
-}) => {
-  const { id, lang } = await params;
+const Page = async ({ params }: { params: { lang: string; id: string } }) => {
+  const { id, lang } = params;
   const ar = lang === "ar";
   const t = translations[lang as keyof typeof translations];
 
@@ -45,13 +43,16 @@ const Page = async ({
     where: { id },
     select: {
       id: true,
-      name: true,
-      description: true,
+      name_ar: true,
+      name_en: true,
+      description_ar: true,
+      description_en: true,
       basePrice: true,
       image: true,
       categoryId: true,
     },
   });
+
   if (!product)
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center">
@@ -67,7 +68,9 @@ const Page = async ({
       <section className="flex flex-col-reverse items-center lg:flex-row  lg:gap-16 gap-4">
         {/* ✅ Product Details */}
         <div className="py-8 space-y-4 flex-1 w-full">
-          <h1 className="scroll-m-20 text-4xl font-bold">{product.name}</h1>
+          <h1 className="scroll-m-20 text-4xl font-bold">
+            {ar ? product.name_ar : product.name_en}
+          </h1>
 
           {/* Rating (static demo) */}
           <div className="flex items-center gap-0.5">
@@ -85,8 +88,8 @@ const Page = async ({
             ))}
           </div>
 
-          <p className="leading-7  text-muted-foreground">
-            {product.description}
+          <p className="leading-7 text-muted-foreground">
+            {ar ? product.description_ar : product.description_en}
           </p>
 
           <p className="text-3xl font-bold">
@@ -118,7 +121,7 @@ const Page = async ({
         <div className="relative h-[265px] flex-1 flex justify-center mx-auto items-center">
           <Image
             src={product.image}
-            alt={product.name || "Product image"}
+            alt={ar ? product.name_ar : product.name_en}
             width={300}
             height={300}
             priority
@@ -136,9 +139,7 @@ const Page = async ({
             <ProductCard key={related.id} product={related} lang={lang} />
           ))
         ) : (
-          <p className="text-muted-foreground">
-            {ar ? "لا توجد منتجات ذات صلة." : "No related products found."}
-          </p>
+          <p className="text-muted-foreground">{t.noRelated}</p>
         )}
       </div>
     </main>
@@ -151,10 +152,19 @@ export default Page;
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string; id: string }>;
+  params: { lang: string; id: string };
 }): Promise<Metadata> {
-  const { id } = await params;
-  const product = await db.product.findUnique({ where: { id } });
+  const { id, lang } = params;
+  const product = await db.product.findUnique({
+    where: { id },
+    select: {
+      name_ar: true,
+      name_en: true,
+      description_ar: true,
+      description_en: true,
+      image: true,
+    },
+  });
 
   if (!product) {
     return {
@@ -164,13 +174,24 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${product.name} - Vogue Haven`,
-    description: product.description || "Find out more about this product.",
+    title: `${lang === "ar" ? product.name_ar : product.name_en} - Vogue Haven`,
+    description:
+      lang === "ar"
+        ? product.description_ar
+        : product.description_en || "Find out more about this product.",
     openGraph: {
-      title: `${product.name} - Vogue Haven`,
-      description: product.description || "Check out this product.",
+      title: `${
+        lang === "ar" ? product.name_ar : product.name_en
+      } - Vogue Haven`,
+      description:
+        lang === "ar" ? product.description_ar : product.description_en,
       images: [
-        { url: product.image, width: 800, height: 600, alt: product.name },
+        {
+          url: product.image,
+          width: 800,
+          height: 600,
+          alt: lang === "ar" ? product.name_ar : product.name_en,
+        },
       ],
     },
   };
