@@ -78,14 +78,15 @@ model Product {
   description_ar String
   description_en String
   image       String
-  basePrice   Int
+  basePrice   Float
   createdAt   DateTime    @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime?
   categoryId  Int
-  userId      String?
+    userId         String      // ✅ link to the user who created it
+  User           User        @relation(fields: [userId], references: [id])
+
   OrderItem   OrderItem[]
   Category    Category    @relation(fields: [categoryId], references: [id])
-  User        User?       @relation(fields: [userId], references: [id])
 }
 
 model Session {
@@ -108,11 +109,10 @@ model User {
   role          UserRole        @default(USER)
   createdAt     DateTime        @default(now())
  updatedAt     DateTime       @updatedAt
-
+products  Product[]
   Account       Account[]
   Authenticator Authenticator[]
   Order         Order[]
-  Product       Product[]
   Session       Session[]
 }
 

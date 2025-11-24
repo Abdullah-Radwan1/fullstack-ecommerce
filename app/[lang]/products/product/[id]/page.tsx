@@ -34,8 +34,13 @@ const translations = {
 } as const;
 
 // 🧩 Page Component
-const Page = async ({ params }: { params: { lang: string; id: string } }) => {
-  const { id, lang } = params;
+const Page = async ({
+  params,
+}: {
+  params: Promise<{ lang: string; id: string }>; // ✅ wrap in Promise with object type
+}) => {
+  const { lang, id } = await params; // ✅ await the params
+
   const ar = lang === "ar";
   const t = translations[lang as keyof typeof translations];
 
@@ -64,25 +69,20 @@ const Page = async ({ params }: { params: { lang: string; id: string } }) => {
   const relatedFunc = await relatedProducts(product.categoryId);
 
   return (
-    <main className="max-w-[80%] mx-auto " dir={ar ? "rtl" : "ltr"}>
-      <section className="flex flex-col-reverse items-center lg:flex-row  lg:gap-16 gap-4">
-        {/* ✅ Product Details */}
+    <main className="max-w-[80%] mx-auto" dir={ar ? "rtl" : "ltr"}>
+      <section className="flex flex-col-reverse items-center lg:flex-row lg:gap-16 gap-4">
+        {/* Product Details */}
         <div className="py-8 space-y-4 flex-1 w-full">
           <h1 className="scroll-m-20 text-4xl font-bold">
             {ar ? product.name_ar : product.name_en}
           </h1>
 
-          {/* Rating (static demo) */}
           <div className="flex items-center gap-0.5">
             {Array.from({ length: 5 }).map((_, index) => (
               <Image
                 key={index}
                 className="h-4 w-4"
-                src={
-                  index < Math.floor(4)
-                    ? assets.star_icon
-                    : assets.star_dull_icon
-                }
+                src={index < 4 ? assets.star_icon : assets.star_dull_icon}
                 alt="star_icon"
               />
             ))}
@@ -117,7 +117,7 @@ const Page = async ({ params }: { params: { lang: string; id: string } }) => {
           </div>
         </div>
 
-        {/* ✅ Product Image */}
+        {/* Product Image */}
         <div className="relative h-[265px] flex-1 flex justify-center mx-auto items-center">
           <Image
             src={product.image}
@@ -130,7 +130,6 @@ const Page = async ({ params }: { params: { lang: string; id: string } }) => {
         </div>
       </section>
 
-      {/* ✅ Related Products */}
       <Separator className="my-8" />
       <h2 className="text-2xl font-bold mb-4">{t.relatedProducts}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
@@ -148,13 +147,13 @@ const Page = async ({ params }: { params: { lang: string; id: string } }) => {
 
 export default Page;
 
-// 🧠 Metadata for SEO
+// 🧠 Metadata
 export async function generateMetadata({
   params,
 }: {
-  params: { lang: string; id: string };
+  params: Promise<{ lang: string; id: string }>;
 }): Promise<Metadata> {
-  const { id, lang } = params;
+  const { id, lang } = await params;
   const product = await db.product.findUnique({
     where: { id },
     select: {
@@ -166,12 +165,11 @@ export async function generateMetadata({
     },
   });
 
-  if (!product) {
+  if (!product)
     return {
       title: "Product Not Found - Vogue Haven",
       description: "This product does not exist in the store.",
     };
-  }
 
   return {
     title: `${lang === "ar" ? product.name_ar : product.name_en} - Vogue Haven`,
@@ -200,7 +198,6 @@ export async function generateMetadata({
 // ✅ ISR Static Params
 export async function generateStaticParams() {
   const products = await db.product.findMany({ select: { id: true } });
-
   return products.flatMap((product) => [
     { id: product.id, lang: "en" },
     { id: product.id, lang: "ar" },

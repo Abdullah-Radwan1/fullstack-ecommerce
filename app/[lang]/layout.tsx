@@ -19,11 +19,11 @@ export const revalidate = 10;
 export default async function RootLayout({
   children,
   params,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-  params: Promise<{ lang: string }>;
-}>) {
-  const { lang } = await params;
+  params: Promise<{ lang: string }>; // ✅ Correct typing
+}) {
+  const { lang } = await params; // ✅ await the dynamic params
   const session = await getServerSession(authOptions);
   const Footer = dynamic(() => import("@/components/footer"), {
     loading: () => <Loading />,
@@ -40,7 +40,7 @@ export default async function RootLayout({
         <Sidebar />
         <SessionProvider session={session}>
           <Navbar />
-          <main className="flex-1  content-center">{children}</main>
+          <main className="flex-1 content-center">{children}</main>
         </SessionProvider>
         <Footer lang={lang} />
         <Toaster />

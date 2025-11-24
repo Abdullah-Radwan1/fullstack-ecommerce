@@ -3,8 +3,7 @@ import Image from "next/image";
 import { Gamepad } from "lucide-react";
 import Link from "next/link";
 
-const Banner = async ({ params }: { params: Promise<{ lang: string }> }) => {
-  const { lang } = await params;
+const Banner = async ({ lang }: { lang: string }) => {
   const ar = lang === "ar";
 
   return (

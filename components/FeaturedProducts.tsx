@@ -51,12 +51,7 @@ const products = [
   },
 ];
 
-const FeaturedProduct = async ({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}) => {
-  const { lang } = await params;
+const FeaturedProduct = async ({ lang }: { lang: string }) => {
   const ar = lang === "ar";
 
   return (

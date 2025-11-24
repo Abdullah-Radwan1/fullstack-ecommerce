@@ -1,53 +1,70 @@
 import { NextResponse } from "next/server";
 import { db } from "@/prisma/db";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/Authoptions";
 
 export async function POST(req: Request) {
-  const user = getServerSession();
+  const session = await getServerSession(authOptions);
 
-  if (!user) {
-    return new Response("Unauthorized", { status: 401 });
+  if (!session || !session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   try {
-    const { name, description, basePrice, categoryId, image, userId } =
-      await req.json();
+    const {
+      name_ar,
+      name_en,
+      description_ar,
+      description_en,
+      basePrice,
+      categoryId,
+      image,
+    } = await req.json();
 
     // Ensure required fields exist
     if (
-      !name ||
-      !description ||
+      !name_ar ||
+      !name_en ||
+      !description_ar ||
+      !description_en ||
       !basePrice ||
       !categoryId ||
-      !image ||
-      !userId
+      !image
     ) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Create product in database
+    const userId = session.user.id!;
+
+    // Limit products per user
     const productCount = await db.product.count({
       where: { userId },
     });
+
     if (productCount >= 2) {
       return NextResponse.json(
         { error: "You can only create 2 products" },
         { status: 400 }
       );
     }
+
+    // Create product
     const product = await db.product.create({
       data: {
-        name,
-        description,
-        basePrice: parseFloat(basePrice), // Ensure basePrice is a number
-        categoryId: parseInt(categoryId), // Ensure categoryId is a number
+        name_ar,
+        name_en,
+        description_ar,
+        userId: userId as string, // ✅ link to the user
+
+        description_en,
+        basePrice: parseFloat(basePrice),
+        categoryId: parseInt(categoryId, 10),
         image,
+        updatedAt: new Date(),
       },
     });
-    await db.user.update({
-      where: { id: userId },
-      data: { products: { connect: { id: product.id } } },
-    });
-    return NextResponse.json(product);
+
+    return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json(

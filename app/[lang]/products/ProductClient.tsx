@@ -133,7 +133,7 @@ export default function ProductsClient({
     };
 
     runSearch();
-  }, [triggerSearch, pathname]);
+  }, [triggerSearch, pathname, handleFetch]);
 
   // Optional: debounce search (if user types fast)
   useEffect(() => {

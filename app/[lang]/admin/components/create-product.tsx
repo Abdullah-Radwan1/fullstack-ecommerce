@@ -1,4 +1,5 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -10,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import Cloudinary from "@/lib/cloudinary";
 import { useImageStore } from "@/zustand/store";
@@ -24,73 +25,43 @@ import { Label } from "@/components/ui/label";
 const CreateProduct = () => {
   const { lang } = useParams();
   const session = useSession();
-  const userId = session?.data?.user.id;
   const ar = lang === "ar";
 
-  const [name, setName] = useState("");
+  const [name_ar, setNameAr] = useState("");
+  const [name_en, setNameEn] = useState("");
+  const [description_ar, setDescriptionAr] = useState("");
+  const [description_en, setDescriptionEn] = useState("");
   const [categoryId, setCategoryId] = useState<number>();
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
+  const [basePrice, setBasePrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
   const { imageUrl, setImageUrl, setImageName } = useImageStore();
-
-  useEffect(() => {
-    const generateDescription = async () => {
-      if (name.length > 3) {
-        setIsGeneratingDescription(true);
-        try {
-          const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, lang }),
-          });
-
-          if (response.ok) {
-            const { description } = await response.json();
-            let index = 0;
-            const typedText = { current: "" };
-            setDescription("");
-            const typeWriter = () => {
-              if (index < description.length) {
-                typedText.current += description.charAt(index);
-                setDescription(typedText.current);
-                index++;
-                setTimeout(typeWriter, 15);
-              }
-            };
-            typeWriter();
-          }
-        } catch (error) {
-          console.error("Description generation failed:", error);
-        } finally {
-          setIsGeneratingDescription(false);
-        }
-      }
-    };
-
-    const timer = setTimeout(generateDescription, 1000);
-    return () => clearTimeout(timer);
-  }, [name, lang]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    if (!session.data?.user?.id) {
+      toast.error(ar ? "يجب تسجيل الدخول" : "You must be logged in");
+      return;
+    }
 
+    setIsLoading(true);
     try {
       if (!imageUrl)
         throw new Error(ar ? "الصورة مطلوبة" : "Image is required");
+      if (!categoryId)
+        throw new Error(ar ? "الفئة مطلوبة" : "Category is required");
 
       const response = await fetch("/api/product-create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          description,
-          basePrice: parseFloat(price),
+          name_ar,
+          name_en,
+          description_ar,
+          description_en,
+          basePrice: parseFloat(basePrice),
           categoryId,
           image: imageUrl,
-          userId,
+          userId: session.data.user.id,
         }),
       });
 
@@ -100,50 +71,109 @@ const CreateProduct = () => {
         ar ? "تم إنشاء المنتج بنجاح" : "Product created successfully"
       );
 
-      setName("");
+      // Reset form
+      setNameAr("");
+      setNameEn("");
+      setDescriptionAr("");
+      setDescriptionEn("");
       setCategoryId(undefined);
-      setPrice("");
-      setDescription("");
+      setBasePrice("");
       setImageUrl("");
       setImageName("");
-    } catch (error) {
-      toast("error");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Card className="max-w-xl mx-auto mt-10">
+    <Card className="max-w-xl border-0 mx-auto mt-10">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-bold">
           {ar ? "إنشاء منتج جديد" : "Create New Product"}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-          {/* Name */}
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          {/* Name Arabic */}
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="name">{ar ? "الاسم" : "Name"}</Label>
+            <Label htmlFor="name_ar">
+              {ar ? "الاسم بالعربية" : "Name (Arabic)"}
+            </Label>
             <Input
-              id="name"
+              id="name_ar"
               type="text"
-              value={name}
-              className="bg-transparent"
-              onChange={(e) => setName(e.target.value)}
+              value={name_ar}
+              onChange={(e) => setNameAr(e.target.value)}
               required
-              minLength={5}
-              maxLength={20}
+              minLength={2}
+              maxLength={50}
+              className="bg-card"
+            />
+          </div>
+
+          {/* Name English */}
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="name_en">
+              {ar ? "الاسم بالإنجليزية" : "Name (English)"}
+            </Label>
+            <Input
+              id="name_en"
+              type="text"
+              value={name_en}
+              onChange={(e) => setNameEn(e.target.value)}
+              required
+              minLength={2}
+              maxLength={50}
+              className="bg-card"
+            />
+          </div>
+
+          {/* Description Arabic */}
+          <div className="flex flex-col space-y-2 md:col-span-2">
+            <Label htmlFor="description_ar">
+              {ar ? "الوصف بالعربية" : "Description (Arabic)"}
+            </Label>
+            <Textarea
+              id="description_ar"
+              value={description_ar}
+              onChange={(e) => setDescriptionAr(e.target.value)}
+              required
+              minLength={20}
+              maxLength={250}
+              className="min-h-[80px]"
+            />
+          </div>
+
+          {/* Description English */}
+          <div className="flex flex-col space-y-2 md:col-span-2">
+            <Label htmlFor="description_en">
+              {ar ? "الوصف بالإنجليزية" : "Description (English)"}
+            </Label>
+            <Textarea
+              id="description_en"
+              value={description_en}
+              onChange={(e) => setDescriptionEn(e.target.value)}
+              required
+              minLength={20}
+              maxLength={250}
+              className="min-h-[80px] bg-none"
             />
           </div>
 
           {/* Category */}
-          <div className="flex flex-col space-y-2 ">
+          <div className="flex flex-col space-y-2">
             <Label htmlFor="category">{ar ? "الفئة" : "Category"}</Label>
             <Select
-              dir={ar ? "rtl" : "ltr"}
               required
               onValueChange={(value: string) => setCategoryId(parseInt(value))}
+              dir={ar ? "rtl" : "ltr"}
             >
               <SelectTrigger className="w-full">
                 <SelectValue
@@ -167,66 +197,40 @@ const CreateProduct = () => {
           <div className="flex flex-col space-y-2">
             <Label htmlFor="price">{ar ? "السعر" : "Price"}</Label>
             <Input
-              className="bg-transparent"
               id="price"
               type="number"
-              value={price}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d*\.?\d{0,2}$/.test(value)) setPrice(value);
-              }}
-              required
-              min="0.01"
+              value={basePrice}
+              onChange={(e) => setBasePrice(e.target.value)}
+              min="0.1"
+              maxLength={3}
               step="0.01"
-            />
-          </div>
-
-          {/* Description */}
-          <div className="flex flex-col space-y-2 relative">
-            <Label htmlFor="description">
-              {ar ? "الوصف" : "Description"}
-              {isGeneratingDescription && (
-                <h6 className="font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent flex items-center gap-1">
-                  {ar
-                    ? "  يتم الانشاء عبر الذكاء الاصطناعي"
-                    : "Generated by Ai"}
-                  <Loader2 className="h-4 w-4 animate-spin text-my-main" />
-                </h6>
-              )}
-            </Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
               required
-              minLength={50}
-              maxLength={120}
-              className="min-h-[100px]"
+              className="bg-card"
             />
-            <p className="text-xs text-muted-foreground">
-              {description.length}/150 {ar ? "حرف" : "chars"}
-            </p>
           </div>
 
-          {/* Image Upload */}
-          <Cloudinary />
+          {/* Image */}
+          <div className="md:col-span-2">
+            <Cloudinary />
+          </div>
 
           {/* Submit */}
-          <Button
-            name="submit"
-            type="submit"
-            disabled={isLoading}
-            className="flex items-center justify-center gap-2 w-full"
-          >
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {isLoading
-              ? ar
-                ? "جاري الإنشاء..."
-                : "Creating..."
-              : ar
-              ? "إنشاء المنتج"
-              : "Create Product"}
-          </Button>
+          <div className="md:col-span-2">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 w-full"
+            >
+              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isLoading
+                ? ar
+                  ? "جاري الإنشاء..."
+                  : "Creating..."
+                : ar
+                ? "إنشاء المنتج"
+                : "Create Product"}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

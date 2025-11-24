@@ -80,7 +80,7 @@ export function Navbar() {
 
           {/* Admin Link */}
           {role === "ADMIN" && (
-            <Link href={routes.admin} className="underline text-sm font-medium">
+            <Link href={routes.admin} className="underline text-md font-medium">
               {t("لوحة التحكم", "Admin")}
             </Link>
           )}
