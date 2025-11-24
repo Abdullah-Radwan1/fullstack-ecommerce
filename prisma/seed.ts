@@ -13,6 +13,7 @@ async function main() {
     await db.category.upsert({
       where: { id: category.id },
       update: {},
+
       create: category,
     });
   }
@@ -167,20 +168,17 @@ async function main() {
     await db.product.upsert({
       where: { id: product.id },
       update: {
-        basePrice: product.basePrice,
-        name_ar: product.name_ar,
-        name_en: product.name_en,
-        description_ar: product.description_ar,
-        description_en: product.description_en,
-        image: product.image,
-        categoryId: product.categoryId,
-        updatedAt: product.updatedAt,
+        ...product,
+        userId: "cmidkixnl00008ktbd9fajesp", // make sure userId is updated too
       },
-      create: product,
+      create: {
+        ...product,
+        userId: "cmidkixnl00008ktbd9fajesp", // ✅ required for create
+      },
     });
   }
 
-  console.log("Products seeded.🤍");
+  console.log("Products seeded successfully. 🤍");
 }
 
 main()
