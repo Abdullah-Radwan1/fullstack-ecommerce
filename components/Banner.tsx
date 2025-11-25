@@ -114,7 +114,7 @@ const Banner = async ({ lang }: { lang: string }) => {
       <div className="relative flex items-center justify-center">
         <Image
           className="hidden md:block object-contain brightness-90 "
-          src={"/banner_c.png"}
+          src={"/products/banner_c.png"}
           alt="controller_image"
           loading="lazy"
           width={300}
