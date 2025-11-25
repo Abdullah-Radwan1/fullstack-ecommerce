@@ -28,10 +28,10 @@ const Page = async ({ params }: { params: Promise<{ lang: string }> }) => {
       <div className="flex flex-col items-center gap-4">
         <div className="relative w-52 h-52">
           <Image
-            src={image || "/png.png"}
+            src={image || "/avatar.png"}
             alt="profile"
             fill
-            className="rounded-full object-cover"
+            className=" object-cover"
           />
         </div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex flex-col items-center gap-1">

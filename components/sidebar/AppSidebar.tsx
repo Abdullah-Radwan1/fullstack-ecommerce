@@ -56,7 +56,7 @@ const SideCart = () => {
       dir="ltr"
       data-testid="SideCart"
       className={clsx(
-        "fixed inset-0 z-50 flex justify-end bg-black/40 duration-300 transition-opacity",
+        "fixed inset-0 z-70 flex justify-end bg-black/40 duration-300 transition-opacity",
         {
           "opacity-100 pointer-events-auto": togglestate,
           "opacity-0 pointer-events-none": !togglestate,

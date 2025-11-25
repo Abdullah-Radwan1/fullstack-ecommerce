@@ -49,7 +49,7 @@ const Page = () => {
       }`}
     >
       {/* Title */}
-      <h1 className="text-3xl font-extrabold mb-8 text-my-main tracking-wide animate-fade-in">
+      <h1 className="text-3xl font-extrabold mb-8 text-my-main tracking-wide">
         {ar ? "منتجاتي" : "My Products"}
       </h1>
 
@@ -181,7 +181,7 @@ const Page = () => {
       </div>
     </div>
   ) : (
-    <h1 className="text-center flex items-center justify-center text-3xl font-bold min-h-[55vh] text-my-main animate-fade-in">
+    <h1 className="text-center flex items-center justify-center text-3xl font-bold min-h-[55vh] text-my-main ">
       {ar ? "السلة فارغة 😭" : "No products yet 😭"}
     </h1>
   );

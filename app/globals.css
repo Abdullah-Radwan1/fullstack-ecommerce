@@ -71,8 +71,8 @@
   --input: var(--border);
   --ring: var(--my-main);
 
-  --destructive: #ef4444; /* Tailwind red-500 أو أي لون تحبه */
-  --destructive-hover: #f87171; /* اختياري للـ hover */
+  --destructive: #ef4444;
+  --destructive-hover: #f87171;
 }
 
 /* ===========================
@@ -110,34 +110,4 @@ button:hover {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #ffee58;
-}
-
-/* ===========================
-   🎬 Animations
-   =========================== */
-@keyframes fade-in {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-@keyframes slide-up {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out forwards;
-}
-.animate-slide-up {
-  animation: slide-up 0.8s ease-out forwards;
 }

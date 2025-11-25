@@ -26,7 +26,7 @@ const SuccessPage = async ({
     <div
       className={` flex items-center justify-center p-6 ${ar ? "rtl" : "ltr"}`}
     >
-      <div className="bg-card border border-border p-8 rounded-xl shadow-lg max-w-md w-full text-center animate-fade-in">
+      <div className="bg-card border border-border p-8 rounded-xl shadow-lg max-w-md w-full text-center ">
         {/* Icon */}
         <div className="flex justify-center mb-4">
           <CheckCircle className="w-16 h-16 text-my-main animate-bounce" />
@@ -43,9 +43,7 @@ const SuccessPage = async ({
         </p>
 
         {/* Email service note */}
-        <p className="text-red-500 text-sm mb-4 animate-fade-in-delay">
-          {translations.emailDown}
-        </p>
+        <p className="text-red-500 text-sm mb-4 ">{translations.emailDown}</p>
 
         {/* Buttons */}
         <div className="grid grid-cols-1 gap-4 mt-6 animate-slide-up">

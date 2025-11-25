@@ -125,7 +125,7 @@ export function MyCarousel() {
               </div>
 
               {/* IMAGE */}
-              <div className="relative w-full md:h-[350px] lg:h-[350px]">
+              <div className="relative h-[20rem] w-full md:h-[25rem] ">
                 <Image
                   src={slide.imgSrc}
                   alt={`Slide ${slide.id}`}

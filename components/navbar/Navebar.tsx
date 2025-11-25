@@ -52,7 +52,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b transition-all",
+        "sticky top-0 z-50 w-full block border-b transition-all",
         scrolled &&
           "bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
       )}
@@ -61,9 +61,9 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href={routes.home}
-          className="text-lg md:text-2xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent"
+          className="text-base sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent"
         >
-          {t("ڤوجيه هاڤن", "Vogue-Haven")}
+          {t("ڤوجيه هاڤن", "Vogue Haven")}
         </Link>
 
         {/* Desktop Search */}
@@ -72,7 +72,7 @@ export function Navbar() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Products Button */}
           <Link href={routes.products} className="hidden md:block">
             <Button name="shop now">{t("تسوق الآن", "Shop Now")}</Button>
@@ -80,8 +80,8 @@ export function Navbar() {
 
           {/* Admin Link */}
           {role === "ADMIN" && (
-            <Link href={routes.admin} className="underline text-md font-medium">
-              {t("لوحة التحكم", "Admin")}
+            <Link href={routes.admin} className=" text-md font-medium">
+              <Button variant={"ghost"}>{t("لوحة التحكم", "Admin")}</Button>
             </Link>
           )}
 
@@ -111,11 +111,8 @@ export function Navbar() {
           {/* Profile / Signin */}
           {session ? (
             <Link href={routes.profile}>
-              <Avatar className="size-8">
-                <AvatarImage
-                  alt="user image"
-                  src={session.user?.image || "/png.png"}
-                />
+              <Avatar className="size-7 bottom-0.5">
+                <AvatarImage alt="user image" src={"/avatar.png"} />
                 <AvatarFallback>
                   <Loader2 className="size-4 animate-spin" />
                 </AvatarFallback>
