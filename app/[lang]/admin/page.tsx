@@ -50,7 +50,7 @@ export default async function AdminPage({
   };
 
   return (
-    <div className=" py-8 px-2 mx-auto  max-w-6xl border  ">
+    <div className=" py-8 px-2 mx-auto min-h-[80vh]  max-w-6xl border  ">
       <Tabs defaultValue="users">
         <TabsList className="text-white flex gap-2 w-fit  items-center m-auto  p-2 ">
           <TabsTrigger className="hover:bg-my-main" value="users">

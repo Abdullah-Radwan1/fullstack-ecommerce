@@ -55,7 +55,7 @@ const FeaturedProduct = async ({ lang }: { lang: string }) => {
   const ar = lang === "ar";
 
   return (
-    <div className="mt-14">
+    <div className="mt-8">
       <h2 className="text-3xl md:text-5xl font-medium text-my-main text-center">
         {ar ? "منتجات مميزة" : "Featured Products"}
       </h2>

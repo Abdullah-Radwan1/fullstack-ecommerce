@@ -50,7 +50,7 @@ export default async function Home({
   return (
     <main>
       <MyCarousel />
-      <div className="mx-auto p-12">
+      <div className="mx-auto px-12">
         <FeaturedProduct lang={lang} />
         <h2 className="text-4xl font-semibold text-center my-6">
           {lang === "ar" ? "احدث منتجاتنا" : "Our Latest Products"}

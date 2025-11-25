@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useParams } from "next/navigation";
 import { DropdownMenuRadioGroupDemo } from "@/components/ui/Phonedropdown";
 import useCartStore from "@/zustand/store";
 import Image from "next/image";
