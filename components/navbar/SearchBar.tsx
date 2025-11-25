@@ -1,36 +1,33 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Search, Sparkles } from "lucide-react";
 import { useSearchStore } from "@/zustand/store";
 import React from "react";
-
+import { redirect } from "next/navigation";
 export function SearchBar({ ar }: { ar: boolean }) {
-  const router = useRouter();
   const { searchQuery, setSearchQuery, toggleTrigger } = useSearchStore();
 
   // ✅ When Enter is pressed
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      router.push(
+      redirect(
         `/${ar ? "ar" : "en"}/products?page=1&search=${encodeURIComponent(
           searchQuery
         )}`
       );
-      toggleTrigger();
     }
+    toggleTrigger();
   };
 
   // ✅ When the Search icon is clicked
   const handleClick = () => {
-    router.push(
+    redirect(
       `/${ar ? "ar" : "en"}/products?page=1&search=${encodeURIComponent(
         searchQuery
       )}`
     );
-    toggleTrigger(); // ✅ triggers the effect in ProductsClient
   };
 
   return (
