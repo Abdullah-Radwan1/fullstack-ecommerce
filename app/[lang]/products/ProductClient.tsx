@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  useCallback,
-  useMemo,
   useState,
-  useTransition,
   useEffect,
+  useCallback,
+  useTransition,
+  useMemo,
 } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,8 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import CustomSkeleton from "@/components/CustomSkeleton";
-import { usePathname, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useSearchStore } from "@/zustand/store";
-import { Input } from "@/components/ui/input";
 
 type selectedProducts = Omit<Product, "createdAt" | "updatedAt" | "userId">;
 
@@ -34,18 +32,24 @@ export default function ProductsClient({
 }) {
   const ar = lang === "ar";
   const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const { searchQuery, setSearchQuery, triggerSearch, toggleTrigger } =
-    useSearchStore();
+  // Extract values from URL
+  const search = searchParams.get("search") || "";
+  const pageFromParam = Number(searchParams.get("page") || 1);
+  const categoryFromParam = searchParams.get("category") || "all";
+  const min = Number(searchParams.get("min") || 0);
+  const max = Number(searchParams.get("max") || 1300);
 
   const [products, setProducts] = useState(initialProducts);
   const [hasMore, setHasMore] = useState(initialHasMore);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(pageFromParam);
   const [isPending, startTransition] = useTransition();
 
-  const [appliedCategory, setAppliedCategory] = useState<string[]>(["all"]);
-  const [priceRange, setPriceRange] = useState<number[]>([0, 1300]);
+  const [appliedCategory, setAppliedCategory] = useState<string[]>(
+    categoryFromParam.split(",")
+  );
+  const [priceRange, setPriceRange] = useState<number[]>([min, max]);
 
   const categories = useMemo(
     () => [
@@ -57,114 +61,108 @@ export default function ProductsClient({
     []
   );
 
-  // Category toggle logic
   const handleCategoryChange = useCallback((id: string) => {
     setAppliedCategory((prev) => {
       if (id === "all") return ["all"];
-      const newCategories = prev.includes(id)
+
+      const updated = prev.includes(id)
         ? prev.filter((c) => c !== id)
         : [...prev.filter((c) => c !== "all"), id];
-      return newCategories.length ? newCategories : ["all"];
+
+      return updated.length ? updated : ["all"];
     });
   }, []);
 
-  // Core fetch function
+  // Unified fetch function
   const handleFetch = useCallback(
     async (
-      newPage = 1,
-      search = searchQuery,
-      categoriesParam = appliedCategory,
+      pageParam = 1,
+      searchText = search,
+      categoryParam = appliedCategory,
       price = priceRange
     ) => {
       startTransition(async () => {
-        const category = categoriesParam.join(",");
-        const [min, max] = price;
+        const category = categoryParam.join(",");
+        const [minVal, maxVal] = price;
 
         const { products, hasMore } = await getProducts({
-          page: newPage,
+          page: pageParam,
           category,
-          min: String(min),
-          max: String(max),
-          search,
+          min: String(minVal),
+          max: String(maxVal),
+          search: searchText,
         });
 
         setProducts(products);
         setHasMore(hasMore);
-        setPage(newPage);
+        setPage(pageParam);
       });
     },
-    [appliedCategory, priceRange, searchQuery]
+    [appliedCategory, priceRange, search]
   );
 
-  // Apply filters manually
+  // Fetch on URL change
+  useEffect(() => {
+    const categoryParam = (searchParams.get("category") || "all").split(",");
+    const minParam = Number(searchParams.get("min") || 0);
+    const maxParam = Number(searchParams.get("max") || 1300);
+
+    setAppliedCategory(categoryParam);
+    setPriceRange([minParam, maxParam]);
+
+    handleFetch(pageFromParam, search, categoryParam, [minParam, maxParam]);
+  }, [searchParams]);
+
+  // Apply filters button
   const handleApplyFilters = () => {
-    handleFetch(1);
+    const category = appliedCategory.join(",");
+    const [minVal, maxVal] = priceRange;
+
     router.push(
-      `/${lang}/products?page=1&search=${encodeURIComponent(searchQuery)}`
+      `/${lang}/products?page=1` +
+        `&search=${encodeURIComponent(search)}` +
+        `&category=${category}` +
+        `&min=${minVal}&max=${maxVal}`
     );
   };
 
-  // Reset filters
+  // Pagination
+  const nextPage = () => {
+    const category = appliedCategory.join(",");
+    const [minVal, maxVal] = priceRange;
+
+    router.push(
+      `/${lang}/products?page=${page + 1}` +
+        `&search=${encodeURIComponent(search)}` +
+        `&category=${category}&min=${minVal}&max=${maxVal}`
+    );
+  };
+
+  const prevPage = () => {
+    const category = appliedCategory.join(",");
+    const [minVal, maxVal] = priceRange;
+
+    router.push(
+      `/${lang}/products?page=${page - 1}` +
+        `&search=${encodeURIComponent(search)}` +
+        `&category=${category}&min=${minVal}&max=${maxVal}`
+    );
+  };
+
+  // Reset
   const resetFilters = () => {
-    const defaultCategory = ["all"];
-    const defaultPrice = [0, 1300];
-
-    setAppliedCategory(defaultCategory);
-    setPriceRange(defaultPrice);
-    setSearchQuery("");
-
-    handleFetch(1, "", defaultCategory, defaultPrice);
+    setAppliedCategory(["all"]);
+    setPriceRange([0, 1300]);
     router.push(`/${lang}/products?page=1`);
   };
 
-  // Pagination
-  const nextPage = () =>
-    handleFetch(page + 1, searchQuery, appliedCategory, priceRange);
-  const prevPage = () =>
-    handleFetch(page - 1, searchQuery, appliedCategory, priceRange);
-
-  // Handle cross-page search (Zustand trigger)
-  useEffect(() => {
-    if (!triggerSearch || !pathname.includes("/products")) return;
-
-    const runSearch = async () => {
-      await handleFetch(1);
-      toggleTrigger(); // reset Zustand trigger
-    };
-
-    runSearch();
-  }, [triggerSearch, pathname, handleFetch]);
-
-  // Optional: debounce search (if user types fast)
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchQuery.trim().length > 2) {
-        handleFetch(1);
-      }
-    }, 600);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchQuery]);
-
   return (
     <div className="flex flex-col lg:flex-row gap-8">
-      {/* Filters Section */}
-      <section className="w-full lg:w-80  p-6 shadow-sm h-fit rounded-md">
+      {/* Filters */}
+      <section className="w-full lg:w-80 p-6 shadow-sm h-fit rounded-md">
         <h2 className="text-lg font-semibold mb-4">
           {ar ? "تصفية النتائج" : "Filters"}
         </h2>
-
-        {/* Search Input */}
-        <div className="mb-4">
-          <Input
-            type="text"
-            placeholder={ar ? "ابحث عن منتج..." : "Search for a product..."}
-            value={searchQuery}
-            className="bg-transparent  "
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && toggleTrigger()}
-          />
-        </div>
 
         {/* Categories */}
         <h3 className="text-sm font-medium mb-2">
@@ -183,7 +181,7 @@ export default function ProductsClient({
           ))}
         </div>
 
-        {/* Price Range */}
+        {/* Price */}
         <div className="mt-4">
           <h3 className="text-sm font-medium mb-2">
             {ar ? "السعر" : "Price Range"} (USD)
@@ -202,7 +200,6 @@ export default function ProductsClient({
           </div>
         </div>
 
-        {/* Apply & Reset Buttons */}
         <div className="mt-6 flex gap-3">
           <Button onClick={handleApplyFilters} disabled={isPending}>
             {isPending ? (
@@ -214,12 +211,12 @@ export default function ProductsClient({
             )}
           </Button>
           <Button variant="outline" onClick={resetFilters}>
-            {ar ? "مسح الفلتر" : "Reset Filters"}
+            {ar ? "مسح الفلتر" : "Reset"}
           </Button>
         </div>
       </section>
 
-      {/* Product Grid */}
+      {/* Products */}
       <section className="flex-1 flex flex-col">
         {isPending ? (
           <CustomSkeleton />
@@ -235,7 +232,7 @@ export default function ProductsClient({
               src="/no-product.png"
               width={300}
               height={300}
-              alt="no product found"
+              alt="no product"
               className="mx-auto opacity-70"
             />
             <p className="mt-4 text-muted-foreground">
@@ -244,10 +241,8 @@ export default function ProductsClient({
           </div>
         )}
 
-        {/* Pagination */}
         <div className="flex justify-between mt-8">
           <Button
-            name="previous"
             variant="outline"
             onClick={prevPage}
             disabled={page === 1 || isPending}
@@ -255,7 +250,6 @@ export default function ProductsClient({
             {ar ? "السابق" : "Previous"}
           </Button>
           <Button
-            name="next"
             variant="outline"
             onClick={nextPage}
             disabled={!hasMore || isPending}

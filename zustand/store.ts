@@ -33,22 +33,6 @@ type CartState = {
   getTotalPrice: () => number; // Getter for total price
 };
 
-// Search Store
-interface SearchState {
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-  triggerSearch: boolean;
-  toggleTrigger: () => void;
-}
-
-export const useSearchStore = create<SearchState>((set) => ({
-  searchQuery: "",
-  setSearchQuery: (value) => set({ searchQuery: value }),
-  triggerSearch: false,
-  toggleTrigger: () =>
-    set((state) => ({ triggerSearch: !state.triggerSearch })),
-}));
-
 // Cart Store
 const useCartStore = create<CartState>()(
   persist(
