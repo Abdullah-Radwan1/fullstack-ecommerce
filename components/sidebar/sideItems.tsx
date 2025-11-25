@@ -39,7 +39,7 @@ const Sideitem = ({ CartItem, ar }: { CartItem: CartItem; ar: boolean }) => {
 
         <div className="flex items-center justify-between gap-x-2">
           <Button
-            name="decrease"
+            aria-label="decrease"
             variant={"ghost"}
             onClick={decrementQuantity}
             className="p-1   transition"
@@ -50,7 +50,7 @@ const Sideitem = ({ CartItem, ar }: { CartItem: CartItem; ar: boolean }) => {
           <p className=" font-semibold">{CartItem.quantity}</p>
 
           <Button
-            name="increase"
+            aria-label="increase"
             variant={"ghost"}
             onClick={incrementQuantity}
             className="px-1    transition"

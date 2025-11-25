@@ -76,6 +76,7 @@ const FeaturedProduct = async ({ lang }: { lang: string }) => {
 
               <CardContent className="flex flex-col items-center ">
                 <Image
+                  priority
                   src={image}
                   alt={title[lang as keyof typeof title]}
                   width={300}

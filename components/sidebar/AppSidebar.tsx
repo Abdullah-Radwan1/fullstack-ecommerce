@@ -75,7 +75,7 @@ const SideCart = () => {
         onClick={(e) => e.stopPropagation()} // 👈 stop clicks *inside* sidebar from closing it
       >
         <Button
-          name="close"
+          aria-label="close"
           className="absolute top-4 right-4 z-10 bg-red-500 text-white  "
           onClick={() => setTogglestate(false)}
         >
@@ -100,8 +100,12 @@ const SideCart = () => {
           <h5 className="text-lg font-medium ">
             {ar ? "الإجمالي :" : "Total :"} <span>${totalAmount()}</span>
           </h5>
-          <Link onClick={() => setTogglestate(false)} href="/checkout">
-            <Button>{ar ? "الدفع" : "Checkout"}</Button>
+          <Link
+            aria-label="checkout"
+            onClick={() => setTogglestate(false)}
+            href="/checkout"
+          >
+            <Button name="checkout">{ar ? "الدفع" : "Checkout"}</Button>
           </Link>
         </div>
       </div>

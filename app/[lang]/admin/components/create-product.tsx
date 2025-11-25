@@ -217,6 +217,7 @@ const CreateProduct = () => {
           {/* Submit */}
           <div className="md:col-span-2">
             <Button
+             
               type="submit"
               disabled={isLoading}
               className="flex items-center justify-center gap-2 w-full"

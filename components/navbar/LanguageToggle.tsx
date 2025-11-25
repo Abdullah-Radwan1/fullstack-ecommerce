@@ -35,7 +35,7 @@ export function LanguageToggle() {
         <Button
           variant={"ghost"}
           className="transition bg-none hover:bg-accent  p-1"
-          name="language"
+          aria-label="language"
         >
           <Languages />
           <span className="sr-only">Toggle language</span>

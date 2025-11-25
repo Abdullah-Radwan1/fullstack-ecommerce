@@ -212,6 +212,7 @@ function CarouselNext({
 
   return (
     <Button
+      aria-label="carousel next"
       data-slot="carousel-next"
       variant={variant}
       size={size}

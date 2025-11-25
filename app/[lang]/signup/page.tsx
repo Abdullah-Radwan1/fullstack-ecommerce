@@ -142,7 +142,7 @@ const SignUpPage = () => {
         </div>
 
         <Button
-          name="submit"
+         
           type="submit"
           className="w-full bg-gradient-to-r from-my-main to-my-secondary hover:opacity-90"
           disabled={loading}

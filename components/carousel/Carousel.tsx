@@ -71,23 +71,13 @@ const sliderData = [
 ];
 export function MyCarousel() {
   const plugin = React.useRef(Autoplay({ delay: 3000 }));
-  const [show, setShow] = React.useState(false);
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => setShow(true), 10);
-    return () => clearTimeout(timeout);
-  }, []);
 
   const params = useParams();
   const lang: Lang = params.lang === "ar" ? "ar" : "en";
   const ar = lang === "ar";
 
   return (
-    <Carousel
-      className={`transform transition-all duration-200 ease-out 
-    ${show ? "opacity-100 translate-x-0" : "opacity-0 translate-y-5"}`}
-      plugins={[plugin.current]}
-    >
+    <Carousel plugins={[plugin.current]}>
       <CarouselContent dir="ltr">
         {sliderData.map((slide) => (
           <CarouselItem key={slide.id} className="bg-card">
@@ -111,13 +101,17 @@ export function MyCarousel() {
 
                 <div className="flex items-center mt-4 gap-3">
                   <Link
+                    aria-label="previous"
                     href={slide.link}
                     className="font-medium rounded bg-accent text-black px-4 py-2"
                   >
                     {slide.buttonText1[lang]}
                   </Link>
 
-                  <button className="flex items-center gap-2 text-my-main font-medium">
+                  <button
+                    aria-label="previous"
+                    className="flex items-center gap-2 text-my-main font-medium"
+                  >
                     {slide.buttonText2[lang]}
                     {ar ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
                   </button>

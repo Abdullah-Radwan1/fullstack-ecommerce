@@ -48,6 +48,7 @@ const SuccessPage = async ({
         {/* Buttons */}
         <div className="grid grid-cols-1 gap-4 mt-6 animate-slide-up">
           <Link
+            aria-label="gmail"
             href={ar ? "/ar" : "/en"}
             className="bg-my-main text-background font-medium px-6 py-2 rounded-md transition-transform duration-300 hover:scale-105 hover:bg-accent"
           >

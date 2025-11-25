@@ -60,6 +60,7 @@ export function Navbar() {
       <div className="flex items-center justify-between mx-auto max-w-7xl px-4 md:px-8 py-3">
         {/* Logo */}
         <Link
+          aria-label="home"
           href={routes.home}
           className="text-base sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent"
         >
@@ -74,14 +75,22 @@ export function Navbar() {
         {/* Right Actions */}
         <div className="flex items-center gap-2">
           {/* Products Button */}
-          <Link href={routes.products} className="hidden md:block">
-            <Button name="shop now">{t("تسوق الآن", "Shop Now")}</Button>
+          <Link
+            href={routes.products}
+            className="hidden md:block"
+          >
+            <Button aria-label="shop now">{t("تسوق الآن", "Shop Now")}</Button>
           </Link>
 
           {/* Admin Link */}
           {role === "ADMIN" && (
-            <Link href={routes.admin} className=" text-md font-medium">
-              <Button variant={"ghost"}>{t("لوحة التحكم", "Admin")}</Button>
+            <Link
+              href={routes.admin}
+              className=" text-md font-medium"
+            >
+              <Button  variant={"ghost"}>
+                {t("لوحة التحكم", "Admin")}
+              </Button>
             </Link>
           )}
 
@@ -90,7 +99,7 @@ export function Navbar() {
 
           {/* Sidebar Toggle */}
           <Button
-            name="sidebar"
+            aria-label="side bar"
             variant="ghost"
             size="icon"
             onClick={() => setTogglestate(true)}
@@ -99,8 +108,8 @@ export function Navbar() {
           </Button>
 
           {/* Cart */}
-          <Link href={routes.cart} className="relative">
-            <Button name="cart" variant="ghost" size="icon">
+          <Link aria-label="cart" href={routes.cart} className="relative">
+            <Button aria-label="cart" variant="ghost" size="icon">
               <ShoppingBasket className="size-5" />
             </Button>
 
@@ -110,7 +119,7 @@ export function Navbar() {
 
           {/* Profile / Signin */}
           {session ? (
-            <Link href={routes.profile}>
+            <Link aria-label="profile" href={routes.profile}>
               <Avatar className="size-7 bottom-0.5">
                 <AvatarImage alt="user image" src={"/avatar.png"} />
                 <AvatarFallback>
@@ -119,8 +128,8 @@ export function Navbar() {
               </Avatar>
             </Link>
           ) : (
-            <Link href={routes.signin}>
-              <Button name="signin" variant="ghost" size="icon">
+            <Link aria-label="signin" href={routes.signin}>
+              <Button aria-label="signin" variant="ghost" size="icon">
                 <User className="size-5" />
               </Button>
             </Link>

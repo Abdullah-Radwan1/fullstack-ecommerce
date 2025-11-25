@@ -210,7 +210,6 @@ function Form({ ar }: { ar?: boolean }) {
           <CardFooter>
             <Button
               variant={"outline"}
-              name="purchase"
               className="w-full"
               size="lg"
               disabled={!stripe || !elements || isLoading}

@@ -196,7 +196,10 @@ export default function ProductsClient({
         </div>
 
         <div className="mt-6 flex gap-3">
-          <Button onClick={handleApplyFilters} disabled={isLoading}>
+          <Button
+            onClick={handleApplyFilters}
+            disabled={isLoading}
+          >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : ar ? (
@@ -238,6 +241,7 @@ export default function ProductsClient({
 
         <div className="flex justify-between mt-8">
           <Button
+            
             variant="outline"
             onClick={prevPage}
             disabled={page === 1 || isLoading}
@@ -245,6 +249,7 @@ export default function ProductsClient({
             {ar ? "السابق" : "Previous"}
           </Button>
           <Button
+           
             variant="outline"
             onClick={nextPage}
             disabled={!hasMore || isLoading}

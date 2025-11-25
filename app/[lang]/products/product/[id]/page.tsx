@@ -104,11 +104,12 @@ const Page = async ({
               item={product}
             />
             <Link
+              aria-label="checkout"
               href={ar ? `/ar/checkout` : `/en/checkout`}
               className="flex-1"
             >
               <Button
-                name="checkout"
+                aria-label="checkout"
                 className="w-full bg-my-secondary hover:bg-my-secondary/90"
               >
                 {t.checkout}

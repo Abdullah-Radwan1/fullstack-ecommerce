@@ -31,6 +31,7 @@ const Footer = async ({ lang }: { lang: string }) => {
             <ul className="text-sm space-y-2">
               <li>
                 <Link
+                  aria-label="linkedin"
                   className="hover:underline transition flex items-center gap-1"
                   href="https://www.linkedin.com/in/abdullah-radwan-280140284/"
                   target="_blank"
@@ -41,6 +42,7 @@ const Footer = async ({ lang }: { lang: string }) => {
               </li>
               <li>
                 <Link
+                  aria-label="github"
                   className="hover:underline transition flex items-center gap-1"
                   href="https://github.com/Abdullah-Radwan1"
                   target="_blank"
@@ -51,6 +53,7 @@ const Footer = async ({ lang }: { lang: string }) => {
               </li>
               <li>
                 <Link
+                  aria-label="whatsapp"
                   className="hover:underline transition flex items-center gap-1"
                   target="_blank"
                   href="https://wa.link/7thukh"
