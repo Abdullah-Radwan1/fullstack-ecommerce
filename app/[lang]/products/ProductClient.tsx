@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useTransition,
-  useMemo,
-} from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/generated/prisma/browser";
@@ -34,7 +28,7 @@ export default function ProductsClient({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Extract values from URL
+  // Extract URL params
   const search = searchParams.get("search") || "";
   const pageFromParam = Number(searchParams.get("page") || 1);
   const categoryFromParam = searchParams.get("category") || "all";
@@ -44,12 +38,12 @@ export default function ProductsClient({
   const [products, setProducts] = useState(initialProducts);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [page, setPage] = useState(pageFromParam);
-  const [isPending, startTransition] = useTransition();
 
   const [appliedCategory, setAppliedCategory] = useState<string[]>(
     categoryFromParam.split(",")
   );
   const [priceRange, setPriceRange] = useState<number[]>([min, max]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const categories = useMemo(
     () => [
@@ -64,16 +58,14 @@ export default function ProductsClient({
   const handleCategoryChange = useCallback((id: string) => {
     setAppliedCategory((prev) => {
       if (id === "all") return ["all"];
-
       const updated = prev.includes(id)
         ? prev.filter((c) => c !== id)
         : [...prev.filter((c) => c !== "all"), id];
-
       return updated.length ? updated : ["all"];
     });
   }, []);
 
-  // Unified fetch function
+  // Fetch products
   const handleFetch = useCallback(
     async (
       pageParam = 1,
@@ -81,7 +73,8 @@ export default function ProductsClient({
       categoryParam = appliedCategory,
       price = priceRange
     ) => {
-      startTransition(async () => {
+      setIsLoading(true);
+      try {
         const category = categoryParam.join(",");
         const [minVal, maxVal] = price;
 
@@ -96,12 +89,14 @@ export default function ProductsClient({
         setProducts(products);
         setHasMore(hasMore);
         setPage(pageParam);
-      });
+      } finally {
+        setIsLoading(false);
+      }
     },
     [appliedCategory, priceRange, search]
   );
 
-  // Fetch on URL change
+  // Load products whenever URL changes
   useEffect(() => {
     const categoryParam = (searchParams.get("category") || "all").split(",");
     const minParam = Number(searchParams.get("min") || 0);
@@ -113,7 +108,7 @@ export default function ProductsClient({
     handleFetch(pageFromParam, search, categoryParam, [minParam, maxParam]);
   }, [searchParams]);
 
-  // Apply filters button
+  // Apply filters
   const handleApplyFilters = () => {
     const category = appliedCategory.join(",");
     const [minVal, maxVal] = priceRange;
@@ -201,8 +196,8 @@ export default function ProductsClient({
         </div>
 
         <div className="mt-6 flex gap-3">
-          <Button onClick={handleApplyFilters} disabled={isPending}>
-            {isPending ? (
+          <Button onClick={handleApplyFilters} disabled={isLoading}>
+            {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : ar ? (
               "تطبيق"
@@ -218,7 +213,7 @@ export default function ProductsClient({
 
       {/* Products */}
       <section className="flex-1 flex flex-col">
-        {isPending ? (
+        {isLoading ? (
           <CustomSkeleton />
         ) : products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -245,14 +240,14 @@ export default function ProductsClient({
           <Button
             variant="outline"
             onClick={prevPage}
-            disabled={page === 1 || isPending}
+            disabled={page === 1 || isLoading}
           >
             {ar ? "السابق" : "Previous"}
           </Button>
           <Button
             variant="outline"
             onClick={nextPage}
-            disabled={!hasMore || isPending}
+            disabled={!hasMore || isLoading}
           >
             {ar ? "التالي" : "Next"}
           </Button>
