@@ -1,49 +1,49 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/generated/prisma/browser";
-import { Loader2 } from "lucide-react";
-import { getProducts } from "@/lib/functions/product/getProducts";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import CustomSkeleton from "@/components/CustomSkeleton";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 type selectedProducts = Omit<Product, "createdAt" | "updatedAt" | "userId">;
+
+interface ProductsClientProps {
+  initialProducts: selectedProducts[];
+  hasMore: boolean;
+  lang: string;
+  initialSearch: string;
+  initialCategory: string;
+  initialPrice: [number, number];
+  initialPage: number;
+}
 
 export default function ProductsClient({
   initialProducts,
   hasMore: initialHasMore,
   lang,
-}: {
-  initialProducts: selectedProducts[];
-  hasMore: boolean;
-  lang: string;
-}) {
+  initialSearch,
+  initialCategory,
+  initialPrice,
+  initialPage,
+}: ProductsClientProps) {
   const ar = lang === "ar";
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  // Extract URL params
-  const search = searchParams.get("search") || "";
-  const pageFromParam = Number(searchParams.get("page") || 1);
-  const categoryFromParam = searchParams.get("category") || "all";
-  const min = Number(searchParams.get("min") || 0);
-  const max = Number(searchParams.get("max") || 1300);
-
-  const [products, setProducts] = useState(initialProducts);
-  const [hasMore, setHasMore] = useState(initialHasMore);
-  const [page, setPage] = useState(pageFromParam);
-
+  // Local UI state
+  const [searchState, setSearchState] = useState(initialSearch);
   const [appliedCategory, setAppliedCategory] = useState<string[]>(
-    categoryFromParam.split(",")
+    initialCategory.split(",")
   );
-  const [priceRange, setPriceRange] = useState<number[]>([min, max]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [priceRange, setPriceRange] = useState<number[]>(initialPrice);
+  const [page, setPage] = useState(initialPage);
+
+  const products = initialProducts;
+  const hasMore = initialHasMore;
 
   const categories = useMemo(
     () => [
@@ -65,94 +65,34 @@ export default function ProductsClient({
     });
   }, []);
 
-  // Fetch products
-  const handleFetch = useCallback(
-    async (
-      pageParam = 1,
-      searchText = search,
-      categoryParam = appliedCategory,
-      price = priceRange
-    ) => {
-      setIsLoading(true);
-      try {
-        const category = categoryParam.join(",");
-        const [minVal, maxVal] = price;
-
-        const { products, hasMore } = await getProducts({
-          page: pageParam,
-          category,
-          min: String(minVal),
-          max: String(maxVal),
-          search: searchText,
-        });
-
-        setProducts(products);
-        setHasMore(hasMore);
-        setPage(pageParam);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [appliedCategory, priceRange, search]
-  );
-
-  // Load products whenever URL changes
-  useEffect(() => {
-    const categoryParam = (searchParams.get("category") || "all").split(",");
-    const minParam = Number(searchParams.get("min") || 0);
-    const maxParam = Number(searchParams.get("max") || 1300);
-
-    setAppliedCategory(categoryParam);
-    setPriceRange([minParam, maxParam]);
-
-    handleFetch(pageFromParam, search, categoryParam, [minParam, maxParam]);
-  }, [searchParams]);
-
-  // Apply filters
-  const handleApplyFilters = () => {
-    const category = appliedCategory.join(",");
-    const [minVal, maxVal] = priceRange;
-
+  const applyFilters = () => {
+    const categoryParam = appliedCategory.join(",");
     router.push(
       `/${lang}/products?page=1` +
-        `&search=${encodeURIComponent(search)}` +
-        `&category=${category}` +
-        `&min=${minVal}&max=${maxVal}`
+        `&search=${encodeURIComponent(searchState)}` +
+        `&category=${categoryParam}&min=${priceRange[0]}&max=${priceRange[1]}`
     );
   };
 
-  // Pagination
-  const nextPage = () => {
-    const category = appliedCategory.join(",");
-    const [minVal, maxVal] = priceRange;
-
-    router.push(
-      `/${lang}/products?page=${page + 1}` +
-        `&search=${encodeURIComponent(search)}` +
-        `&category=${category}&min=${minVal}&max=${maxVal}`
-    );
-  };
-
-  const prevPage = () => {
-    const category = appliedCategory.join(",");
-    const [minVal, maxVal] = priceRange;
-
-    router.push(
-      `/${lang}/products?page=${page - 1}` +
-        `&search=${encodeURIComponent(search)}` +
-        `&category=${category}&min=${minVal}&max=${maxVal}`
-    );
-  };
-
-  // Reset
   const resetFilters = () => {
     setAppliedCategory(["all"]);
     setPriceRange([0, 1300]);
+    setSearchState("");
     router.push(`/${lang}/products?page=1`);
   };
 
+  const goToPage = (newPage: number) => {
+    const categoryParam = appliedCategory.join(",");
+    router.push(
+      `/${lang}/products?page=${newPage}` +
+        `&search=${encodeURIComponent(searchState)}` +
+        `&category=${categoryParam}&min=${priceRange[0]}&max=${priceRange[1]}`
+    );
+    setPage(newPage);
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
+    <div className="flex flex-col lg:flex-row gap-8 w-[90%] mx-auto p-2">
       {/* Filters */}
       <section className="w-full lg:w-80 p-6 shadow-sm h-fit rounded-md">
         <h2 className="text-lg font-semibold mb-4">
@@ -196,18 +136,7 @@ export default function ProductsClient({
         </div>
 
         <div className="mt-6 flex gap-3">
-          <Button
-            onClick={handleApplyFilters}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : ar ? (
-              "تطبيق"
-            ) : (
-              "Apply"
-            )}
-          </Button>
+          <Button onClick={applyFilters}>{ar ? "تطبيق" : "Apply"}</Button>
           <Button variant="outline" onClick={resetFilters}>
             {ar ? "مسح الفلتر" : "Reset"}
           </Button>
@@ -216,9 +145,7 @@ export default function ProductsClient({
 
       {/* Products */}
       <section className="flex-1 flex flex-col">
-        {isLoading ? (
-          <CustomSkeleton />
-        ) : products.length > 0 ? (
+        {products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} lang={lang} />
@@ -239,21 +166,12 @@ export default function ProductsClient({
           </div>
         )}
 
+        {/* Pagination */}
         <div className="flex justify-between mt-8">
-          <Button
-            
-            variant="outline"
-            onClick={prevPage}
-            disabled={page === 1 || isLoading}
-          >
+          <Button onClick={() => goToPage(page - 1)} disabled={page === 1}>
             {ar ? "السابق" : "Previous"}
           </Button>
-          <Button
-           
-            variant="outline"
-            onClick={nextPage}
-            disabled={!hasMore || isLoading}
-          >
+          <Button onClick={() => goToPage(page + 1)} disabled={!hasMore}>
             {ar ? "التالي" : "Next"}
           </Button>
         </div>

@@ -1,25 +1,56 @@
-import { getProducts } from "@/lib/functions/product/getProducts";
+// ProductsPage.tsx (Server Component)
 import ProductsClient from "./ProductClient";
+import { getProducts } from "@/lib/functions/product/getProducts";
 
-export const revalidate = 60; // cache for 60s
+// Define the search params interface
+interface SearchParams {
+  page?: string;
+  category?: string;
+  search?: string;
+  min?: string;
+  max?: string;
+}
 
+// Type assertion for default values
 export default async function ProductsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ lang: string }>;
+  searchParams?: Promise<SearchParams>;
 }) {
-  const { products, hasMore } = await getProducts({ page: 1 });
-  const { lang } = await params;
+  // Await the params
+  const resolvedParams = await params;
+
+  // Await searchParams or use empty object
+  const resolvedSearchParams = (await searchParams) ?? {};
+
+  // Extract with defaults
+  const {
+    page = "1",
+    category = "all",
+    search = "",
+    min = "0",
+    max = "1300",
+  } = resolvedSearchParams as SearchParams; // Type assertion here
+
+  const { products, hasMore } = await getProducts({
+    page: Number(page),
+    category,
+    search,
+    min,
+    max,
+  });
+
   return (
-    <section className="container mx-auto min-h-[70vh] p-6 space-y-8">
-      <h1 className="text-3xl text-center font-bold mb-4">
-        {lang === "ar" ? " منتجاتك 💛 " : "Your Products 💛"}
-      </h1>
-      <ProductsClient
-        lang={lang}
-        initialProducts={products}
-        hasMore={hasMore}
-      />
-    </section>
+    <ProductsClient
+      initialProducts={products}
+      hasMore={hasMore}
+      lang={resolvedParams.lang}
+      initialSearch={search}
+      initialCategory={category}
+      initialPrice={[Number(min), Number(max)]}
+      initialPage={Number(page)}
+    />
   );
 }
