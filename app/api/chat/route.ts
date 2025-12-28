@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       "X-Title": "Vogue Haven", // Optional
     },
     body: JSON.stringify({
-      model: "qwen/qwen2.5-vl-72b-instruct:free",
+      model: "qwen/qwen3-coder:free",
       messages: [
         {
           role: "user",

@@ -41,7 +41,6 @@ export default async function ProductsPage({
     min,
     max,
   });
-
   return (
     <ProductsClient
       initialProducts={products}
