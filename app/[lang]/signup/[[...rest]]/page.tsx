@@ -1,6 +1,6 @@
 "use client";
 
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 import { useParams } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -28,47 +28,55 @@ const Page = () => {
           </div>
 
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            {ar ? "تسجيل الدخول" : "Welcome back"}
+            {ar ? "إنشاء حساب" : "Create account"}
           </h1>
 
           <p className="text-sm text-muted-foreground">
-            {ar ? "سجّل الدخول للمتابعة" : "Sign in to continue"}
+            {ar ? "انضم إلينا اليوم" : "Join us today"}
           </p>
         </CardHeader>
 
         <CardContent className="pt-2">
-          <SignIn
+          <SignUp
             routing="path"
-            path={`/${lang}/signin`}
-            signUpUrl={`/${lang}/signup`}
+            path={`/${lang}/signup`}
+            signInUrl={`/${lang}/signin`}
             redirectUrl={`/${lang}`}
             forceRedirectUrl={`/${lang}`}
             appearance={{
               elements: {
                 card: "bg-transparent shadow-none",
-                badge: "bg-black/80 border border-white/20 !text-white",
+
+                /* Badges (Last used, etc.) */
+                badge: "bg-black/80 border border-white/20",
                 badgeText: "!text-white font-medium",
 
-                // For safety (some themes use this internally)
-                badgeIcon: "!text-white",
+                /* Divider */
+                dividerLine: "bg-border/30",
+                dividerText: "text-muted-foreground",
+
+                /* Labels & text */
+                formFieldLabel: "text-foreground font-medium",
+                footerActionText: "text-muted-foreground",
+
                 /* Inputs */
                 formFieldInput:
-                  "border-border bg-card text-foreground focus:border-my-main focus:ring-my-main/30 ",
+                  "bg-input border border-border/50 text-foreground placeholder:text-muted-foreground focus:border-my-main/50 focus:ring-my-main/20",
 
                 /* Primary button */
                 formButtonPrimary:
-                  "bg-gradient-to-r from-my-main to-my-secondary text-background font-medium shadow-[0_0_25px_var(--my-main)] hover:shadow-[0_0_40px_var(--my-main)] transition-all",
+                  "bg-gradient-to-r from-my-main to-my-secondary text-background font-semibold shadow-[0_0_20px_var(--my-main)] hover:shadow-[0_0_35px_var(--my-main)] transition-all",
 
                 /* Social buttons */
                 socialButtonsBlockButton:
-                  "border-border bg-card hover:border-my-main/50 transition-colors !bg-white",
-                socialButtonsBlockButtonText: "text-foreground font-medium ",
+                  "border border-border/50 bg-card hover:border-my-main/50 hover:bg-my-main/5 transition-colors",
+                socialButtonsBlockButtonText: "text-foreground font-medium",
 
-                /* Footer links */
+                /* Footer link */
                 footerActionLink:
-                  "text-my-main hover:text-my-secondary transition-colors",
+                  "text-my-main hover:text-my-secondary font-medium",
 
-                /* Remove Clerk headers */
+                /* Hide Clerk headers */
                 headerTitle: "hidden",
                 headerSubtitle: "hidden",
 
@@ -76,19 +84,20 @@ const Page = () => {
               },
 
               variables: {
+                /* 🔥 THIS is the most important part */
                 colorPrimary: "hsl(var(--my-main))",
                 colorText: "hsl(var(--foreground))",
-                colorBackground: "hsl(var(--card))",
-                colorInputBackground: "hsl(var(--card))",
-                colorBorder: "white",
+                colorTextSecondary: "hsl(var(--muted-foreground))",
+                colorBackground: "transparent",
+                colorInputBackground: "hsl(var(--input))",
                 colorInputText: "hsl(var(--foreground))",
+                colorNeutral: "hsl(var(--foreground))",
+                colorAlphaShade: "hsl(var(--foreground))",
+                borderRadius: "0.75rem",
               },
             }}
           />
         </CardContent>
-
-        {/* Bottom accent */}
-        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-my-main/40 to-transparent" />
       </Card>
     </div>
   );
