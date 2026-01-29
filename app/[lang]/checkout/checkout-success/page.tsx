@@ -1,6 +1,21 @@
-import React from "react";
-import { CheckCircle, Mail } from "lucide-react";
+import {
+  CheckCircle,
+  Mail,
+  Home,
+  Sparkles,
+  Package,
+  ShoppingBag,
+  Shield,
+} from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const SuccessPage = async ({
   params,
@@ -12,57 +27,179 @@ const SuccessPage = async ({
 
   const translations = {
     heading: ar ? "تم الدفع بنجاح!" : "Payment Successful!",
+    subheading: ar ? "تهانينا على شرائك!" : "Congratulations on your purchase!",
     message: ar
-      ? "شكرًا لشرائك. يرجى التحقق من بريدك الإلكتروني للحصول على تأكيد الطلب والتفاصيل."
-      : "Thank you for your purchase. Please check your email for the order confirmation and details.",
-    button: ar ? "العودة إلى الصفحة الرئيسية" : "Return Home",
+      ? "شكرًا لثقتك بنا. تم تأكيد طلبك بنجاح وستصلك تفاصيل الشحن قريبًا."
+      : "Thank you for trusting us. Your order has been confirmed and shipping details will arrive soon.",
+    emailNote: ar
+      ? "تحقق من بريدك الإلكتروني للحصول على تأكيد الطلب"
+      : "Check your email for order confirmation",
     emailDown: ar
-      ? "خدمة البريد الإلكتروني معطّلة حاليًا"
-      : "Email service is currently down",
+      ? "ملاحظة: خدمة البريد الإلكتروني مؤقتة غير متوفرة"
+      : "Note: Email service is temporarily unavailable",
     gmail: ar ? "فتح Gmail" : "Open Gmail",
+    returnHome: ar ? "العودة للرئيسية" : "Return Home",
+    continueShopping: ar ? "متابعة التسوق" : "Continue Shopping",
+    orderNumber: ar ? "رقم الطلب" : "Order #",
+    estimatedDelivery: ar ? "التوصيل المقدر" : "Estimated Delivery",
+    days: ar ? "أيام عمل" : "Business Days",
   };
 
+  const orderNumber = `ORD-${Math.floor(Math.random() * 1000000)
+    .toString()
+    .padStart(6, "0")}`;
+
   return (
-    <div
-      className={` flex items-center justify-center p-6 ${ar ? "rtl" : "ltr"}`}
-    >
-      <div className="bg-card border border-border p-8 rounded-xl shadow-lg max-w-md w-full text-center ">
-        {/* Icon */}
-        <div className="flex justify-center mb-4">
-          <CheckCircle className="w-16 h-16 text-my-main animate-bounce" />
-        </div>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      {/* Background Effects */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-my-main/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-my-secondary/5 rounded-full blur-3xl" />
+      </div>
 
-        {/* Heading */}
-        <h1 className="text-3xl font-extrabold text-my-main tracking-wide">
-          {translations.heading}
-        </h1>
+      <div className="w-full max-w-2xl">
+        <Card className="border-border/40 bg-card/50 shadow-xl">
+          {/* Gradient Top */}
+          <div className="h-1 w-full bg-gradient-to-r from-my-main to-my-secondary" />
 
-        {/* Subtext */}
-        <p className="text-muted-foreground mt-4 mb-2 leading-relaxed">
-          {translations.message}
-        </p>
+          <CardHeader className="text-center pb-4">
+            {/* Success Icon */}
+            <div className="mx-auto w-20 h-20 mb-4">
+              <div className="w-full h-full rounded-full bg-my-main/20 border-2 border-my-main/30 flex items-center justify-center">
+                <CheckCircle className="w-12 h-12 text-my-main" />
+              </div>
+            </div>
 
-        {/* Email service note */}
-        <p className="text-red-500 text-sm mb-4 ">{translations.emailDown}</p>
+            <h1 className="text-3xl font-bold text-my-main mb-2">
+              {translations.heading}
+            </h1>
 
-        {/* Buttons */}
-        <div className="grid grid-cols-1 gap-4 mt-6 animate-slide-up">
-          <Link
-            aria-label="gmail"
-            href={ar ? "/ar" : "/en"}
-            className="bg-my-main text-background font-medium px-6 py-2 rounded-md transition-transform duration-300 hover:scale-105 hover:bg-accent"
-          >
-            {translations.button}
-          </Link>
+            <p className="text-muted-foreground">
+              <Sparkles className="w-4 h-4 inline mr-2 text-my-main" />
+              {translations.subheading}
+            </p>
+          </CardHeader>
 
-          <Link
-            target="_blank"
-            href="https://mail.google.com/"
-            className="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 text-background font-medium px-6 py-2 rounded-md flex items-center justify-center gap-2 transition-transform duration-300 hover:scale-105"
-          >
-            {translations.gmail}
-            <Mail className="w-4 h-4" />
-          </Link>
+          <CardContent className="space-y-6">
+            {/* Order Details */}
+            <Card className="border-border/30">
+              <CardContent className="p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <ShoppingBag className="w-4 h-4 text-my-main" />
+                      <span className="text-sm text-muted-foreground">
+                        {translations.orderNumber}
+                      </span>
+                    </div>
+                    <Badge className="bg-my-main/20 text-foreground border-my-main/30 font-mono">
+                      {orderNumber}
+                    </Badge>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Package className="w-4 h-4 text-my-main" />
+                      <span className="text-sm text-muted-foreground">
+                        {translations.estimatedDelivery}
+                      </span>
+                    </div>
+                    <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+                      3-5 {translations.days}
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Message */}
+            <div className="text-center space-y-3">
+              <p className="text-muted-foreground">{translations.message}</p>
+
+              <div className="text-sm text-my-main flex items-center justify-center gap-2">
+                <Mail className="w-4 h-4" />
+                {translations.emailNote}
+              </div>
+
+              <div className="text-sm text-destructive">
+                ⚠️ {translations.emailDown}
+              </div>
+            </div>
+
+            {/* Steps */}
+            <div className="bg-my-main/5 border border-my-main/20 rounded-lg p-4">
+              <h3 className="font-bold mb-3 text-center">
+                {ar ? "الخطوات التالية" : "Next Steps"}
+              </h3>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="p-2">
+                  <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-my-main" />
+                  </div>
+                  <p className="text-xs">1. {ar ? "البريد" : "Email"}</p>
+                </div>
+                <div className="p-2">
+                  <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
+                    <Package className="w-4 h-4 text-my-main" />
+                  </div>
+                  <p className="text-xs">2. {ar ? "الشحن" : "Ship"}</p>
+                </div>
+                <div className="p-2">
+                  <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
+                    <Home className="w-4 h-4 text-my-main" />
+                  </div>
+                  <p className="text-xs">3. {ar ? "تسوق" : "Shop"}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+
+          <CardFooter className="pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+              <Button asChild variant="outline" className="border-border">
+                <Link
+                  href={ar ? "/ar" : "/en"}
+                  className="flex items-center justify-center gap-2"
+                >
+                  <Home className="w-4 h-4" />
+                  {translations.returnHome}
+                </Link>
+              </Button>
+
+              <Button
+                asChild
+                className="bg-gradient-to-r from-[#EA4335] to-[#FBBC05] text-background"
+              >
+                <Link
+                  href="https://mail.google.com/"
+                  target="_blank"
+                  className="flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-4 h-4" />
+                  {translations.gmail}
+                </Link>
+              </Button>
+
+              <Button
+                asChild
+                className="bg-gradient-to-r from-my-main to-my-secondary text-background"
+              >
+                <Link
+                  href={ar ? "/ar/shop" : "/en/shop"}
+                  className="flex items-center justify-center gap-2"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  {translations.continueShopping}
+                </Link>
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+
+        {/* Footer Message */}
+        <div className="text-center mt-6 text-sm text-muted-foreground">
+          <Shield className="w-4 h-4 inline mr-2 text-my-main" />
+          {ar ? "تم تأمين طلبك بنجاح" : "Your order is secured"}
         </div>
       </div>
     </div>

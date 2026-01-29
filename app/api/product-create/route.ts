@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/prisma/db";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/Authoptions";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
+  const { userId } = await auth();
 
-  if (!session || !session.user) {
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -34,8 +33,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const userId = session.user.id!;
-
     // Limit products per user
     const productCount = await db.product.count({
       where: { userId },
@@ -44,7 +41,7 @@ export async function POST(req: Request) {
     if (productCount >= 2) {
       return NextResponse.json(
         { error: "You can only create 2 products" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -69,7 +66,7 @@ export async function POST(req: Request) {
     console.error("Error creating product:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

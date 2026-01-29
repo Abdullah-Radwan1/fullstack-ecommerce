@@ -57,11 +57,9 @@ export async function getAllOrders() {
   });
 }
 
-export async function getMyOrders(userEmail: string) {
+export async function getMyOrders(clerkId: string) {
   return await db.order.findMany({
-    where: {
-      User: { email: userEmail },
-    },
+    where: {},
     include: {
       User: true,
       OrderItem: {
@@ -74,14 +72,24 @@ export async function getMyOrders(userEmail: string) {
 }
 
 // Auth function
-export async function getUser(email: string) {
+// lib/Functions.ts
+export async function getUser(clerkId: string, email: string) {
+  console.log(clerkId, email, "dd");
+  if (!clerkId || !email) {
+    throw new Error("clerkId and email are required to fetch or create user");
+  }
+
   return await db.user.upsert({
-    where: { email },
-    create: {
-      email,
-      updatedAt: new Date(), // required
+    where: { clerkId }, // <-- use clerkId, not email
+    update: {
+      email, // update email if it changed
+      updatedAt: new Date(),
     },
-    update: {},
+    create: {
+      clerkId,
+      email,
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -106,7 +114,7 @@ export const hasMatchingOrder = async (orderItems: OrderItemInput[]) => {
 
     const isMatch = orderItems.every((inputItem) => {
       const orderItem = order.OrderItem.find(
-        (item) => item.productId === inputItem.productId
+        (item) => item.productId === inputItem.productId,
       );
       return orderItem && orderItem.quantity === inputItem.quantity;
     });

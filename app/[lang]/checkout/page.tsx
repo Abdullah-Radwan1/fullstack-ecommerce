@@ -25,7 +25,7 @@ export default function CheckoutPage() {
 
     const totalPrice = getTotalPrice();
     const productsNames = products.map((item) =>
-      ar ? item.name_ar : item.name_en
+      ar ? item.name_ar : item.name_en,
     );
 
     const createPaymentIntent = async () => {
@@ -57,13 +57,12 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto mt-10 px-4 sm:px-6 lg:px-8 min-h-screen">
+    <main className="container mx-auto mt-10 min-h-screen">
       <h1 className="text-3xl font-bold text-center text-my-main mb-6">
         {ar ? "الدفع" : "Checkout"}
       </h1>
-      <div className="bg-card p-6 rounded-xl shadow-md">
-        <CheckoutForm ar={ar} clientSecret={clientSecret} />
-      </div>
+
+      <CheckoutForm ar={ar} clientSecret={clientSecret} />
     </main>
   );
 }

@@ -7,121 +7,65 @@ datasource db {
   provider = "postgresql"
 }
 
-model Account {
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime
-  User              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([provider, providerAccountId])
-}
-
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
-  User                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, credentialID])
-}
-
 model Category {
   id      Int       @id @default(autoincrement())
   name    String    @unique
   Product Product[]
 }
 
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique // link to Clerk user id
+  name      String?
+  email     String   @unique
+  image     String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products  Product[]
+  orders    Order[]  // renamed from Order to orders for clarity
+}
+
 model Order {
-  id            String      @id @default(uuid()) // ✅ generate automatically
+  id            String      @id @default(uuid())
   paid          Boolean     @default(false)
   totalPrice    Float
   phone         String
   streetAddress String
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt // ✅ auto-update timestamp
+  updatedAt     DateTime    @updatedAt
   userId        String
   User          User        @relation(fields: [userId], references: [id])
   OrderItem     OrderItem[]
 }
-
 
 model OrderItem {
   id        String  @id @default(uuid())
   quantity  Int     @default(1)
   productId String
   orderId   String
-  Order     Order   @relation(fields: [orderId], references: [id])
   Product   Product @relation(fields: [productId], references: [id])
+  Order     Order   @relation(fields: [orderId], references: [id])
 
   @@unique([productId, orderId])
 }
 
 model Product {
-  id          String      @id @default(uuid())
-  name_ar       String
-  name_en String
+  id             String      @id @default(uuid())
+  name_ar        String
+  name_en        String
   description_ar String
   description_en String
-  image       String
-  basePrice   Float
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime?
-  categoryId  Int
-    userId         String      // ✅ link to the user who created it
-  User           User        @relation(fields: [userId], references: [id])
-
-  OrderItem   OrderItem[]
-  Category    Category    @relation(fields: [categoryId], references: [id])
-}
-
-model Session {
-  id           String   @id
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          UserRole        @default(USER)
-  createdAt     DateTime        @default(now())
- updatedAt     DateTime       @updatedAt
-products  Product[]
-  Account       Account[]
-  Authenticator Authenticator[]
-  Order         Order[]
-  Session       Session[]
-}
-
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
+  image          String
+  basePrice      Float
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime?
+  categoryId     Int
+  userId         String
+  User           User       @relation(fields: [userId], references: [id])
+  Category       Category   @relation(fields: [categoryId], references: [id])
+  OrderItem      OrderItem[]
 }
 
 enum UserRole {

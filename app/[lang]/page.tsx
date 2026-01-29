@@ -12,7 +12,7 @@ const LazyFirst8Products = dynamic(
   {
     ssr: true,
     loading: () => <Loading />,
-  }
+  },
 );
 
 export const metadata: Metadata = {
@@ -41,7 +41,7 @@ export default async function Home({
 
   const FeaturedProduct = dynamic(
     () => import("@/components/FeaturedProducts"),
-    { loading: () => <Loading /> }
+    { loading: () => <Loading /> },
   );
   const Banner = dynamic(() => import("@/components/Banner"), {
     loading: () => <Loading />,
@@ -49,8 +49,8 @@ export default async function Home({
 
   return (
     <main>
-      <MyCarousel />
-      <div className="mx-auto px-12">
+      <div className="mx-auto p-6">
+        <MyCarousel />
         <FeaturedProduct lang={lang} />
         <h2 className="text-4xl font-semibold text-center my-6">
           {lang === "ar" ? "احدث منتجاتنا" : "Our Latest Products"}

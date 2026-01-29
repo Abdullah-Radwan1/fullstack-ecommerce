@@ -11,20 +11,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import Cloudinary from "@/lib/cloudinary";
 import { useImageStore } from "@/zustand/store";
-import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 
 const CreateProduct = () => {
   const { lang } = useParams();
-  const session = useSession();
   const ar = lang === "ar";
 
   const [name_ar, setNameAr] = useState("");
@@ -38,11 +36,6 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!session.data?.user?.id) {
-      toast.error(ar ? "يجب تسجيل الدخول" : "You must be logged in");
-      return;
-    }
-
     setIsLoading(true);
     try {
       if (!imageUrl)
@@ -61,17 +54,15 @@ const CreateProduct = () => {
           basePrice: parseFloat(basePrice),
           categoryId,
           image: imageUrl,
-          userId: session.data.user.id,
         }),
       });
 
       if (!response.ok) throw new Error(await response.text());
 
       toast.success(
-        ar ? "تم إنشاء المنتج بنجاح" : "Product created successfully"
+        ar ? "تم إنشاء المنتج بنجاح" : "Product created successfully",
       );
 
-      // Reset form
       setNameAr("");
       setNameEn("");
       setDescriptionAr("");
@@ -81,101 +72,87 @@ const CreateProduct = () => {
       setImageUrl("");
       setImageName("");
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
+      if (error instanceof Error) toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Card className="max-w-xl border-0 mx-auto mt-10">
-      <CardHeader>
-        <CardTitle className="text-center text-2xl font-bold">
+    <Card className="max-w-3xl mx-auto mt-12 border-0 bg-gradient-to-br from-card/50 to-card/30 backdrop-blur-lg shadow-lg">
+      <CardHeader className="pb-0">
+        <CardTitle className="text-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-my-main to-my-secondary">
           {ar ? "إنشاء منتج جديد" : "Create New Product"}
         </CardTitle>
       </CardHeader>
-      <CardContent>
+
+      <CardContent className="pt-6">
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          {/* Name Arabic */}
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="name_ar">
-              {ar ? "الاسم بالعربية" : "Name (Arabic)"}
-            </Label>
-            <Input
-              id="name_ar"
-              type="text"
-              value={name_ar}
-              onChange={(e) => setNameAr(e.target.value)}
-              required
-              minLength={2}
-              maxLength={50}
-              className="bg-card"
-            />
-          </div>
+          {/* Name Fields */}
+          {[
+            {
+              value: name_ar,
+              setter: setNameAr,
+              label: ar ? "الاسم بالعربية" : "Name (Arabic)",
+            },
+            {
+              value: name_en,
+              setter: setNameEn,
+              label: ar ? "الاسم بالإنجليزية" : "Name (English)",
+            },
+          ].map((field, idx) => (
+            <div key={idx} className="flex flex-col space-y-2">
+              <Label>{field.label}</Label>
+              <Input
+                type="text"
+                value={field.value}
+                onChange={(e) => field.setter(e.target.value)}
+                required
+                minLength={2}
+                maxLength={50}
+                className="bg-card/70 backdrop-blur-sm hover:border-my-main focus:border-my-secondary transition-all"
+              />
+            </div>
+          ))}
 
-          {/* Name English */}
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="name_en">
-              {ar ? "الاسم بالإنجليزية" : "Name (English)"}
-            </Label>
-            <Input
-              id="name_en"
-              type="text"
-              value={name_en}
-              onChange={(e) => setNameEn(e.target.value)}
-              required
-              minLength={2}
-              maxLength={50}
-              className="bg-card"
-            />
-          </div>
-
-          {/* Description Arabic */}
-          <div className="flex flex-col space-y-2 md:col-span-2">
-            <Label htmlFor="description_ar">
-              {ar ? "الوصف بالعربية" : "Description (Arabic)"}
-            </Label>
-            <Textarea
-              id="description_ar"
-              value={description_ar}
-              onChange={(e) => setDescriptionAr(e.target.value)}
-              required
-              minLength={20}
-              maxLength={250}
-              className="min-h-[80px]"
-            />
-          </div>
-
-          {/* Description English */}
-          <div className="flex flex-col space-y-2 md:col-span-2">
-            <Label htmlFor="description_en">
-              {ar ? "الوصف بالإنجليزية" : "Description (English)"}
-            </Label>
-            <Textarea
-              id="description_en"
-              value={description_en}
-              onChange={(e) => setDescriptionEn(e.target.value)}
-              required
-              minLength={20}
-              maxLength={250}
-              className="min-h-[80px] bg-none"
-            />
-          </div>
+          {/* Description Fields */}
+          {[
+            {
+              value: description_ar,
+              setter: setDescriptionAr,
+              label: ar ? "الوصف بالعربية" : "Description (Arabic)",
+            },
+            {
+              value: description_en,
+              setter: setDescriptionEn,
+              label: ar ? "الوصف بالإنجليزية" : "Description (English)",
+            },
+          ].map((field, idx) => (
+            <div key={idx} className="flex flex-col space-y-2 md:col-span-2">
+              <Label>{field.label}</Label>
+              <Textarea
+                value={field.value}
+                onChange={(e) => field.setter(e.target.value)}
+                required
+                minLength={20}
+                maxLength={250}
+                className="min-h-[100px] bg-card/50 backdrop-blur-sm hover:border-my-main focus:border-my-secondary transition-all resize-none"
+              />
+            </div>
+          ))}
 
           {/* Category */}
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="category">{ar ? "الفئة" : "Category"}</Label>
+            <Label>{ar ? "الفئة" : "Category"}</Label>
             <Select
               required
               onValueChange={(value: string) => setCategoryId(parseInt(value))}
               dir={ar ? "rtl" : "ltr"}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-card/70 backdrop-blur-sm hover:border-my-main focus:border-my-secondary transition-all">
                 <SelectValue
                   placeholder={ar ? "اختر فئة" : "Select a category"}
                 />
@@ -195,21 +172,19 @@ const CreateProduct = () => {
 
           {/* Price */}
           <div className="flex flex-col space-y-2">
-            <Label htmlFor="price">{ar ? "السعر" : "Price"}</Label>
+            <Label>{ar ? "السعر" : "Price"}</Label>
             <Input
-              id="price"
               type="number"
               value={basePrice}
               onChange={(e) => setBasePrice(e.target.value)}
               min="0.1"
-              maxLength={3}
               step="0.01"
               required
-              className="bg-card"
+              className="bg-card/70 backdrop-blur-sm hover:border-my-main focus:border-my-secondary transition-all"
             />
           </div>
 
-          {/* Image */}
+          {/* Image Upload */}
           <div className="md:col-span-2">
             <Cloudinary />
           </div>
@@ -217,19 +192,18 @@ const CreateProduct = () => {
           {/* Submit */}
           <div className="md:col-span-2">
             <Button
-             
               type="submit"
               disabled={isLoading}
-              className="flex items-center justify-center gap-2 w-full"
+              className="w-full py-4 flex items-center justify-center gap-3 text-lg bg-gradient-to-r from-my-main to-my-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold"
             >
-              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
               {isLoading
                 ? ar
                   ? "جاري الإنشاء..."
                   : "Creating..."
                 : ar
-                ? "إنشاء المنتج"
-                : "Create Product"}
+                  ? "إنشاء المنتج"
+                  : "Create Product"}
             </Button>
           </div>
         </form>

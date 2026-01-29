@@ -2,7 +2,23 @@
 import { db } from "./db";
 
 async function main() {
-  // Seed categories
+  // 1️⃣ Seed a default user (linked to Clerk)
+  const defaultUserClerkId = "clerk_test_user_001"; // replace with a real Clerk user ID in prod
+
+  const user = await db.user.upsert({
+    where: { clerkId: defaultUserClerkId },
+    update: {},
+    create: {
+      clerkId: defaultUserClerkId,
+      email: "admin@example.com",
+      name: "Admin User",
+      role: "ADMIN",
+    },
+  });
+
+  console.log("Default user seeded:", user.email);
+
+  // 2️⃣ Seed categories
   const categories = [
     { id: 1, name: "Laptops" },
     { id: 2, name: "Accessories" },
@@ -13,14 +29,13 @@ async function main() {
     await db.category.upsert({
       where: { id: category.id },
       update: {},
-
       create: category,
     });
   }
 
   console.log("Categories seeded.");
 
-  // Seed products
+  // 3️⃣ Seed all products
   const products = [
     {
       id: "cm84m00pp0066vg2kq8y2x3il",
@@ -33,7 +48,6 @@ async function main() {
       image: "/products/mac2.png",
       basePrice: 289,
       categoryId: 1,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp006avg2k9ty963ji",
@@ -46,7 +60,6 @@ async function main() {
       image: "/products/jbl.png",
       basePrice: 1209,
       categoryId: 3,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp006bvg2knn74n1fc",
@@ -58,7 +71,6 @@ async function main() {
       image: "/products/camera.png",
       basePrice: 419,
       categoryId: 3,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp006evg2kptvgf0f1",
@@ -68,10 +80,9 @@ async function main() {
         "تمتع بصوت عالي الجودة مع خاصية إلغاء الضوضاء لهذه السماعات الأنيقة.",
       description_en:
         "Experience premium sound quality and noise cancellation with these sleek AirPods Pro.",
-      image: "/products/airpods.png",
+      image: "/products/airpods.webp",
       basePrice: 679,
       categoryId: 3,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp0068vg2k61d0q6zf",
@@ -83,7 +94,6 @@ async function main() {
       image: "/products/asus.png",
       basePrice: 469,
       categoryId: 1,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp0067vg2kqszuwqgm",
@@ -96,7 +106,6 @@ async function main() {
       image: "/products/asuslab.png",
       basePrice: 239,
       categoryId: 1,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp006dvg2kbctgsr62",
@@ -108,7 +117,6 @@ async function main() {
       image: "/products/mice.png",
       basePrice: 889,
       categoryId: 2,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp006cvg2kq7wak4qq",
@@ -121,7 +129,6 @@ async function main() {
       image: "/products/hand.png",
       basePrice: 979,
       categoryId: 2,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp0069vg2kxiaxj5hx",
@@ -134,7 +141,6 @@ async function main() {
       image: "/products/lab2.png",
       basePrice: 559,
       categoryId: 1,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp0065vg2ko3uj5xiq",
@@ -147,7 +153,6 @@ async function main() {
       image: "/products/watch.png",
       basePrice: 199,
       categoryId: 3,
-      updatedAt: new Date(),
     },
     {
       id: "cm84m00pp006fvg2kbosehphone",
@@ -160,7 +165,6 @@ async function main() {
       image: "/products/bose.png",
       basePrice: 429,
       categoryId: 3,
-      updatedAt: new Date(),
     },
   ];
 
@@ -169,16 +173,19 @@ async function main() {
       where: { id: product.id },
       update: {
         ...product,
-        userId: "cmidkixnl00008ktbd9fajesp", // make sure userId is updated too
+        userId: user.id,
+        updatedAt: new Date(),
       },
       create: {
         ...product,
-        userId: "cmidkixnl00008ktbd9fajesp", // ✅ required for create
+        userId: user.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     });
   }
 
-  console.log("Products seeded successfully. 🤍");
+  console.log("All products seeded successfully. 🤍");
 }
 
 main()

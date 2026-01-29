@@ -1,4 +1,3 @@
-// ProductsPage.tsx (Server Component)
 import ProductsClient from "./ProductClient";
 import { getProducts } from "@/lib/functions/product/getProducts";
 

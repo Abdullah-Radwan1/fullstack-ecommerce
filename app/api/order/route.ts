@@ -1,69 +1,60 @@
-// app/api/order/route.ts (if using App Router)
+// app/api/order/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/prisma/db";
-
-// import purchaseReciept from "@/email/purchaseReciept";
+import { auth } from "@clerk/nextjs/server";
 import { getUser } from "@/lib/Functions";
-// import { Resend } from "resend";
-
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("resend key is not defined");
-}
-// const resend = new Resend(process.env.RESEND_API_KEY as string); // no export
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { total, streetAddress, phone, email, products } = body;
-  if (!total || !streetAddress || !phone || !email || !products) {
+  try {
+    // ✅ Get the logged-in user
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // ✅ Parse request body
+    const body = await req.json();
+    const { total, streetAddress, phone, products, email } = body;
+    console.log(email);
+    if (!total || !streetAddress || !phone || !products || !products.length) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
+    }
+
+    // ✅ Get user data from Prisma (or create if not exists)
+    const user = await getUser(userId, email);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // ✅ Create order in Prisma
+    const order = await db.order.create({
+      data: {
+        totalPrice: total / 100,
+        streetAddress,
+        phone,
+        userId: user.id,
+        OrderItem: {
+          create: products.map((p: { id: string; quantity: number }) => ({
+            quantity: p.quantity,
+            Product: { connect: { id: p.id } },
+          })),
+        },
+      },
+      include: { OrderItem: { include: { Product: true } } },
+    });
+
     return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
+      { message: "Order created", order },
+      { status: 201 },
+    );
+  } catch (err: any) {
+    console.error("Error creating order:", err);
+    return NextResponse.json(
+      { error: "Failed to create order", details: err.message },
+      { status: 500 },
     );
   }
-  const user = await getUser(email);
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  }
-  const order = await db.order.create({
-    data: {
-      totalPrice: total / 100,
-      streetAddress,
-      phone,
-      userId: user.id,
-      OrderItem: {
-        // ✅ match your Prisma model
-        create: products.map((product: { id: string; quantity: number }) => ({
-          quantity: product.quantity,
-          Product: { connect: { id: product.id } }, // also match relation name in OrderItem
-        })),
-      },
-    },
-    include: {
-      OrderItem: { include: { Product: true } },
-    },
-  });
-  if (!order) {
-    return NextResponse.json({ error: "Order not created" }, { status: 500 });
-  }
-  // await resend.emails.send({
-  //   from: `Support <${process.env.SENDER_EMAIL}>`,
-  //   to: email,
-  //   subject: "Vogue Haven Order Confirmation",
-  //   react: purchaseReciept({
-  //     order: {
-  //       id: order.id,
-  //       totalPrice: order.totalPrice,
-  //       userId: order.userId,
-  //       products: order.orderItems.map((product) => ({
-  //         name: product.product.name,
-  //         quantity: product.quantity,
-  //         price: product.product.basePrice,
-  //       })),
-  //     },
-  //   }),
-  // });
-  return NextResponse.json({
-    message: "Order created successfully",
-    status: 201,
-  });
 }

@@ -1,13 +1,11 @@
 import "../globals.css";
 import { Navbar } from "@/components/navbar/Navebar";
-import SessionProvider from "@/lib/auth/SessionProvider";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/Authoptions";
 import Sidebar from "@/components/sidebar/AppSidebar";
 import { lato } from "@/app/font/font";
 import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
 import Loading from "../loading";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Vogue-Haven Store",
@@ -24,7 +22,6 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>; // ✅ Correct typing
 }) {
   const { lang } = await params; // ✅ await the dynamic params
-  const session = await getServerSession(authOptions);
   const Footer = dynamic(() => import("@/components/footer"), {
     loading: () => <Loading />,
   });
@@ -36,15 +33,17 @@ export default async function RootLayout({
       dir={lang === "ar" ? "rtl" : "ltr"}
       lang={lang}
     >
-      <body className="flex min-h-screen flex-col">
-        <Sidebar />
-        <SessionProvider session={session}>
+      <ClerkProvider>
+        <body className="flex min-h-screen flex-col">
+          <Sidebar />
+
           <Navbar />
           <main className="flex-1 content-center">{children}</main>
-        </SessionProvider>
-        <Footer lang={lang} />
-        <Toaster />
-      </body>
+
+          <Footer lang={lang} />
+          <Toaster />
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LanguageToggle } from "./LanguageToggle";
 import useCartStore, { useSidebarStore } from "@/zustand/store";
@@ -13,93 +14,80 @@ import { SearchBar } from "./SearchBar";
 import { Button } from "../ui/button";
 
 export function Navbar() {
-  const { data: session } = useSession();
   const { lang } = useParams() as { lang: string };
   const ar = lang === "ar";
-  const role = session?.user?.role;
+
+  const { user, isLoaded, isSignedIn } = useUser();
+
+  // State for the user's role
+  const role =
+    (user?.publicMetadata as { role?: "USER" | "ADMIN" })?.role ?? "USER";
 
   const [scrolled, setScrolled] = useState(false);
   const { setTogglestate } = useSidebarStore();
 
-  // ✅ Derive quantity from items so Zustand tracks items and re-renders correctly
   const quantity = useCartStore((state) =>
-    state.items.reduce((acc, it) => acc + (it.quantity || 0), 0)
+    state.items.reduce((acc, it) => acc + (it.quantity || 0), 0),
   );
 
   useEffect(() => {
-    // mark mounted (fixes SSR hydration / conditional UI)
-
-    const handleScroll = () => {
-      setScrolled((prev) => {
-        const next = window.scrollY > 10;
-        return prev === next ? prev : next;
-      });
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const t = (arText: string, enText: string) => (ar ? arText : enText);
+
   const routes = {
-    home: ar ? "/ar" : "/en",
-    products: ar ? "/ar/products" : "/products",
-    admin: ar ? "/ar/admin" : "/admin",
-    signin: ar ? "/ar/signin" : "/signin",
-    profile: ar ? "/ar/profile" : "/profile",
-    cart: ar ? "/ar/cart" : "/cart",
+    home: `/${lang}`,
+    products: `/${lang}/products`,
+    admin: `/${lang}/admin`,
+    signin: `/${lang}/signin`,
+    profile: `/${lang}/profile`,
+    cart: `/${lang}/cart`,
   };
+
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full block border-b transition-all",
+        "sticky top-0 z-50 w-full border-b transition-all",
         scrolled &&
-          "bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
+          "bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60",
       )}
     >
-      <div className="flex items-center justify-between mx-auto max-w-7xl px-4 md:px-8 py-3">
+      <div className="mx-auto max-w-7xl px-4 md:px-8 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link
-          aria-label="home"
           href={routes.home}
-          className="text-base sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent"
+          className="text-xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent"
         >
           {t("ڤوجيه هاڤن", "Vogue Haven")}
         </Link>
 
         {/* Desktop Search */}
-        <div className="hidden md:flex flex-1 justify-center ">
+        <div className="hidden md:flex flex-1 justify-center">
           <SearchBar ar={ar} />
         </div>
 
-        {/* Right Actions */}
+        {/* Actions */}
         <div className="flex items-center gap-2">
-          {/* Products Button */}
-          <Link
-            href={routes.products}
-            className="hidden md:block"
-          >
-            <Button aria-label="shop now">{t("تسوق الآن", "Shop Now")}</Button>
+          {/* Products */}
+          <Link href={routes.products} className="hidden md:block">
+            <Button>{t("تسوق الآن", "Shop Now")}</Button>
           </Link>
 
-          {/* Admin Link */}
+          {/* Admin button */}
           {role === "ADMIN" && (
-            <Link
-              href={routes.admin}
-              className=" text-md font-medium"
-            >
-              <Button  variant={"ghost"}>
-                {t("لوحة التحكم", "Admin")}
-              </Button>
+            <Link href={routes.admin} className="text-md font-medium">
+              <Button variant="ghost">{t("لوحة التحكم", "Admin")}</Button>
             </Link>
           )}
 
           {/* Language Toggle */}
           <LanguageToggle />
 
-          {/* Sidebar Toggle */}
+          {/* Sidebar */}
           <Button
-            aria-label="side bar"
             variant="ghost"
             size="icon"
             onClick={() => setTogglestate(true)}
@@ -108,28 +96,26 @@ export function Navbar() {
           </Button>
 
           {/* Cart */}
-          <Link aria-label="cart" href={routes.cart} className="relative">
-            <Button aria-label="cart" variant="ghost" size="icon">
+          <Link href={routes.cart} className="relative">
+            <Button variant="ghost" size="icon">
               <ShoppingBasket className="size-5" />
             </Button>
-
-            {/* render badge only after mount to avoid SSR mismatch */}
             {quantity > 0 && <CartBadge quantity={quantity} />}
           </Link>
 
-          {/* Profile / Signin */}
-          {session ? (
-            <Link aria-label="profile" href={routes.profile}>
-              <Avatar className="size-7 bottom-0.5">
-                <AvatarImage alt="user image" src={"/avatar.png"} />
-                <AvatarFallback>
-                  <Loader2 className="size-4 animate-spin" />
-                </AvatarFallback>
+          {/* Profile / Sign in */}
+          {!isLoaded ? (
+            <Loader2 className="size-5 animate-spin" />
+          ) : isSignedIn ? (
+            <Link href={routes.profile}>
+              <Avatar className="size-7">
+                <AvatarImage src={user.imageUrl} />
+                <AvatarFallback>{user.firstName?.[0] ?? "U"}</AvatarFallback>
               </Avatar>
             </Link>
           ) : (
-            <Link aria-label="signin" href={routes.signin}>
-              <Button aria-label="signin" variant="ghost" size="icon">
+            <Link href={routes.signin}>
+              <Button variant="ghost" size="icon">
                 <User className="size-5" />
               </Button>
             </Link>
@@ -138,17 +124,17 @@ export function Navbar() {
       </div>
 
       {/* Mobile Search */}
-      <div className="flex md:hidden px-4 pb-3">
+      <div className="md:hidden px-4 pb-3">
         <SearchBar ar={ar} />
       </div>
     </header>
   );
 }
 
-/* --------------------------- Cart Badge --------------------------- */
+/* ---------------- Cart Badge ---------------- */
 function CartBadge({ quantity }: { quantity: number }) {
   return (
-    <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-my-main text-xs font-bold text-black">
+    <span className="absolute -top-1.5 -right-1.5 h-4 w-4 flex items-center justify-center rounded-full bg-my-main text-xs font-bold text-black">
       {quantity}
     </span>
   );
