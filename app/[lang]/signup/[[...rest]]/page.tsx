@@ -92,7 +92,7 @@ const Page = () => {
                 colorInputBackground: "hsl(var(--input))",
                 colorInputText: "hsl(var(--foreground))",
                 colorNeutral: "hsl(var(--foreground))",
-                colorAlphaShade: "hsl(var(--foreground))",
+
                 borderRadius: "0.75rem",
               },
             }}
