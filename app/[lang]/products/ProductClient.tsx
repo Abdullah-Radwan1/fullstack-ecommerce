@@ -31,6 +31,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import ProductSkeleton from "@/components/ProductSkeleton";
 
 type selectedProducts = Omit<Product, "createdAt" | "updatedAt" | "userId">;
 
@@ -362,11 +363,15 @@ export default function ProductsClient({
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {initialProducts.map((product) => (
-                <ProductCard key={product.id} product={product} lang={lang} />
-              ))}
-            </div>
+            {isLoading || isApplyingFilters ? (
+              <ProductSkeleton />
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {initialProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} lang={lang} />
+                ))}
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-16 bg-card/30 border border-border/40 rounded-xl">

@@ -1,7 +1,6 @@
-import React from "react";
 import { Skeleton } from "./ui/skeleton";
 
-const CustomSkeleton = () => {
+const ProductSkeleton = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {[...Array(6)].map((_, index) => (
@@ -15,4 +14,4 @@ const CustomSkeleton = () => {
   );
 };
 
-export default CustomSkeleton;
+export default ProductSkeleton;
