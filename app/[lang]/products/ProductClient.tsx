@@ -144,13 +144,7 @@ export default function ProductsClient({
           className="hover:rotate-180 w-8 h-8"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
-          {isSidebarOpen ? (
-            <X />
-          ) : (
-            <>
-              <Funnel />
-            </>
-          )}
+          {isSidebarOpen ? <X /> : <Funnel />}
         </Button>
         <h1 className="text-xl font-bold">
           {ar ? "منتجاتنا المميزة" : "Featured Products"}

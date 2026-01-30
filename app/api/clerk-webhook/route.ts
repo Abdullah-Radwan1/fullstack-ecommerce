@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   console.log("📦 Clerk webhook event:", event.type);
 
   // ✅ We care about session.created
-  if (event.type !== "session.created") {
+  if (event.type !== "user.created") {
     return new NextResponse("Ignored event", { status: 200 });
   }
 
