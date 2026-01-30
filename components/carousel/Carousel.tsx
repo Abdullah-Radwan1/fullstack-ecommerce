@@ -137,8 +137,8 @@ export function MyCarousel() {
                   {/* IMAGE */}
                   <div className="flex-1 relative w-full">
                     {/* Theme-aware golden glow */}
-                    <div className="absolute inset-0 rounded-full blur-2xl opacity-70 bg-[radial-gradient(circle_at_center,var(--my-main)_0%,transparent_65%)]" />
-                    <div className="absolute inset-0 rounded-full shadow-[0_0_90px_25px_var(--my-main)] opacity-30" />
+                    <div className="absolute inset-0 rounded-full blur-2xl opacity-70 bg-[radial-gradient(circle_at_center,var(--my-main)_0%,transparent_55%)]" />
+                    <div className="absolute inset-0 rounded-full  opacity-30" />
 
                     <div className="relative mx-auto w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-[4/3] sm:aspect-square">
                       <Image

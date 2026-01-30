@@ -40,6 +40,7 @@ export default function Loading() {
             width={180}
             height={180}
             priority
+            unoptimized
             className="relative "
           />
         </div>

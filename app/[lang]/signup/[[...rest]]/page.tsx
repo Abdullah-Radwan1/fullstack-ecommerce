@@ -48,52 +48,88 @@ const Page = () => {
                 card: "bg-transparent shadow-none",
 
                 /* Badges (Last used, etc.) */
-                badge: "bg-black/80 border border-white/20",
-                badgeText: "!text-white font-medium",
+                badge: "bg-muted/80 border border-border",
+                badgeText: "text-muted-foreground font-medium",
 
                 /* Divider */
-                dividerLine: "bg-border/30",
+                dividerLine: "bg-border",
                 dividerText: "text-muted-foreground",
 
                 /* Labels & text */
                 formFieldLabel: "text-foreground font-medium",
+                formFieldRadioLabelTitle__emailAddress: "ss",
+                formFieldHintText: "text-muted-foreground/80",
                 footerActionText: "text-muted-foreground",
+                identityPreviewText: "text-foreground",
+                formFieldSuccessText: "text-green-400",
 
-                /* Inputs */
+                /* Inputs - WHITE BORDERS with dark theme fixes */
                 formFieldInput:
-                  "bg-input border border-border/50 text-foreground placeholder:text-muted-foreground focus:border-my-main/50 focus:ring-my-main/20",
+                  "bg-input border border-white/30 text-foreground placeholder:text-muted-foreground/70 focus:border-white/70 focus:ring-white/20 transition-colors",
+
+                /* Password strength indicator */
+                formFieldSuccess: "text-green-400",
+                formFieldWarning: "text-amber-400",
+                formFieldError: "text-red-400",
+                formFieldErrorText: "text-red-400",
+                formFieldShowPasswordIcon: "text-foreground",
+                formFieldAction: "text-my-main hover:text-my-secondary",
 
                 /* Primary button */
                 formButtonPrimary:
-                  "bg-gradient-to-r from-my-main to-my-secondary text-background font-semibold shadow-[0_0_20px_var(--my-main)] hover:shadow-[0_0_35px_var(--my-main)] transition-all",
+                  "bg-gradient-to-r from-my-main to-my-secondary text-background font-semibold shadow-[0_0_20px_var(--my-main)/30] hover:shadow-[0_0_35px_var(--my-main)/40] transition-all hover:opacity-90",
 
                 /* Social buttons */
                 socialButtonsBlockButton:
-                  "border border-border/50 bg-card hover:border-my-main/50 hover:bg-my-main/5 transition-colors",
+                  "border border-white/20 bg-card text-foreground hover:border-my-main/50 hover:bg-my-main/5 transition-colors",
                 socialButtonsBlockButtonText: "text-foreground font-medium",
+                socialButtonsBlockButtonArrow: "text-foreground",
 
                 /* Footer link */
                 footerActionLink:
-                  "text-my-main hover:text-my-secondary font-medium",
+                  "text-my-main hover:text-my-secondary font-medium transition-colors",
 
                 /* Hide Clerk headers */
                 headerTitle: "hidden",
                 headerSubtitle: "hidden",
 
-                socialButtonsProviderIcon: "dark:invert",
+                /* Icons */
+                socialButtonsProviderIcon:
+                  "dark:invert-0 filter brightness-200",
+                userButtonAvatarBox: "border-2 border-white/20",
+                avatarBox: "border-2 border-white/20",
               },
 
               variables: {
-                /* 🔥 THIS is the most important part */
-                colorPrimary: "hsl(var(--my-main))",
-                colorText: "hsl(var(--foreground))",
-                colorTextSecondary: "hsl(var(--muted-foreground))",
+                /* Colors for dark theme */
+                colorPrimary: "#FFD700", // Your my-main gold
+
+                colorDanger: "#ef4444",
+                colorSuccess: "#10b981",
+                colorWarning: "#f59e0b",
+                colorText: "#f9f9f9", // Your foreground
+                colorTextSecondary: "#bfbfbf", // Your muted-foreground
+                colorTextOnPrimaryBackground: "#111", // Your background
                 colorBackground: "transparent",
-                colorInputBackground: "hsl(var(--input))",
-                colorInputText: "hsl(var(--foreground))",
-                colorNeutral: "hsl(var(--foreground))",
+                colorInputBackground: "#1c1c1c", // Your card color
+                colorInputText: "#f9f9f9", // Your foreground
+
+                colorNeutral: "#f9f9f9", // Your foreground
 
                 borderRadius: "0.75rem",
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.875rem",
+                fontWeight: {
+                  normal: "400",
+                  medium: "500",
+                  semibold: "600",
+                },
+              },
+
+              layout: {
+                socialButtonsPlacement: "bottom",
+                socialButtonsVariant: "blockButton",
+                logoPlacement: "none",
               },
             }}
           />

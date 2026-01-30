@@ -4,7 +4,8 @@ import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const raw = await req.text();
+  const raw = await req.clone().text();
+  console.debug("Webhook raw body length:", raw?.length ?? 0);
 
   let evt: any;
   try {
@@ -32,6 +33,12 @@ export async function POST(req: NextRequest) {
   // Normalize event type and data for different Clerk payload shapes
   const eventType = evt.type ?? evt.event_type;
   const data = evt.data ?? evt.data?.object ?? evt.data?.attributes ?? evt;
+  console.debug(
+    "Clerk webhook event:",
+    eventType,
+    "data id:",
+    data?.id ?? data?.user_id,
+  );
 
   try {
     if (eventType === "user.created") {
@@ -70,6 +77,11 @@ export async function POST(req: NextRequest) {
 
       // Sync role to Clerk publicMetadata
       await updateClerkUserRole(id, user.role);
+      console.debug("Upserted user:", {
+        clerkId: id,
+        email: user.email,
+        role: user.role,
+      });
     }
 
     return new Response("Webhook received", { status: 200 });

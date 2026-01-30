@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useCallback } from "react";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/generated/prisma/browser";
@@ -27,6 +27,8 @@ import {
   Home,
   Layers,
   Loader2,
+  X,
+  Funnel,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -88,20 +90,17 @@ export default function ProductsClient({
   const ar = lang === "ar";
   const router = useRouter();
 
-  const [searchState, setSearchState] = useState(initialSearch);
-  const [appliedCategory, setAppliedCategory] = useState<string[]>(
+  const [search, setSearch] = useState(initialSearch);
+  const [categories, setCategories] = useState<string[]>(
     initialCategory.split(","),
   );
   const [priceRange, setPriceRange] = useState<number[]>(initialPrice);
   const [page, setPage] = useState(initialPage);
-  const [isApplyingFilters, setIsApplyingFilters] = useState(false);
-  const [isNavigatingPage, setIsNavigatingPage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const categories = useMemo(() => categoriesData, []);
-
-  const handleCategoryChange = useCallback((id: string) => {
-    setAppliedCategory((prev) => {
+  const toggleCategory = useCallback((id: string) => {
+    setCategories((prev) => {
       if (id === "all") return ["all"];
       const updated = prev.includes(id)
         ? prev.filter((c) => c !== id)
@@ -110,301 +109,265 @@ export default function ProductsClient({
     });
   }, []);
 
-  const applyFilters = async () => {
-    setIsApplyingFilters(true);
+  const navigateTo = (pageNum: number = 1) => {
     setIsLoading(true);
-
-    try {
-      const categoryParam = appliedCategory.join(",");
-      router.push(
-        `/${lang}/products?page=1&search=${encodeURIComponent(searchState)}&category=${categoryParam}&min=${priceRange[0]}&max=${priceRange[1]}`,
-      );
-    } finally {
-      // Note: The loading state will be cleared when the component re-renders with new data
-      // We use a small timeout to ensure smooth transition
-      setTimeout(() => {
-        setIsApplyingFilters(false);
-        setIsLoading(false);
-      }, 500);
-    }
+    router.push(
+      `/${lang}/products?page=${pageNum}&search=${encodeURIComponent(search)}&category=${categories.join(",")}&min=${priceRange[0]}&max=${priceRange[1]}`,
+    );
+    setTimeout(() => setIsLoading(false), 500);
   };
+
+  const applyFilters = () => navigateTo(1);
 
   const resetFilters = () => {
-    setIsLoading(true);
-    setAppliedCategory(["all"]);
+    setSearch("");
+    setCategories(["all"]);
     setPriceRange([0, 1300]);
-    setSearchState("");
-    router.push(`/${lang}/products?page=1`);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
+    navigateTo(1);
+    setIsSidebarOpen(false);
   };
 
-  const goToPage = async (newPage: number) => {
-    setIsNavigatingPage(true);
-    setIsLoading(true);
-
-    try {
-      const categoryParam = appliedCategory.join(",");
-      router.push(
-        `/${lang}/products?page=${newPage}&search=${encodeURIComponent(searchState)}&category=${categoryParam}&min=${priceRange[0]}&max=${priceRange[1]}`,
-      );
-      setPage(newPage);
-    } finally {
-      setTimeout(() => {
-        setIsNavigatingPage(false);
-        setIsLoading(false);
-      }, 500);
-    }
+  const goToPage = (newPage: number) => {
+    setPage(newPage);
+    navigateTo(newPage);
   };
 
   const hasProducts = initialProducts.length > 0;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto p-4 relative">
-      {/* Global Loading Overlay */}
-
-      {/* Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-my-main/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-my-secondary/10 rounded-full blur-3xl" />
+    <div className="min-h-screen bg-background">
+      {/* Mobile Header */}
+      <div className="lg:hidden sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border/40 p-4 flex items-center justify-between">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:rotate-180 w-8 h-8"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          {isSidebarOpen ? (
+            <X />
+          ) : (
+            <>
+              <Funnel />
+            </>
+          )}
+        </Button>
+        <h1 className="text-xl font-bold">
+          {ar ? "منتجاتنا المميزة" : "Featured Products"}
+        </h1>
+        <div className="w-10" />
       </div>
 
-      {/* Filters */}
-      <div className="lg:w-72 space-y-6">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder={ar ? "ابحث عن منتجات..." : "Search products..."}
-            value={searchState}
-            onChange={(e) => setSearchState(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                applyFilters(); // or your search function
-              }
-            }}
-            className="pl-10 bg-card/50 border-border/40"
+      {/* Layout Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-[18rem_1fr] gap-8 p-4 relative">
+        {/* Background */}
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-my-main/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-72 h-72 bg-my-secondary/10 rounded-full blur-3xl" />
+        </div>
+
+        {/* Overlay for mobile */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
           />
-        </div>
+        )}
 
-        {/* Categories */}
-        <div className="bg-card/50 border border-border/40 rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-5 h-5 text-my-main" />
-            <span className="font-bold text-foreground">
-              {ar ? "الفئات" : "Categories"}
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            {categories.map((cat) => {
-              const Icon = cat.icon;
-              const isActive = appliedCategory.includes(cat.id);
-              return (
-                <div
-                  key={cat.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer ${
-                    isActive
-                      ? "bg-my-main/20 border border-my-main/30"
-                      : "hover:bg-muted/30"
-                  }`}
-                  onClick={() => handleCategoryChange(cat.id)}
-                >
-                  <div className={cat.color}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <Label className="flex-1 cursor-pointer font-medium">
-                    {ar ? cat.labelAr : cat.labelEn}
-                  </Label>
-                  <Checkbox
-                    checked={isActive}
-                    className={`border-2 ${isActive ? "border-my-main bg-my-main" : "border-border"}`}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Price */}
-        <div className="bg-card/50 border border-border/40 rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <DollarSign className="w-5 h-5 text-my-main" />
-            <span className="font-bold text-foreground">
-              {ar ? "السعر" : "Price"}
-            </span>
-          </div>
-
-          <Slider
-            min={0}
-            max={1300}
-            step={10}
-            value={priceRange}
-            onValueChange={setPriceRange}
-          />
-
-          <div className="flex justify-between mt-4 text-sm">
-            <Badge variant="outline" className="border-my-main/30">
-              ${priceRange[0]}
-            </Badge>
-            <Tag className="w-4 h-4 text-muted-foreground" />
-            <Badge variant="outline" className="border-my-main/30">
-              ${priceRange[1]}
-            </Badge>
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex gap-3">
-          <Button
-            onClick={applyFilters}
-            disabled={isApplyingFilters || isLoading}
-            className="flex-1 bg-gradient-to-r from-my-main to-my-secondary text-background"
-          >
-            {isApplyingFilters || isLoading ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Zap className="w-4 h-4 mr-2" />
-            )}
-            {isApplyingFilters
-              ? ar
-                ? "جاري التطبيق..."
-                : "Applying..."
-              : ar
-                ? "تطبيق"
-                : "Apply"}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={resetFilters}
-            disabled={isLoading}
-            className="border-border"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Products */}
-      <div className="flex-1 space-y-8">
-        {/* Header */}
-        <div className="bg-card/50 border border-border/40 rounded-xl p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
-                <div className="w-2 h-8 bg-gradient-to-b from-my-main to-my-secondary rounded-full" />
-                {ar ? "منتجاتنا المميزة" : "Featured Products"}
-              </h1>
-              <div className="flex items-center gap-2 mt-2 text-muted-foreground">
-                <ShoppingBag className="w-4 h-4" />
-                {ar
-                  ? `${initialProducts.length} منتج`
-                  : `${initialProducts.length} products`}
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <Badge className="bg-my-main/20 text-foreground border-my-main/30">
-                <Clock className="w-3 h-3 mr-1" />
-                {ar ? "صفحة" : "Page"} {page}
-              </Badge>
-              <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
-                <Shield className="w-3 h-3 mr-1" />
-                {ar ? "جودة" : "Premium"}
-              </Badge>
-            </div>
-          </div>
-        </div>
-
-        {/* Content */}
-        {hasProducts ? (
-          <div className="space-y-8">
-            {/* Pagination */}
-            <div className="flex items-center justify-between">
+        {/* Sidebar */}
+        <aside
+          className={`fixed lg:sticky top-0 lg:top-24 h-screen lg:h-fit w-80 lg:w-full bg-background lg:bg-transparent border-r lg:border-0 border-border/40 shadow-xl lg:shadow-none z-50 lg:z-auto transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} overflow-y-auto lg:overflow-visible p-6 lg:p-0`}
+        >
+          <div className="space-y-6">
+            {/* Mobile title */}
+            <div className="flex justify-between items-center lg:hidden">
+              <h2 className="text-xl font-bold">
+                {ar ? "الفلاتر" : "Filters"}
+              </h2>
               <Button
-                onClick={() => goToPage(page - 1)}
-                disabled={page === 1 || isLoading}
-                variant="outline"
-                className="border-border"
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSidebarOpen(false)}
               >
-                {isNavigatingPage ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                )}
-                {ar ? "السابق" : "Previous"}
+                <X className="w-5 h-5" />
               </Button>
+            </div>
 
-              <div className="flex items-center gap-4">
-                <Badge className="bg-my-main/20">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  {ar ? "صفحة" : "Page"} {page}
-                </Badge>
-                <span className="text-sm text-muted-foreground">
-                  {initialProducts.length} {ar ? "منتج" : "items"}
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                className="pl-10 bg-card/50 border-border/40"
+                placeholder={ar ? "ابحث عن منتجات..." : "Search products..."}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+              />
+            </div>
+
+            {/* Categories */}
+            <div className="bg-card/50 border border-border/40 rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Filter className="w-5 h-5 text-my-main" />
+                <span className="font-bold">
+                  {ar ? "الفئات" : "Categories"}
                 </span>
               </div>
-
-              <Button
-                onClick={() => goToPage(page + 1)}
-                disabled={!hasMore || isLoading}
-                variant="outline"
-                className="border-border"
-              >
-                {ar ? "التالي" : "Next"}
-                {isNavigatingPage ? (
-                  <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                )}
-              </Button>
-            </div>
-
-            {/* Grid */}
-            {isLoading || isApplyingFilters ? (
-              <ProductSkeleton />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {initialProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} lang={lang} />
-                ))}
+              <div className="space-y-3">
+                {categoriesData.map((cat) => {
+                  const Icon = cat.icon;
+                  const isActive = categories.includes(cat.id);
+                  return (
+                    <div
+                      key={cat.id}
+                      onClick={() => toggleCategory(cat.id)}
+                      className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer ${isActive ? "bg-my-main/20 border border-my-main/30" : "hover:bg-muted/30"}`}
+                    >
+                      <Icon className={`w-5 h-5 ${cat.color}`} />
+                      <Label className="flex-1 font-medium cursor-pointer">
+                        {ar ? cat.labelAr : cat.labelEn}
+                      </Label>
+                      <Checkbox checked={isActive} />
+                    </div>
+                  );
+                })}
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="text-center py-16 bg-card/30 border border-border/40 rounded-xl">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-my-main/10 flex items-center justify-center">
-              <Search className="w-10 h-10 text-my-main/50" />
             </div>
-            <h3 className="text-2xl font-bold mb-3">
-              {ar ? "لم يتم العثور على منتجات" : "No Products Found"}
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              {ar
-                ? "جرب تغيير فلتر البحث"
-                : "Try adjusting your search filters"}
-            </p>
-            <div className="flex gap-4 justify-center">
+
+            {/* Price */}
+            <div className="bg-card/50 border border-border/40 rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <DollarSign className="w-5 h-5 text-my-main" />
+                <span className="font-bold">{ar ? "السعر" : "Price"}</span>
+              </div>
+              <Slider
+                min={0}
+                max={1300}
+                step={10}
+                value={priceRange}
+                onValueChange={setPriceRange}
+              />
+              <div className="flex justify-between mt-4 text-sm">
+                <Badge variant="outline">${priceRange[0]}</Badge>
+                <Tag className="w-4 h-4 text-muted-foreground" />
+                <Badge variant="outline">${priceRange[1]}</Badge>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 sticky bottom-0 bg-background/95 p-4 -mx-6 border-t lg:static lg:p-0 lg:mx-0 lg:border-0">
+              <Button
+                onClick={applyFilters}
+                disabled={isLoading}
+                className="flex-1 bg-gradient-to-r from-my-main to-my-secondary"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Zap className="w-4 h-4 mr-2" />
+                )}
+                {ar ? "تطبيق" : "Apply"}
+              </Button>
               <Button
                 variant="outline"
                 onClick={resetFilters}
                 disabled={isLoading}
-                className="border-border"
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                {ar ? "عرض الكل" : "Show All"}
-              </Button>
-              <Button asChild disabled={isLoading}>
-                <Link href={ar ? "/ar" : "/en"}>
-                  <Home className="w-4 h-4 mr-2" />
-                  {ar ? "الرئيسية" : "Home"}
-                </Link>
+                <RefreshCw className="w-4 h-4" />
               </Button>
             </div>
           </div>
-        )}
+        </aside>
+
+        {/* Products */}
+        <main className="space-y-8">
+          {isLoading ? (
+            <ProductSkeleton />
+          ) : hasProducts ? (
+            <>
+              {/* Pagination */}
+              <div className="flex justify-between items-center">
+                <Button
+                  variant="outline"
+                  disabled={page === 1}
+                  onClick={() => goToPage(page - 1)}
+                >
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  {ar ? "السابق" : "Previous"}
+                </Button>
+                <Badge className="bg-my-main/20">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  {ar ? "صفحة" : "Page"} {page}
+                </Badge>
+                <Button
+                  variant="outline"
+                  disabled={!hasMore}
+                  onClick={() => goToPage(page + 1)}
+                >
+                  {ar ? "التالي" : "Next"}
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+
+              {/* Header */}
+              <div className="bg-card/50 border border-border/40 rounded-xl p-6 mb-2">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                      <div className="w-2 h-8 bg-gradient-to-b from-my-main to-my-secondary rounded-full" />
+                      {ar ? "منتجاتنا المميزة" : "Featured Products"}
+                    </h1>
+                    <div className="flex items-center gap-2 mt-2 text-muted-foreground">
+                      <ShoppingBag className="w-4 h-4" />
+                      {ar
+                        ? `${initialProducts.length} منتج`
+                        : `${initialProducts.length} products`}
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Badge className="bg-my-main/20 text-foreground border-my-main/30">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {ar ? "صفحة" : "Page"} {page}
+                    </Badge>
+                    <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+                      <Shield className="w-3 h-3 mr-1" />
+                      {ar ? "جودة" : "Premium"}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {initialProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} lang={lang} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-16 bg-card/30 border border-border/40 rounded-xl">
+              <h3 className="text-2xl font-bold mb-3">
+                {ar ? "لم يتم العثور على منتجات" : "No Products Found"}
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                {ar
+                  ? "جرب تغيير فلتر البحث"
+                  : "Try adjusting your search filters"}
+              </p>
+              <div className="flex justify-center gap-4">
+                <Button variant="outline" onClick={resetFilters}>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  {ar ? "عرض الكل" : "Show All"}
+                </Button>
+                <Button asChild>
+                  <Link href={ar ? "/ar" : "/en"}>
+                    <Home className="w-4 h-4 mr-2" />
+                    {ar ? "الرئيسية" : "Home"}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

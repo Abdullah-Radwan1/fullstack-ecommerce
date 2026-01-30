@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
+import "./globals.css";
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -29,7 +29,7 @@ export default function NotFound() {
             asChild
             className="bg-my-main hover:bg-my-secondary text-background font-medium transition-all duration-300 hover:scale-105"
           >
-            <Link href="/">Return Home</Link>
+            <Link href="/en">Return Home</Link>
           </Button>
 
           {/* Decorative Elements */}
