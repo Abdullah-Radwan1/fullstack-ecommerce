@@ -40,11 +40,24 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   }
 
   // Locale detection
-  const negotiator = new Negotiator({
-    headers: Object.fromEntries(request.headers),
-  });
-  const languages = negotiator.languages();
-  const detectedLocale = match(languages, locales, defaultLocale);
+  let detectedLocale = defaultLocale;
+  try {
+    const negotiator = new Negotiator({
+      headers: Object.fromEntries(request.headers),
+    });
+    const languages = negotiator.languages() || [];
+    // Filter out invalid locale codes
+    const validLanguages = languages.filter((lang) =>
+      /^[a-z]{2}(-[A-Z]{2})?$/.test(lang),
+    );
+    detectedLocale =
+      validLanguages.length > 0
+        ? match(validLanguages, locales, defaultLocale)
+        : defaultLocale;
+  } catch (error) {
+    console.error("Locale detection error:", error);
+    detectedLocale = defaultLocale;
+  }
 
   const pathSegments = pathname.split("/");
   const lang = pathSegments[1];
@@ -85,6 +98,6 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
 
 export const config = {
   matcher: [
-    "/((?!_next/|webhooks/stripe|api/clerk-webhook|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
+    "/((?!_next/|webhooks|api|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
   ],
 };
