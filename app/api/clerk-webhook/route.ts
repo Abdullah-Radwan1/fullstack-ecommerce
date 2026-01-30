@@ -5,51 +5,42 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   let event: any;
+
   const hasSecret = !!process.env.CLERK_WEBHOOK_SIGNING_SECRET;
 
   try {
     if (hasSecret) {
-      // ✅ Production: verify signature + parse body
+      // ✅ Production: Clerk verifies + parses body
       event = await verifyWebhook(req);
     } else {
-      // ⚠️ Local development only
+      // ⚠️ Local testing only (NO signature verification)
       const rawBody = await req.text();
       event = JSON.parse(rawBody);
-      console.warn("⚠️ Clerk webhook signature verification DISABLED (local)");
+      console.warn("⚠️ Webhook signature verification DISABLED (local)");
     }
   } catch (err) {
     console.error("❌ Webhook verification/parsing failed:", err);
     return new NextResponse("Invalid webhook", { status: 400 });
   }
 
-  console.log("📦 Clerk webhook event:", event.type);
+  const eventType = event.type;
+  const userData = event.data;
 
-  // ✅ We care about session.created
-  if (event.type !== "user.created") {
+  // Only handle "user.created"
+  if (eventType !== "user.created") {
+    console.log("ℹ️ Ignored event:", eventType);
     return new NextResponse("Ignored event", { status: 200 });
   }
 
-  // ✅ Correct payload shape for session.created
-  const user = event.data?.user;
-
-  if (!user) {
-    console.error("❌ session.created event missing user object");
-    return new NextResponse("Invalid payload", { status: 400 });
-  }
-
-  const clerkId = user.id;
-  const email = user.email_addresses?.[0]?.email_address ?? null;
-
-  const firstName = user.first_name ?? "";
-  const lastName = user.last_name ?? "";
+  // Extract user info from Clerk payload
+  const clerkId = userData.id;
+  const email = userData.email_addresses?.[0]?.email_address ?? null;
+  const firstName = userData.first_name ?? "";
+  const lastName = userData.last_name ?? "";
   const name = `${firstName} ${lastName}`.trim() || null;
 
-  if (!clerkId || !email) {
-    console.error("❌ Missing required user fields", { clerkId, email });
-    return new NextResponse("Missing user data", { status: 400 });
-  }
-
   try {
+    // Upsert user into Prisma DB
     const dbUser = await db.user.upsert({
       where: { clerkId },
       update: {
@@ -64,14 +55,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // 🔁 Sync role back to Clerk publicMetadata
+    // Sync role to Clerk public metadata
     await updateClerkUserRole(clerkId, dbUser.role);
-
-    console.log("✅ User synced successfully:", dbUser.id);
 
     return new NextResponse("OK", { status: 200 });
   } catch (err) {
-    console.error("❌ Database error:", err);
     return new NextResponse("Server error", { status: 500 });
   }
 }
