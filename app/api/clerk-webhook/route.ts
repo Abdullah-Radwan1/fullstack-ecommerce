@@ -1,92 +1,77 @@
 import { db } from "@/prisma/db";
 import { updateClerkUserRole } from "@/lib/auth/clerk-utils";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const raw = await req.clone().text();
-  console.debug("Webhook raw body length:", raw?.length ?? 0);
+  let event: any;
+  const hasSecret = !!process.env.CLERK_WEBHOOK_SIGNING_SECRET;
 
-  let evt: any;
   try {
-    // Prefer verified event; this will throw if verification fails
-    evt = await verifyWebhook(req);
-  } catch (err) {
-    console.error("Webhook verification failed:", err);
-
-    // Development fallback: if webhook secret is not configured, try to parse raw body
-    if (!process.env.CLERK_WEBHOOK_SECRET && raw) {
-      try {
-        evt = JSON.parse(raw);
-        console.warn(
-          "Using raw payload as event (no webhook secret configured)",
-        );
-      } catch (e) {
-        console.error("Failed to parse raw body:", e);
-        return new Response("Invalid payload", { status: 400 });
-      }
+    if (hasSecret) {
+      // ✅ Production: verify signature + parse body
+      event = await verifyWebhook(req);
     } else {
-      return new Response("Error verifying webhook", { status: 400 });
+      // ⚠️ Local development only
+      const rawBody = await req.text();
+      event = JSON.parse(rawBody);
+      console.warn("⚠️ Clerk webhook signature verification DISABLED (local)");
     }
+  } catch (err) {
+    console.error("❌ Webhook verification/parsing failed:", err);
+    return new NextResponse("Invalid webhook", { status: 400 });
   }
 
-  // Normalize event type and data for different Clerk payload shapes
-  const eventType = evt.type ?? evt.event_type;
-  const data = evt.data ?? evt.data?.object ?? evt.data?.attributes ?? evt;
-  console.debug(
-    "Clerk webhook event:",
-    eventType,
-    "data id:",
-    data?.id ?? data?.user_id,
-  );
+  console.log("📦 Clerk webhook event:", event.type);
+
+  // ✅ We care about session.created
+  if (event.type !== "session.created") {
+    return new NextResponse("Ignored event", { status: 200 });
+  }
+
+  // ✅ Correct payload shape for session.created
+  const user = event.data?.user;
+
+  if (!user) {
+    console.error("❌ session.created event missing user object");
+    return new NextResponse("Invalid payload", { status: 400 });
+  }
+
+  const clerkId = user.id;
+  const email = user.email_addresses?.[0]?.email_address ?? null;
+
+  const firstName = user.first_name ?? "";
+  const lastName = user.last_name ?? "";
+  const name = `${firstName} ${lastName}`.trim() || null;
+
+  if (!clerkId || !email) {
+    console.error("❌ Missing required user fields", { clerkId, email });
+    return new NextResponse("Missing user data", { status: 400 });
+  }
 
   try {
-    if (eventType === "user.created") {
-      const id = data.id ?? evt.data?.id;
+    const dbUser = await db.user.upsert({
+      where: { clerkId },
+      update: {
+        email,
+        name,
+      },
+      create: {
+        clerkId,
+        email,
+        name,
+        role: "USER",
+      },
+    });
 
-      // Try multiple common locations for emails and names
-      const email =
-        data.email_addresses?.[0]?.email_address ??
-        data.primary_email_address ??
-        data.email ??
-        (Array.isArray(data.emails) ? data.emails[0]?.email : undefined) ??
-        null;
+    // 🔁 Sync role back to Clerk publicMetadata
+    await updateClerkUserRole(clerkId, dbUser.role);
 
-      const first_name = data.first_name ?? data.firstName ?? data.given_name;
-      const last_name = data.last_name ?? data.lastName ?? data.family_name;
-      const name = `${first_name ?? ""} ${last_name ?? ""}`.trim() || undefined;
+    console.log("✅ User synced successfully:", dbUser.id);
 
-      if (!id) {
-        console.error("No user id in webhook payload");
-        return new Response("No user id", { status: 400 });
-      }
-
-      const user = await db.user.upsert({
-        where: { clerkId: id },
-        update: {
-          email: email ?? undefined,
-          name: name ?? undefined,
-        },
-        create: {
-          clerkId: id,
-          email: email ?? undefined,
-          name: name ?? undefined,
-          role: "USER", // Default role for new users
-        },
-      });
-
-      // Sync role to Clerk publicMetadata
-      await updateClerkUserRole(id, user.role);
-      console.debug("Upserted user:", {
-        clerkId: id,
-        email: user.email,
-        role: user.role,
-      });
-    }
-
-    return new Response("Webhook received", { status: 200 });
+    return new NextResponse("OK", { status: 200 });
   } catch (err) {
-    console.error("Error handling webhook:", err);
-    return new Response("Error handling webhook", { status: 500 });
+    console.error("❌ Database error:", err);
+    return new NextResponse("Server error", { status: 500 });
   }
 }
