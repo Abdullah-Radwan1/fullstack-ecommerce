@@ -5,15 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   let event: any;
-
   const hasSecret = !!process.env.CLERK_WEBHOOK_SIGNING_SECRET;
 
   try {
     if (hasSecret) {
-      // ✅ Production: Clerk verifies + parses body
+      // Production: verify webhook
       event = await verifyWebhook(req);
     } else {
-      // ⚠️ Local testing only (NO signature verification)
+      // Local dev: parse raw body without verification
       const rawBody = await req.text();
       event = JSON.parse(rawBody);
       console.warn("⚠️ Webhook signature verification DISABLED (local)");
@@ -23,43 +22,51 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Invalid webhook", { status: 400 });
   }
 
-  const eventType = event.type;
-  const userData = event.data;
+  console.log("📦 Clerk webhook event:", JSON.stringify(event, null, 2));
 
-  // Only handle "user.created"
-  if (eventType !== "user.created") {
-    console.log("ℹ️ Ignored event:", eventType);
+  // Only handle user.created
+  if (event.type !== "user.created") {
+    console.log("ℹ️ Ignored event type:", event.type);
     return new NextResponse("Ignored event", { status: 200 });
   }
 
-  // Extract user info from Clerk payload
+  // ✅ Extract user data
+  const userData = event.data;
   const clerkId = userData.id;
   const email = userData.email_addresses?.[0]?.email_address ?? null;
   const firstName = userData.first_name ?? "";
   const lastName = userData.last_name ?? "";
   const name = `${firstName} ${lastName}`.trim() || null;
 
+  if (!clerkId) {
+    console.error("❌ Missing clerk user id", JSON.stringify(event, null, 2));
+    return new NextResponse("Missing user id", { status: 400 });
+  }
+
+  if (!email) {
+    console.error("❌ Missing email", JSON.stringify(event, null, 2));
+    return new NextResponse("Missing email", { status: 400 });
+  }
+
   try {
-    // Upsert user into Prisma DB
     const dbUser = await db.user.upsert({
       where: { clerkId },
-      update: {
-        email,
-        name,
-      },
-      create: {
-        clerkId,
-        email,
-        name,
-        role: "USER",
-      },
+      update: { email, name },
+      create: { clerkId, email, name, role: "USER" },
     });
 
-    // Sync role to Clerk public metadata
+    // Sync role to Clerk
     await updateClerkUserRole(clerkId, dbUser.role);
+
+    console.log("✅ User synced:", {
+      clerkId: dbUser.clerkId,
+      email: dbUser.email,
+      role: dbUser.role,
+    });
 
     return new NextResponse("OK", { status: 200 });
   } catch (err) {
+    console.error("❌ DB error:", err);
     return new NextResponse("Server error", { status: 500 });
   }
 }
