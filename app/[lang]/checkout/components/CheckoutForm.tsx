@@ -32,7 +32,10 @@ import {
   ShoppingBag,
   Lock,
   Sparkles,
+  Loader2,
 } from "lucide-react";
+
+import { useUser } from "@clerk/nextjs";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string,
@@ -74,7 +77,7 @@ function Form({ ar }: { ar?: boolean }) {
   const [country_code, setCountryCode] = useState<string>("+20");
   const [phone, setPhone] = useState<string>("");
   const [streetAddress, setStreetAddress] = useState<string>("");
-
+  const { user, isSignedIn } = useUser();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -86,7 +89,7 @@ function Form({ ar }: { ar?: boolean }) {
   const total = totalPrice;
   const allPhone = country_code + phone;
 
-  if (!products || products.length === 0) return null;
+  if (!products || products.length === 0 || !user) return null;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -105,7 +108,7 @@ function Form({ ar }: { ar?: boolean }) {
           total,
           streetAddress,
           phone: allPhone,
-          email,
+          email: user.emailAddresses[0].emailAddress,
           products,
           quantity,
         }),
@@ -123,7 +126,7 @@ function Form({ ar }: { ar?: boolean }) {
           return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/${redirectLang}/checkout/checkout-success`,
           payment_method_data: {
             billing_details: {
-              email,
+              email: email,
               phone: allPhone,
               address: { line1: streetAddress },
             },
@@ -147,7 +150,7 @@ function Form({ ar }: { ar?: boolean }) {
       setIsLoading(false);
     }
   };
-
+  console.log("dsd", user.emailAddresses);
   return (
     <div className="grid lg:grid-cols-2 gap-8">
       {/* Left Column: Order Summary */}
@@ -206,7 +209,11 @@ function Form({ ar }: { ar?: boolean }) {
                 <div className="space-y-4">
                   <PaymentElement />
                   <LinkAuthenticationElement
-                    onChange={(e) => setEmail(e.value?.email ?? "")}
+                    onChange={(e) =>
+                      setEmail(
+                        e.value?.email ?? user.emailAddresses[0].emailAddress,
+                      )
+                    }
                   />
                 </div>
 
@@ -266,7 +273,17 @@ function Form({ ar }: { ar?: boolean }) {
                   {isLoading ? (
                     <span className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                      {ar ? "جاري المعالجة..." : "Processing..."}
+                      {ar ? (
+                        <>
+                          جاري الدفع
+                          <Loader2 className="animate-spin" />
+                        </>
+                      ) : (
+                        <>
+                          Processing
+                          <Loader2 className="animate-spin" />
+                        </>
+                      )}
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">

@@ -15,7 +15,7 @@ model Category {
 
 model User {
   id        String   @id @default(cuid())
-  clerkId   String   @unique // link to Clerk user id
+  clerkId   String   @unique // Clerk user ID
   name      String?
   email     String   @unique
   image     String?
@@ -24,21 +24,26 @@ model User {
   updatedAt DateTime @updatedAt
 
   products  Product[]
-  orders    Order[]  // renamed from Order to orders for clarity
+  orders    Order[]  @relation("UserOrders") // links orders via clerkId
 }
 
 model Order {
   id            String      @id @default(uuid())
-  paid          Boolean     @default(false)
   totalPrice    Float
   phone         String
   streetAddress String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  userId        String
-  User          User        @relation(fields: [userId], references: [id])
+
+  clerkId       String      // Clerk ID from authentication
+  User          User        @relation("UserOrders", fields: [clerkId], references: [clerkId], onDelete: Cascade, onUpdate: Cascade)
+  
   OrderItem     OrderItem[]
+
+  @@index([clerkId])
 }
+
+
 
 model OrderItem {
   id        String  @id @default(uuid())

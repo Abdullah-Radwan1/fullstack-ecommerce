@@ -46,11 +46,7 @@ const Page = () => {
             appearance={{
               elements: {
                 card: "bg-transparent shadow-none",
-                badge: "bg-black/80 border border-white/20 !text-white",
-                badgeText: "!text-white font-medium",
 
-                // For safety (some themes use this internally)
-                badgeIcon: "!text-white",
                 /* Inputs */
                 formFieldInput:
                   "border-border bg-card text-foreground focus:border-my-main focus:ring-my-main/30 ",

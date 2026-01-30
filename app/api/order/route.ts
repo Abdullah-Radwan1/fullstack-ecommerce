@@ -2,7 +2,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/prisma/db";
 import { auth } from "@clerk/nextjs/server";
-import { getUser } from "@/lib/Functions";
 
 export async function POST(req: Request) {
   try {
@@ -11,22 +10,16 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
+    console.log("sparta", userId);
     // ✅ Parse request body
     const body = await req.json();
     const { total, streetAddress, phone, products, email } = body;
-    console.log(email);
+    console.log("dsd", email);
     if (!total || !streetAddress || !phone || !products || !products.length) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 },
       );
-    }
-
-    // ✅ Get user data from Prisma (or create if not exists)
-    const user = await getUser(userId, email);
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // ✅ Create order in Prisma
@@ -35,7 +28,9 @@ export async function POST(req: Request) {
         totalPrice: total / 100,
         streetAddress,
         phone,
-        userId: user.id,
+        clerkId: userId, // Clerk ID from auth
+
+        // Order items
         OrderItem: {
           create: products.map((p: { id: string; quantity: number }) => ({
             quantity: p.quantity,
@@ -43,7 +38,9 @@ export async function POST(req: Request) {
           })),
         },
       },
-      include: { OrderItem: { include: { Product: true } } },
+      include: {
+        OrderItem: { include: { Product: true } },
+      },
     });
 
     return NextResponse.json(

@@ -43,14 +43,20 @@ const SuccessPage = async ({
     orderNumber: ar ? "رقم الطلب" : "Order #",
     estimatedDelivery: ar ? "التوصيل المقدر" : "Estimated Delivery",
     days: ar ? "أيام عمل" : "Business Days",
+    stepsTitle: ar ? "الخطوات التالية" : "Next Steps",
+    steps: [
+      { icon: Mail, label: ar ? "البريد" : "Email" },
+      { icon: Package, label: ar ? "الشحن" : "Ship" },
+      { icon: Home, label: ar ? "تسوق" : "Shop" },
+    ],
   };
 
-  const orderNumber = `ORD-${Math.floor(Math.random() * 1000000)
+  const orderNumber = `ORD-${Math.floor(Math.random() * 1_000_000)
     .toString()
     .padStart(6, "0")}`;
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       {/* Background Effects */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-my-main/5 rounded-full blur-3xl" />
@@ -62,98 +68,85 @@ const SuccessPage = async ({
           {/* Gradient Top */}
           <div className="h-1 w-full bg-gradient-to-r from-my-main to-my-secondary" />
 
+          {/* Header */}
           <CardHeader className="text-center pb-4">
-            {/* Success Icon */}
             <div className="mx-auto w-20 h-20 mb-4">
               <div className="w-full h-full rounded-full bg-my-main/20 border-2 border-my-main/30 flex items-center justify-center">
                 <CheckCircle className="w-12 h-12 text-my-main" />
               </div>
             </div>
-
             <h1 className="text-3xl font-bold text-my-main mb-2">
               {translations.heading}
             </h1>
-
-            <p className="text-muted-foreground">
-              <Sparkles className="w-4 h-4 inline mr-2 text-my-main" />
+            <p className="text-muted-foreground flex items-center justify-center gap-1">
+              <Sparkles className="w-4 h-4 text-my-main" />
               {translations.subheading}
             </p>
           </CardHeader>
 
+          {/* Content */}
           <CardContent className="space-y-6">
             {/* Order Details */}
-            <Card className="border-border/30">
-              <CardContent className="p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <ShoppingBag className="w-4 h-4 text-my-main" />
-                      <span className="text-sm text-muted-foreground">
-                        {translations.orderNumber}
-                      </span>
-                    </div>
-                    <Badge className="bg-my-main/20 text-foreground border-my-main/30 font-mono">
-                      {orderNumber}
-                    </Badge>
+            <section className="border border-border/30 rounded-lg p-4">
+              <div className="flex flex-wrap justify-evenly gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <ShoppingBag className="w-4 h-4 text-my-main" />
+                    <span className="text-sm text-muted-foreground">
+                      {translations.orderNumber}
+                    </span>
                   </div>
-
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Package className="w-4 h-4 text-my-main" />
-                      <span className="text-sm text-muted-foreground">
-                        {translations.estimatedDelivery}
-                      </span>
-                    </div>
-                    <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
-                      3-5 {translations.days}
-                    </Badge>
-                  </div>
+                  <Badge className="bg-my-main/20 text-foreground border-my-main/30 font-mono">
+                    {orderNumber}
+                  </Badge>
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Package className="w-4 h-4 text-my-main" />
+                    <span className="text-sm text-muted-foreground">
+                      {translations.estimatedDelivery}
+                    </span>
+                  </div>
+                  <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+                    3-5 {translations.days}
+                  </Badge>
+                </div>
+              </div>
+            </section>
 
-            {/* Message */}
-            <div className="text-center space-y-3">
+            {/* Confirmation Message */}
+            <section className="text-center space-y-3">
               <p className="text-muted-foreground">{translations.message}</p>
-
               <div className="text-sm text-my-main flex items-center justify-center gap-2">
                 <Mail className="w-4 h-4" />
                 {translations.emailNote}
               </div>
-
               <div className="text-sm text-destructive">
                 ⚠️ {translations.emailDown}
               </div>
-            </div>
+            </section>
 
             {/* Steps */}
-            <div className="bg-my-main/5 border border-my-main/20 rounded-lg p-4">
+            <section className="bg-my-main/5 border border-my-main/20 rounded-lg p-4">
               <h3 className="font-bold mb-3 text-center">
-                {ar ? "الخطوات التالية" : "Next Steps"}
+                {translations.stepsTitle}
               </h3>
               <div className="grid grid-cols-3 gap-3 text-center">
-                <div className="p-2">
-                  <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-my-main" />
+                {translations.steps.map((step, i) => (
+                  <div key={i} className="p-2">
+                    <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
+                      <step.icon className="w-4 h-4 text-my-main" />
+                    </div>
+                    <p className="text-xs">
+                      {i + 1}. {step.label}
+                    </p>
                   </div>
-                  <p className="text-xs">1. {ar ? "البريد" : "Email"}</p>
-                </div>
-                <div className="p-2">
-                  <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
-                    <Package className="w-4 h-4 text-my-main" />
-                  </div>
-                  <p className="text-xs">2. {ar ? "الشحن" : "Ship"}</p>
-                </div>
-                <div className="p-2">
-                  <div className="w-8 h-8 mx-auto mb-1 rounded-full bg-my-main/20 flex items-center justify-center">
-                    <Home className="w-4 h-4 text-my-main" />
-                  </div>
-                  <p className="text-xs">3. {ar ? "تسوق" : "Shop"}</p>
-                </div>
+                ))}
               </div>
-            </div>
+            </section>
           </CardContent>
 
+          {/* Footer Buttons */}
           <CardFooter className="pt-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
               <Button asChild variant="outline" className="border-border">
@@ -185,7 +178,7 @@ const SuccessPage = async ({
                 className="bg-gradient-to-r from-my-main to-my-secondary text-background"
               >
                 <Link
-                  href={ar ? "/ar/shop" : "/en/shop"}
+                  href={ar ? "/ar/products" : "/en/products"}
                   className="flex items-center justify-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4" />
@@ -196,9 +189,9 @@ const SuccessPage = async ({
           </CardFooter>
         </Card>
 
-        {/* Footer Message */}
-        <div className="text-center mt-6 text-sm text-muted-foreground">
-          <Shield className="w-4 h-4 inline mr-2 text-my-main" />
+        {/* Footer Note */}
+        <div className="text-center mt-6 text-sm text-muted-foreground flex items-center justify-center gap-2">
+          <Shield className="w-4 h-4 text-my-main" />
           {ar ? "تم تأمين طلبك بنجاح" : "Your order is secured"}
         </div>
       </div>
