@@ -25,6 +25,13 @@ const publicRoutesMatcher = createRouteMatcher([
 export default clerkMiddleware(async (auth, request: NextRequest) => {
   const { pathname } = request.nextUrl;
 
+  // Skip locale detection for API and static routes
+  const isApiOrStatic =
+    pathname.startsWith("/api/") || pathname.startsWith("/_next/");
+  if (isApiOrStatic) {
+    return NextResponse.next();
+  }
+
   // Robots.txt
   if (pathname.match(/^\/(en|ar)\/robots\.txt$/)) {
     const url = request.nextUrl.clone();
@@ -45,9 +52,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   const locale = isSupportedLocale ? lang : detectedLocale;
 
   // Redirect non-supported locale
-  const isApiOrStatic =
-    pathname.startsWith("/api/") || pathname.startsWith("/_next/");
-  if (!isSupportedLocale && !isApiOrStatic) {
+  if (!isSupportedLocale) {
     request.nextUrl.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(request.nextUrl);
   }
