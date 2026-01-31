@@ -1,6 +1,6 @@
 import "../globals.css";
 import { Navbar } from "@/components/navbar/Navebar";
-import Sidebar from "@/components/sidebar/AppSidebar";
+
 import { lato } from "@/app/font/font";
 import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
@@ -24,6 +24,9 @@ export default async function RootLayout({
 }) {
   const { lang } = await params; // ✅ await the dynamic params
   const Footer = dynamic(() => import("@/components/footer"), {
+    loading: () => <Loading />,
+  });
+  const Sidebar = dynamic(() => import("@/components/sidebar/AppSidebar"), {
     loading: () => <Loading />,
   });
   const ar = lang === "ar";

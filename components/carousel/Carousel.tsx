@@ -79,7 +79,10 @@ export function MyCarousel() {
   const lang: Lang = params.lang === "ar" ? "ar" : "en";
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border bg-card">
+    <div
+      dir="ltr"
+      className="relative overflow-hidden rounded-xl border border-border bg-card"
+    >
       {/* Accent top line – uses theme gold */}
       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-my-main via-accent to-my-secondary shadow-[0_0_12px_var(--my-main)]" />
 

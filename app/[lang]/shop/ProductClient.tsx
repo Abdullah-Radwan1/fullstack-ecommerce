@@ -117,7 +117,10 @@ export default function ProductsClient({
     setTimeout(() => setIsLoading(false), 500);
   };
 
-  const applyFilters = () => navigateTo(1);
+  const applyFilters = () => {
+    navigateTo(1);
+    setIsSidebarOpen(false);
+  };
 
   const resetFilters = () => {
     setSearch("");

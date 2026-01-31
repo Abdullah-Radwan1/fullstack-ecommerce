@@ -57,7 +57,6 @@ export default function loading() {
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-6 w-20" />
                 <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-6 w-28" />
               </div>
 
               {/* Table Rows */}
@@ -73,10 +72,6 @@ export default function loading() {
                     </div>
                     <Skeleton className="h-6 w-16 rounded-full" />
                     <Skeleton className="h-4 w-40" />
-                    <div className="space-y-1">
-                      <Skeleton className="h-3 w-32" />
-                      <Skeleton className="h-3 w-24" />
-                    </div>
                   </div>
                 ))}
               </div>
