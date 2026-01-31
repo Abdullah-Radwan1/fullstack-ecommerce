@@ -11,7 +11,7 @@ export function SearchBar({ ar }: { ar: boolean }) {
 
   const navigate = () => {
     router.push(
-      `/${ar ? "ar" : "en"}/products?page=1&search=${encodeURIComponent(query)}`
+      `/${ar ? "ar" : "en"}/shop?page=1&search=${encodeURIComponent(query)}`,
     );
   };
 

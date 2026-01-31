@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import {
   Elements,
   LinkAuthenticationElement,
@@ -32,7 +32,6 @@ import {
   ShoppingBag,
   Lock,
   Sparkles,
-  Loader2,
 } from "lucide-react";
 
 import { useUser } from "@clerk/nextjs";
@@ -77,7 +76,7 @@ function Form({ ar }: { ar?: boolean }) {
   const [country_code, setCountryCode] = useState<string>("+20");
   const [phone, setPhone] = useState<string>("");
   const [streetAddress, setStreetAddress] = useState<string>("");
-  const { user, isSignedIn } = useUser();
+  const { user } = useUser();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -93,14 +92,42 @@ function Form({ ar }: { ar?: boolean }) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     if (!stripe || !elements) {
       setErrorMessage("Stripe not initialized.");
       return;
     }
+
     setIsLoading(true);
     setErrorMessage(undefined);
 
     try {
+      // 1️⃣ Confirm payment FIRST
+      const { paymentIntent, error } = await stripe.confirmPayment({
+        elements,
+        redirect: "if_required",
+        confirmParams: {
+          payment_method_data: {
+            billing_details: {
+              email: user.emailAddresses[0].emailAddress,
+              phone: allPhone,
+              address: { line1: streetAddress },
+            },
+          },
+        },
+      });
+
+      if (error) {
+        setErrorMessage(error.message ?? "Payment failed.");
+        return;
+      }
+
+      if (!paymentIntent || paymentIntent.status !== "succeeded") {
+        setErrorMessage("Payment not completed.");
+        return;
+      }
+
+      // 2️⃣ ONLY NOW create the order
       const res = await fetch("/api/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -111,48 +138,30 @@ function Form({ ar }: { ar?: boolean }) {
           email: user.emailAddresses[0].emailAddress,
           products,
           quantity,
+          paymentIntentId: paymentIntent.id,
         }),
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Order API failed: ${text || res.status}`);
+        throw new Error("Order creation failed after payment.");
       }
 
-      const redirectLang = lang ?? "en";
-      const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/${redirectLang}/checkout/checkout-success`,
-          payment_method_data: {
-            billing_details: {
-              email: email,
-              phone: allPhone,
-              address: { line1: streetAddress },
-            },
-          },
-        },
-      });
-
-      if (error) {
-        if (error.type === "validation_error" || error.type === "card_error") {
-          setErrorMessage(error.message);
-        } else {
-          setErrorMessage("An unexpected error occurred with payment.");
-        }
-        return;
-      }
-
+      // 3️⃣ Clear cart
       clearCart();
+
+      // 4️⃣ Redirect
+      window.location.href = `/${lang}/checkout/checkout-success`;
     } catch (err) {
-      setErrorMessage(String(err instanceof Error ? err.message : err));
+      setErrorMessage(
+        err instanceof Error ? err.message : "Something went wrong",
+      );
     } finally {
       setIsLoading(false);
     }
   };
-  console.log("dsd", user.emailAddresses);
+
   return (
-    <div className="grid lg:grid-cols-2 gap-8">
+    <div className="grid lg:grid-cols-2 gap-8 p-1">
       {/* Left Column: Order Summary */}
       <div className="lg:col-span-1 ">
         <div className="h-1 w-full bg-gradient-to-r mb-4 from-my-main via-my-secondary to-my-main" />
@@ -273,17 +282,7 @@ function Form({ ar }: { ar?: boolean }) {
                   {isLoading ? (
                     <span className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                      {ar ? (
-                        <>
-                          جاري الدفع
-                          <Loader2 className="animate-spin" />
-                        </>
-                      ) : (
-                        <>
-                          Processing
-                          <Loader2 className="animate-spin" />
-                        </>
-                      )}
+                      {ar ? <>جاري الدفع</> : <>Processing</>}
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">

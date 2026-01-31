@@ -13,12 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       },
     },
     {
-      url: "https://fullstack-ecommerce-flax.vercel.app/products",
+      url: "https://fullstack-ecommerce-flax.vercel.app/shop",
       lastModified: new Date(),
       alternates: {
         languages: {
-          en: "https://fullstack-ecommerce-flax.vercel.app/en/products",
-          ar: "https://fullstack-ecommerce-flax.vercel.app/ar/products",
+          en: "https://fullstack-ecommerce-flax.vercel.app/en/shop",
+          ar: "https://fullstack-ecommerce-flax.vercel.app/ar/shop",
         },
       },
     },

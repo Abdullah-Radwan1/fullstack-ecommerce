@@ -9,8 +9,8 @@ const products = [
     image: "/products/camera.png",
     title: { en: "Capture Every Moment", ar: "التقط كل لحظة" },
     link: {
-      en: "/en/products/product/cm84m00pp006bvg2knn74n1fc",
-      ar: "/ar/products/product/cm84m00pp006bvg2knn74n1fc",
+      en: "/en/shop/product/cm84m00pp006bvg2knn74n1fc",
+      ar: "/ar/shop/product/cm84m00pp006bvg2knn74n1fc",
     },
     description: {
       en: "Professional cameras capture stunning photos and videos, perfect for both beginners and experts.",
@@ -24,8 +24,8 @@ const products = [
     image: "/products/jbl.png",
     title: { en: "Quality Quran Sound", ar: "جودة صوت قرآن" },
     link: {
-      en: "/en/products/product/cm84m00pp006avg2k9ty963ji",
-      ar: "/ar/products/product/cm84m00pp006avg2k9ty963ji",
+      en: "/en/shop/product/cm84m00pp006avg2k9ty963ji",
+      ar: "/ar/shop/product/cm84m00pp006avg2k9ty963ji",
     },
     description: {
       en: "Experience unmatched sound quality with JBL audio devices, delivering crystal-clear Quran recitations and immersive listening experiences.",
@@ -39,8 +39,8 @@ const products = [
     image: "/products/bose.png",
     title: { en: "BOSE Headphones Sound", ar: "سماعات Bose الصوتية" },
     link: {
-      en: "/en/products/product/cm84m00pp006fvg2kbosehphone",
-      ar: "/ar/products/product/cm84m00pp006fvg2kbosehphone",
+      en: "/en/shop/product/cm84m00pp006fvg2kbosehphone",
+      ar: "/ar/shop/product/cm84m00pp006fvg2kbosehphone",
     },
     description: {
       en: "Immerse yourself in the ultimate sound experience with Bose headphones, offering unparalleled audio quality and comfort for all-day use.",
@@ -93,14 +93,14 @@ const FeaturedProduct = async ({ lang }: { lang: string }) => {
                   {description[lang as keyof typeof description]}
                 </p>
                 <Link
-                  href={link[lang as keyof typeof link] || "/products"}
+                  href={link[lang as keyof typeof link] || "/shop"}
                   className="inline-flex items-center gap-2 bg-my-main text-black px-4 py-2 transition-colors hover:opacity-90"
                 >
                   {ar ? "اشتري الآن" : "Buy now"} <ShoppingBag size={18} />
                 </Link>
               </CardFooter>
             </Card>
-          )
+          ),
         )}
       </div>
     </div>

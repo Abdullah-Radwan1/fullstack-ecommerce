@@ -20,8 +20,8 @@ export default function ProductCard({
         href={
           product.id
             ? ar
-              ? `/ar/products/product/${product.id}`
-              : `/en/products/product/${product.id}`
+              ? `/ar/shop/product/${product.id}`
+              : `/en/shop/product/${product.id}`
             : "/" // fallback to homepage if id is missing
         }
       >

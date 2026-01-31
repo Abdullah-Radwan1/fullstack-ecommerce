@@ -4,7 +4,7 @@ import Sidebar from "@/components/sidebar/AppSidebar";
 import { lato } from "@/app/font/font";
 import { Toaster } from "@/components/ui/sonner";
 import dynamic from "next/dynamic";
-import Loading from "../loading";
+import Loading from "./loading";
 import { ClerkProvider } from "@clerk/nextjs";
 import { arSA, enUS } from "@clerk/localizations";
 import type { DeepPartial, LocalizationResource } from "@clerk/types";

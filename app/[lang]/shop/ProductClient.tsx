@@ -112,7 +112,7 @@ export default function ProductsClient({
   const navigateTo = (pageNum: number = 1) => {
     setIsLoading(true);
     router.push(
-      `/${lang}/products?page=${pageNum}&search=${encodeURIComponent(search)}&category=${categories.join(",")}&min=${priceRange[0]}&max=${priceRange[1]}`,
+      `/${lang}/shop?page=${pageNum}&search=${encodeURIComponent(search)}&category=${categories.join(",")}&min=${priceRange[0]}&max=${priceRange[1]}`,
     );
     setTimeout(() => setIsLoading(false), 500);
   };

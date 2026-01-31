@@ -6,7 +6,7 @@ import { Separator } from "@radix-ui/react-select";
 
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
-import Loading from "../loading";
+import Loading from "./loading";
 const LazyFirst8Products = dynamic(
   () => import("@/components/lazyProducts/First8Products"),
   {

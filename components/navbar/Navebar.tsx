@@ -40,7 +40,7 @@ export function Navbar() {
 
   const routes = {
     home: `/${lang}`,
-    products: `/${lang}/products`,
+    products: `/${lang}/shop`,
     admin: `/${lang}/admin`,
     signin: `/${lang}/signin`,
     profile: `/${lang}/profile`,
@@ -72,8 +72,8 @@ export function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-2">
           {/* Products */}
-          <Link href={routes.products} className="hidden md:block">
-            <Button>{t("تسوق الآن", "Shop Now")}</Button>
+          <Link href={routes.products} className="hidden  md:block">
+            <Button className="text-black">{t("تسوق الآن", "Shop Now")}</Button>
           </Link>
 
           {/* Admin button */}

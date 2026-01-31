@@ -19,9 +19,10 @@ const publicRoutesMatcher = createRouteMatcher([
   "/en/signup",
   "/ar/signup",
   "/en/signup/(.*)",
-  "/en/products",
-  "/ar/products",
-  "/ar/products/(.*)",
+  "/en/shop",
+  "/en/shop/(.*)",
+  "/ar/shop",
+  "/ar/shop/(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, request: NextRequest) => {
@@ -89,7 +90,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   // Admin route check
   if (pathname.startsWith(`/${locale}/admin`)) {
     const role = sessionClaims?.role as string | undefined;
-    console.log(role, "ddd");
+
     if (role !== "ADMIN") {
       return NextResponse.redirect(new URL(`/${locale}`, request.url));
     }

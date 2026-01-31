@@ -178,7 +178,7 @@ const SuccessPage = async ({
                 className="bg-gradient-to-r from-my-main to-my-secondary text-background"
               >
                 <Link
-                  href={ar ? "/ar/products" : "/en/products"}
+                  href={ar ? "/ar/shop" : "/en/shop"}
                   className="flex items-center justify-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4" />

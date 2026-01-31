@@ -20,7 +20,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (products.length === 0 && getTotalPrice() === 0) {
       toast.error(ar ? "سلة التسوق فارغة" : "Your cart is empty");
-      redirect(ar ? "/ar/products" : "/products");
+      redirect(ar ? "/ar/shop" : "/shop");
     }
 
     const totalPrice = getTotalPrice();

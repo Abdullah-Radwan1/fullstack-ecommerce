@@ -10,11 +10,11 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.log("sparta", userId);
+
     // ✅ Parse request body
     const body = await req.json();
-    const { total, streetAddress, phone, products, email } = body;
-    console.log("dsd", email);
+    const { total, streetAddress, phone, products } = body;
+
     if (!total || !streetAddress || !phone || !products || !products.length) {
       return NextResponse.json(
         { error: "Missing required fields" },

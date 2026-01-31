@@ -58,8 +58,9 @@ export async function getAllOrders() {
 }
 
 export async function getMyOrders(clerkId: string) {
+  console.log(clerkId);
   return await db.order.findMany({
-    where: {},
+    where: { clerkId },
     include: {
       User: true,
       OrderItem: {
@@ -70,28 +71,6 @@ export async function getMyOrders(clerkId: string) {
     },
   });
 }
-
-// Auth function
-// lib/Functions.ts
-// export async function getUser(clerkId: string, email: string) {
-//   console.log(clerkId, email, "dd");
-//   if (!clerkId || !email) {
-//     throw new Error("clerkId and email are required to fetch or create user");
-//   }
-
-//   return await db.user.upsert({
-//     where: { clerkId }, // <-- use clerkId, not email
-//     update: {
-//       email, // update email if it changed
-//       updatedAt: new Date(),
-//     },
-//     create: {
-//       clerkId,
-//       email,
-//       updatedAt: new Date(),
-//     },
-//   });
-// }
 
 type OrderItemInput = {
   productId: string;

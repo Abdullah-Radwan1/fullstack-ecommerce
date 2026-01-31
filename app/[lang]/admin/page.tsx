@@ -8,8 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
 import { getAllOrders, getAllUsers, getMyOrders } from "@/lib/Functions";
 import CreateProduct from "./components/create-product";
 import { auth } from "@clerk/nextjs/server";
@@ -32,7 +32,6 @@ export default async function AdminPage({
   const ar = lang === "ar";
 
   const { userId } = await auth();
-  const email = "";
 
   const users: User[] = await getAllUsers();
   const orders: (Order & {
@@ -42,14 +41,14 @@ export default async function AdminPage({
   const myOrders: (Order & {
     User: User;
     OrderItem: (OrderItem & { Product: Product })[];
-  })[] = await getMyOrders(email);
-  console.log(myOrders);
+  })[] = await getMyOrders(userId!);
+
   // Calculate stats
   const totalRevenue = orders.reduce(
     (sum, order) => sum + (order.totalPrice || 0),
     0,
   );
-  console.log(userId);
+
   const avgOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
   const adminUsers = users.filter((user) => user.role === "ADMIN").length;
 

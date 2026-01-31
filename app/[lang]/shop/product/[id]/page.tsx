@@ -97,7 +97,7 @@ const Page = async ({
           asChild
           className="bg-gradient-to-r from-my-main to-my-secondary text-background"
         >
-          <Link href={ar ? "/ar/products" : "/en/products"}>
+          <Link href={ar ? "/ar/shop" : "/en/shop"}>
             {ar ? "عرض جميع المنتجات" : "View All Products"}
           </Link>
         </Button>
@@ -125,7 +125,7 @@ const Page = async ({
           </Link>
           <span>/</span>
           <Link
-            href={ar ? "/ar/products" : "/en/products"}
+            href={ar ? "/ar/shop" : "/en/shop"}
             className="hover:text-my-main transition-colors"
           >
             {ar ? "المتجر" : "Shop"}
@@ -280,7 +280,7 @@ const Page = async ({
               {t.relatedProducts}
             </h2>
             <Link
-              href={ar ? "/ar/products" : "/en/products"}
+              href={ar ? "/ar/shop" : "/en/shop"}
               className="text-my-main hover:text-my-secondary transition-colors flex items-center gap-2"
             >
               {ar ? "عرض الكل" : "View All"}

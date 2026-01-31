@@ -94,7 +94,7 @@ const Banner = async ({ lang }: { lang: string }) => {
 
         <Link
           aria-label="products"
-          href={lang === "ar" ? "/ar/products" : "/en/products"}
+          href={lang === "ar" ? "/ar/shop" : "/en/shop"}
           className={`group flex items-center justify-center gap-2 mt-3 px-10 py-2.5 font-semibold rounded-full shadow-md transition duration-300
             ${ar ? "flex-row-reverse" : ""}`}
           style={{
