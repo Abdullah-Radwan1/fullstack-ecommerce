@@ -27,17 +27,21 @@ export function SearchBar({ ar }: { ar: boolean }) {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && navigate()}
           placeholder={ar ? "ابحث عن ما في بالك" : "Search for anything"}
+          aria-label={ar ? "ابحث" : "Search input"}
           className="rounded border-none focus:ring-0 pl-12 pr-11"
         />
 
-        <Search
+        <button
+          type="button"
           onClick={navigate}
-          size={30}
-          className={`absolute ${ar ? "right-4" : "left-4"} 
-          top-1/2 -translate-y-1/2 text-muted-foreground hover:bg-accent p-1 rounded-lg`}
-        />
+          aria-label={ar ? "بحث" : "Search"}
+          className={`absolute ${ar ? "right-6" : "left-6"} top-1/2 -translate-y-1/2 `}
+        >
+          <Search size={20} aria-hidden="true" />
+        </button>
 
         <Sparkles
+          aria-hidden="true"
           className={`absolute ${ar ? "left-3" : "right-3"} 
           top-1/2 -translate-y-1/2 text-my-secondary animate-pulse`}
         />

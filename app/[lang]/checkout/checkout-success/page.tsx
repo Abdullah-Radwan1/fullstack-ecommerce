@@ -166,9 +166,11 @@ const SuccessPage = async ({
                 <Link
                   href="https://mail.google.com/"
                   target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={translations.gmail}
                   className="flex items-center justify-center gap-2"
                 >
-                  <Mail className="w-4 h-4" />
+                  <Mail className="w-4 h-4" aria-hidden="true" />
                   {translations.gmail}
                 </Link>
               </Button>

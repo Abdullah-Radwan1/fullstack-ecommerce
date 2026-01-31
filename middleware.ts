@@ -11,6 +11,7 @@ const publicRoutesMatcher = createRouteMatcher([
   "/en",
   "/ar",
   "/en/signin",
+  "/ar/signin",
   "/ar/cart",
   "/en/cart",
 

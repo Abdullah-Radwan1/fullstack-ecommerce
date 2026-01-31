@@ -289,7 +289,7 @@ export default function ProductsClient({
                   disabled={page === 1}
                   onClick={() => goToPage(page - 1)}
                 >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  <ChevronLeft className={ar ? "rotate-180" : "rotate-0 "} />
                   {ar ? "السابق" : "Previous"}
                 </Button>
                 <Badge className="bg-my-main/20">
@@ -302,7 +302,7 @@ export default function ProductsClient({
                   onClick={() => goToPage(page + 1)}
                 >
                   {ar ? "التالي" : "Next"}
-                  <ChevronRight className="w-4 h-4 ml-2" />
+                  <ChevronRight className={ar ? "rotate-180" : "rotate-0 "} />
                 </Button>
               </div>
 

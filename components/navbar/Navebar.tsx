@@ -70,9 +70,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b transition-all",
-        scrolled &&
-          "bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60",
+        "sticky top-0 z-50 w-full border-b border-border transition-all",
+        scrolled
+          ? "bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
+          : "bg-background",
       )}
     >
       <div className="mx-auto max-w-7xl px-4 md:px-8 py-3 flex flex-wrap items-center justify-between">
@@ -97,14 +98,19 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-2">
             <Link href={routes.products}>
-              <Button>
+              <Button className="bg-primary  hover:bg-my-secondary">
                 {t("المتجر", "Shop")} <ShoppingCartIcon />
               </Button>
             </Link>
 
             {role === "ADMIN" && (
               <Link href={routes.admin}>
-                <Button variant="ghost">{t("لوحة التحكم", "Admin")}</Button>
+                <Button
+                  variant="ghost"
+                  className="text-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  {t("لوحة التحكم", "Admin")}
+                </Button>
               </Link>
             )}
 
@@ -114,29 +120,40 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setTogglestate(true)}
+              className="text-foreground hover:bg-accent hover:text-accent-foreground"
             >
               <Columns2 className="size-5" />
             </Button>
 
             <Link href={routes.cart} className="relative">
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground hover:bg-accent hover:text-accent-foreground"
+              >
                 <ShoppingBasket className="size-5" />
               </Button>
               {quantity > 0 && <CartBadge quantity={quantity} />}
             </Link>
 
             {!isLoaded ? (
-              <Loader2 className="size-5 animate-spin" />
+              <Loader2 className="size-5 animate-spin text-foreground" />
             ) : isSignedIn ? (
               <Link href={routes.profile}>
-                <Avatar className="size-7">
+                <Avatar className="size-7 border border-border">
                   <AvatarImage src={user.imageUrl} />
-                  <AvatarFallback>{user.firstName?.[0] ?? "U"}</AvatarFallback>
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {user.firstName?.[0] ?? "U"}
+                  </AvatarFallback>
                 </Avatar>
               </Link>
             ) : (
               <Link href={routes.signin}>
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-foreground hover:bg-accent hover:text-accent-foreground"
+                >
                   <User className="size-5" />
                 </Button>
               </Link>
@@ -150,7 +167,11 @@ export function Navbar() {
 
             {/* Cart – always visible */}
             <Link href={routes.cart} className="relative">
-              <Button variant="ghost" size="icon" className=" ">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground hover:bg-accent hover:text-accent-foreground"
+              >
                 <ShoppingBasket className="size-5" />
               </Button>
               {quantity > 0 && <CartBadge quantity={quantity} />}
@@ -159,38 +180,36 @@ export function Navbar() {
             {/* Dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className=" ">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-foreground hover:bg-accent hover:text-accent-foreground"
+                >
                   <MoreVertical className="size-5" />
                 </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent
                 align="end"
-                className="
-        w-56
-        bg-card text-card-foreground
-        border border-border
-        rounded-lg
-        shadow-lg
-      "
+                className="w-56 bg-card text-card-foreground border border-border rounded-lg shadow-lg"
               >
                 {/* Shop */}
                 <DropdownMenuItem asChild>
                   <Link
                     href={routes.products}
-                    className="flex items-center gap-3  "
+                    className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                   >
                     <ShoppingBag className="size-4" />
                     {t("تسوق الآن", "Shop")}
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+
                 {/* Admin */}
                 {role === "ADMIN" && (
                   <DropdownMenuItem asChild>
                     <Link
                       href={routes.admin}
-                      className="flex items-center gap-3  "
+                      className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                     >
                       <LayoutDashboard className="size-4" />
                       {t("لوحة التحكم", "Admin")}
@@ -198,25 +217,25 @@ export function Navbar() {
                   </DropdownMenuItem>
                 )}
 
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-border" />
 
                 {/* Sidebar */}
                 <DropdownMenuItem
                   onClick={() => setTogglestate(true)}
-                  className="flex items-center gap-3  "
+                  className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                 >
                   <PanelLeft className="size-4" />
                   {t("القائمة الجانبية", "Sidebar")}
                 </DropdownMenuItem>
 
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-border" />
 
                 {/* Profile / Sign in */}
                 <DropdownMenuItem asChild>
                   {isSignedIn ? (
                     <Link
                       href={routes.profile}
-                      className="flex items-center gap-3  "
+                      className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                     >
                       <UserCircle className="size-4" />
                       {t("الملف الشخصي", "Profile")}
@@ -224,7 +243,7 @@ export function Navbar() {
                   ) : (
                     <Link
                       href={routes.signin}
-                      className="flex items-center gap-3  "
+                      className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                     >
                       <LogIn className="size-4" />
                       {t("تسجيل الدخول", "Sign in")}
@@ -235,8 +254,7 @@ export function Navbar() {
                 {/* Sign out */}
                 {isSignedIn && (
                   <>
-                    <DropdownMenuSeparator />
-
+                    <DropdownMenuSeparator className="bg-border" />
                     <LogoutDialog ar={ar} />
                   </>
                 )}

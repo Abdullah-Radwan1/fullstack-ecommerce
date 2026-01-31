@@ -19,7 +19,6 @@ import ProductCard from "@/components/productCard";
 import AddtoCart from "@/zustand/AddtoCart";
 import { relatedProducts } from "@/lib/Functions";
 import { Button } from "@/components/ui/button";
-import { Metadata } from "next";
 
 const translations = {
   en: {
@@ -123,14 +122,14 @@ const Page = async ({
           >
             {ar ? "الرئيسية" : "Home"}
           </Link>
-          <span>/</span>
+
           <Link
             href={ar ? "/ar/shop" : "/en/shop"}
             className="hover:text-my-main transition-colors"
           >
             {ar ? "المتجر" : "Shop"}
           </Link>
-          <span>/</span>
+
           <span className="text-foreground font-medium">
             {ar ? product.name_ar : product.name_en}
           </span>

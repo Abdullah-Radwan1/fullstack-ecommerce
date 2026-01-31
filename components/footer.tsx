@@ -35,9 +35,10 @@ const Footer = async ({ lang }: { lang: string }) => {
                   className="hover:underline transition flex items-center gap-1"
                   href="https://www.linkedin.com/in/abdullah-radwan-280140284/"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {ar ? "لينكد إن" : "LinkedIn"}
-                  <Linkedin size={15} color="royalblue" />
+                  <Linkedin size={15} color="royalblue" aria-hidden="true" />
                 </Link>
               </li>
               <li>
@@ -46,9 +47,10 @@ const Footer = async ({ lang }: { lang: string }) => {
                   className="hover:underline transition flex items-center gap-1"
                   href="https://github.com/Abdullah-Radwan1"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {ar ? "github" : "github"}
-                  <Github size={15} color="purple" />
+                  <Github size={15} color="purple" aria-hidden="true" />
                 </Link>
               </li>
               <li>
@@ -56,10 +58,11 @@ const Footer = async ({ lang }: { lang: string }) => {
                   aria-label="whatsapp"
                   className="hover:underline transition flex items-center gap-1"
                   target="_blank"
+                  rel="noopener noreferrer"
                   href="https://wa.link/7thukh"
                 >
                   {ar ? "واتساب" : "whatsapp"}
-                  <MessageCircle color="green" size={15} />
+                  <MessageCircle color="green" size={15} aria-hidden="true" />
                 </Link>
               </li>
             </ul>
