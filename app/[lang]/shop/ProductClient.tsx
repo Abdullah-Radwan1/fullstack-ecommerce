@@ -166,6 +166,7 @@ export default function ProductsClient({
         {/* Overlay for mobile */}
         {isSidebarOpen && (
           <div
+            dir="ltr"
             className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={() => setIsSidebarOpen(false)}
           />
@@ -173,7 +174,8 @@ export default function ProductsClient({
 
         {/* Sidebar */}
         <aside
-          className={`fixed lg:sticky top-0 lg:top-24 h-screen lg:h-fit w-80 lg:w-full bg-background lg:bg-transparent border-r lg:border-0 border-border/40 shadow-xl lg:shadow-none z-50 lg:z-auto transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} overflow-y-auto lg:overflow-visible p-6 lg:p-0`}
+          dir={ar ? "rtl" : "ltr"}
+          className={`fixed lg:sticky top-0 lg:top-24 h-screen lg:h-fit w-80 lg:w-full bg-background lg:bg-transparent border-r lg:border-0 border-border/40 shadow-xl lg:shadow-none z-50 lg:z-auto transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : ar ? "translate-x-full" : "-translate-x-full"} lg:translate-x-0 overflow-y-auto lg:overflow-visible p-6 lg:p-0`}
         >
           <div className="space-y-6">
             {/* Mobile title */}
