@@ -4,7 +4,7 @@ import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { Sparkles, Zap, Flame, Crown } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useLocale } from "next-intl";
 import Link from "next/link";
 
 import {
@@ -75,8 +75,8 @@ const sliderData = [
 
 export function MyCarousel() {
   const autoplay = React.useRef(Autoplay({ delay: 5000 }));
-  const params = useParams();
-  const lang: Lang = params.lang === "ar" ? "ar" : "en";
+  const locale = useLocale();
+  const lang: Lang = locale === "ar" ? "ar" : "en";
 
   return (
     <div

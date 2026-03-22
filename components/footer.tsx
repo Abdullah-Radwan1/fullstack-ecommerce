@@ -1,9 +1,11 @@
 import { Github, Linkedin, Mail, MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 
-const Footer = async ({ lang }: { lang: string }) => {
-  const ar = lang === "ar";
+const Footer = async () => {
+  const locale = await getLocale();
+  const t = await getTranslations("Footer");
+  const ar = locale === "ar";
 
   return (
     <footer>
@@ -13,21 +15,15 @@ const Footer = async ({ lang }: { lang: string }) => {
         {/* Title and Description */}
         <div className="w-4/5">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-my-main  to-my-secondary  bg-clip-text text-transparent">
-            {ar ? "ڤوجيه هاڤن" : "Vogue-Haven"}
+            {t("title")}
           </h2>
-          <p className="mt-6 text-sm">
-            {ar
-              ? " فوجيه هاڤن هو موقع تجاري يهدف إلى توفير مجموعة متنوعة من المنتجات و تسهيل البحث و الفلتره علي المستخدم, اضافه امكانيه  الدفع بالفيزا و ماستر كارد, مبني علي قاعده بيانات سريعه , مع واجهه اماميه سلسه و تعطي المستخدم  تجربه  رائعه"
-              : "Vogue-Haven is an e-commerce website that aims to provide a wide range of products. It includes the ability to pay with Visa and MasterCard, built on a fast database. It has a user-friendly interface and provides a great experience for users."}
-          </p>
+          <p className="mt-6 text-sm">{t("description")}</p>
         </div>
 
         {/* Company Links */}
         <div className="w-1/2 flex items-center justify-start md:justify-center">
           <div>
-            <h2 className="font-medium mb-5">
-              {ar ? "تواصل معي" : "Contact me"}
-            </h2>
+            <h2 className="font-medium mb-5">{t("contactMe")}</h2>
             <ul className="text-sm space-y-2">
               <li>
                 <Link
@@ -37,7 +33,7 @@ const Footer = async ({ lang }: { lang: string }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {ar ? "لينكد إن" : "LinkedIn"}
+                  {t("linkedin")}
                   <Linkedin size={15} color="royalblue" aria-hidden="true" />
                 </Link>
               </li>
@@ -49,7 +45,7 @@ const Footer = async ({ lang }: { lang: string }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {ar ? "github" : "github"}
+                  {t("github")}
                   <Github size={15} color="purple" aria-hidden="true" />
                 </Link>
               </li>
@@ -61,7 +57,7 @@ const Footer = async ({ lang }: { lang: string }) => {
                   rel="noopener noreferrer"
                   href="https://wa.link/7thukh"
                 >
-                  {ar ? "واتساب" : "whatsapp"}
+                  {t("whatsapp")}
                   <MessageCircle color="green" size={15} aria-hidden="true" />
                 </Link>
               </li>
@@ -72,9 +68,7 @@ const Footer = async ({ lang }: { lang: string }) => {
         {/* Contact Information */}
         <div className="w-1/2 flex items-start justify-start md:justify-center">
           <div>
-            <h2 className="font-medium mb-5">
-              {ar ? "تواصل معنا" : "Get in touch"}
-            </h2>
+            <h2 className="font-medium mb-5">{t("getInTouch")}</h2>
             <div className="text-sm space-y-2">
               <p className="flex items-center gap-1">
                 +01288265751 <Phone size={15} />
@@ -88,11 +82,7 @@ const Footer = async ({ lang }: { lang: string }) => {
       </div>
 
       {/* Copyright */}
-      <p className="py-4 text-center text-xs md:text-sm">
-        {ar
-          ? "حقوق النشر 2025 © عبد الله رضوان. جميع الحقوق محفوظة."
-          : "Copyright 2025 © Abdullah Radwan. All Rights Reserved."}
-      </p>
+      <p className="py-4 text-center text-xs md:text-sm">{t("copyright")}</p>
     </footer>
   );
 };

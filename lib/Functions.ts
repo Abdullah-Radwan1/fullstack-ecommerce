@@ -35,6 +35,7 @@ export async function relatedProducts(categoryId: number) {
       basePrice: true,
       image: true,
       categoryId: true,
+      createdAt: true,
     },
   });
 }

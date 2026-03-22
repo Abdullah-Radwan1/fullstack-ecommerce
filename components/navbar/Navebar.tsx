@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -31,11 +31,12 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
-import LogoutDialog from "@/app/[lang]/profile/LogoutDialog";
+import LogoutDialog from "@/app/[locale]/profile/LogoutDialog";
 
 export function Navbar() {
-  const { lang } = useParams() as { lang: string };
-  const ar = lang === "ar";
+  const locale = useLocale();
+  const ar = locale === "ar";
+  const t = useTranslations();
 
   const { user, isLoaded, isSignedIn } = useUser();
 
@@ -56,15 +57,13 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const t = (arText: string, enText: string) => (ar ? arText : enText);
-
   const routes = {
-    home: `/${lang}`,
-    products: `/${lang}/shop`,
-    admin: `/${lang}/admin`,
-    signin: `/${lang}/signin`,
-    profile: `/${lang}/profile`,
-    cart: `/${lang}/cart`,
+    home: "/",
+    products: "/shop",
+    admin: "/admin",
+    signin: "/signin",
+    profile: "/profile",
+    cart: "/cart",
   };
 
   return (
@@ -82,12 +81,12 @@ export function Navbar() {
           href={routes.home}
           className="text-xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent"
         >
-          {t("ڤوجيه هاڤن", "Vogue Haven")}
+          {t("brand")}
         </Link>
 
         {/* Desktop Search */}
         <div className="hidden md:flex flex-1 justify-center">
-          <SearchBar ar={ar} />
+          <SearchBar />
         </div>
 
         {/* Actions */}
@@ -99,7 +98,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-2">
             <Link href={routes.products}>
               <Button className="bg-primary  hover:bg-my-secondary">
-                {t("المتجر", "Shop")} <ShoppingCartIcon />
+                {t("shop")} <ShoppingCartIcon />
               </Button>
             </Link>
 
@@ -109,7 +108,7 @@ export function Navbar() {
                   variant="ghost"
                   className="text-foreground hover:bg-accent hover:text-accent-foreground"
                 >
-                  {t("لوحة التحكم", "Admin")}
+                  {t("admin")}
                 </Button>
               </Link>
             )}
@@ -200,7 +199,7 @@ export function Navbar() {
                     className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                   >
                     <ShoppingBag className="size-4" />
-                    {t("تسوق الآن", "Shop")}
+                    {t("shop")}
                   </Link>
                 </DropdownMenuItem>
 
@@ -212,7 +211,7 @@ export function Navbar() {
                       className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                     >
                       <LayoutDashboard className="size-4" />
-                      {t("لوحة التحكم", "Admin")}
+                      {t("admin")}
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -225,7 +224,7 @@ export function Navbar() {
                   className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                 >
                   <PanelLeft className="size-4" />
-                  {t("القائمة الجانبية", "Sidebar")}
+                  {t("sidebar")}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator className="bg-border" />
@@ -238,7 +237,7 @@ export function Navbar() {
                       className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                     >
                       <UserCircle className="size-4" />
-                      {t("الملف الشخصي", "Profile")}
+                      {t("profile")}
                     </Link>
                   ) : (
                     <Link
@@ -246,7 +245,7 @@ export function Navbar() {
                       className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                     >
                       <LogIn className="size-4" />
-                      {t("تسجيل الدخول", "Sign in")}
+                      {t("signin")}
                     </Link>
                   )}
                 </DropdownMenuItem>
@@ -255,7 +254,7 @@ export function Navbar() {
                 {isSignedIn && (
                   <>
                     <DropdownMenuSeparator className="bg-border" />
-                    <LogoutDialog ar={ar} />
+                    <LogoutDialog />
                   </>
                 )}
               </DropdownMenuContent>
@@ -267,7 +266,7 @@ export function Navbar() {
 
       {/* Mobile Search */}
       <div className="md:hidden px-4 pb-3">
-        <SearchBar ar={ar} />
+        <SearchBar />
       </div>
     </header>
   );

@@ -2,7 +2,12 @@
 
 import * as React from "react";
 import { Languages } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useTransition } from "react";
+
+// IMPORTANT: Import these from your local i18n/navigation file
+// usually created via createNavigation(routing)
+import { usePathname, useRouter } from "@/i18n/routing";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,20 +18,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function LanguageToggle() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
-  //redirect by default delete the searchparams
-  function changeLanguage(lang: string) {
-    // Remove the current language prefix from the pathname
-    const currentPathWithoutLang = pathname.replace(/^\/(ar|en)/, "");
+  const pathname = usePathname();
+  const params = useParams();
+  const [isPending, startTransition] = useTransition();
 
-    // Preserve the search params
-    const searchParamsString = searchParams.toString();
-    const queryString = searchParamsString ? `?${searchParamsString}` : "";
-
-    // Redirect to the new language with the same path and search params
-    router.push(`/${lang}/${currentPathWithoutLang}${queryString}`);
+  function changeLanguage(nextLocale: "en" | "ar") {
+    startTransition(() => {
+      // .replace keeps the user on the same page but switches the locale
+      // it automatically handles the [locale] prefix in the URL
+      router.replace({ pathname, query: params }, { locale: nextLocale });
+    });
   }
 
   return (
@@ -34,10 +36,11 @@ export function LanguageToggle() {
       <DropdownMenuTrigger asChild>
         <Button
           variant={"ghost"}
-          className="transition bg-none hover:bg-accent  p-1"
+          className="transition bg-none hover:bg-accent p-1"
           aria-label="language"
+          disabled={isPending}
         >
-          <Languages />
+          <Languages className={isPending ? "opacity-50" : ""} />
           <span className="sr-only">Toggle language</span>
         </Button>
       </DropdownMenuTrigger>
@@ -46,7 +49,7 @@ export function LanguageToggle() {
           English
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => changeLanguage("ar")}>
-          العربيه
+          العربية
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

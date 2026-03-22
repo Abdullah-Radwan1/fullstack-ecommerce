@@ -2,11 +2,14 @@
 import Image from "next/image";
 import React from "react";
 import { Minus, Plus, X } from "lucide-react";
+import { useLocale } from "next-intl";
 
 import useCartStore, { CartItem } from "@/zustand/store";
 import { Button } from "../ui/button";
 
-const Sideitem = ({ CartItem, ar }: { CartItem: CartItem; ar: boolean }) => {
+const Sideitem = ({ CartItem }: { CartItem: CartItem }) => {
+  const locale = useLocale();
+  const ar = locale === "ar";
   const { removeItemFromCart, addCartItem, removeCartItem } = useCartStore();
 
   const incrementQuantity = () => addCartItem(CartItem);

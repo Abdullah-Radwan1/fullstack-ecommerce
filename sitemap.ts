@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       alternates: {
         languages: {
-          en: "https://fullstack-ecommerce-flax.vercel.app/en",
+          en: "https://fullstack-ecommerce-flax.vercel.app",
           ar: "https://fullstack-ecommerce-flax.vercel.app/ar",
         },
       },
@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       alternates: {
         languages: {
-          en: "https://fullstack-ecommerce-flax.vercel.app/en/shop",
+          en: "https://fullstack-ecommerce-flax.vercel.app/shop",
           ar: "https://fullstack-ecommerce-flax.vercel.app/ar/shop",
         },
       },

@@ -15,7 +15,7 @@ import Link from "next/link";
 import useCartStore, { useSidebarStore } from "@/zustand/store";
 import Sideitem from "./sideItems";
 import clsx from "clsx";
-import { useParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
 const FREE_SHIPPING_THRESHOLD = 500;
 const SHIPPING_COST = 5.99;
@@ -25,9 +25,8 @@ const SideCart = () => {
   const products = useCartStore((state) => state.items);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
 
-  const { lang } = useParams<{ lang: string }>();
-  const ar = lang === "ar";
-  const t = (arText: string, enText: string) => (ar ? arText : enText);
+  const locale = useLocale();
+  const t = useTranslations("Sidebar");
 
   // Track when component is mounted on client
   const [mounted, setMounted] = useState(false);
@@ -55,7 +54,7 @@ const SideCart = () => {
   return (
     <>
       <div
-        dir={ar ? "rtl" : "ltr"}
+        dir={locale === "ar" ? "rtl" : "ltr"}
         className={clsx(
           "fixed inset-0 z-[100] transition-all duration-300",
           togglestate
@@ -90,11 +89,10 @@ const SideCart = () => {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent">
-                    {t("سلة التسوق", "Your Cart")}
+                    {t("cart")}
                   </h2>
                   <p className="text-sm text-muted-foreground">
-                    {products.length}{" "}
-                    {t("منتج", products.length === 1 ? "item" : "items")}
+                    {products.length} {t("items", { count: products.length })}
                   </p>
                 </div>
               </div>
@@ -117,10 +115,9 @@ const SideCart = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium flex items-center gap-2">
                   <Truck className="h-4 w-4 text-my-main" />
-                  {t(
-                    `أضف $${remaining.toFixed(2)} للشحن المجاني`,
-                    `Add $${remaining.toFixed(2)} for free shipping`,
-                  )}
+                  {t("addForFreeShipping", {
+                    amount: remaining.toFixed(2),
+                  })}
                 </span>
                 <span className="text-sm text-my-main font-semibold">
                   {progress.toFixed(0)}%
@@ -138,17 +135,9 @@ const SideCart = () => {
           {/* Security Badges */}
           <div className="px-6 py-3 border-b border-white/5">
             <div className="flex justify-center gap-4 text-xs text-muted-foreground">
-              <Badge
-                icon={Shield}
-                color="green"
-                text={t("دفع آمن", "Secure")}
-              />
-              <Badge icon={Truck} color="blue" text={t("شحن سريع", "Fast")} />
-              <Badge
-                icon={CreditCard}
-                color="purple"
-                text={t("إرجاع", "Returns")}
-              />
+              <Badge icon={Shield} color="green" text={t("secure")} />
+              <Badge icon={Truck} color="blue" text={t("fast")} />
+              <Badge icon={CreditCard} color="purple" text={t("returns")} />
             </div>
           </div>
 
@@ -161,7 +150,6 @@ const SideCart = () => {
                 {products.map((item, index) => (
                   <Sideitem
                     key={`${item.id || item.name_ar}-${index}`}
-                    ar={ar}
                     CartItem={item}
                   />
                 ))}
@@ -180,20 +168,20 @@ const SideCart = () => {
               />
             )}
             <div className="space-y-3">
-              <Link href={`/${lang}/cart`} onClick={closeSidebar}>
+              <Link href={`/${locale}/cart`} onClick={closeSidebar}>
                 <Button
                   variant="outline"
                   className="w-full h-12 border-white/20 hover:border-my-main/50"
                 >
-                  {t("عرض السلة", "View Cart")}
+                  {t("viewCart")}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
 
-              <Link href={`/${lang}/checkout`} onClick={closeSidebar}>
+              <Link href={`/${locale}/checkout`} onClick={closeSidebar}>
                 <Button className="w-full h-12 bg-gradient-to-r from-my-main to-my-secondary text-black font-bold">
                   <CreditCard className="mr-2 h-5 w-5" />
-                  {t("الدفع", "Checkout")}
+                  {t("checkout")}
                 </Button>
               </Link>
             </div>
@@ -215,24 +203,20 @@ const Badge = ({ icon: Icon, color, text }: any) => (
 const EmptyState = ({ t, closeSidebar }: any) => (
   <div className="text-center py-16">
     <ShoppingBag className="mx-auto h-12 w-12 text-my-main/40 mb-6" />
-    <h3 className="text-xl font-semibold mb-2">
-      {t("سلة التسوق فارغة", "Cart is Empty")}
-    </h3>
-    <Button onClick={closeSidebar}>
-      {t("تصفح المنتجات", "Browse Products")}
-    </Button>
+    <h3 className="text-xl font-semibold mb-2">{t("emptyCart")}</h3>
+    <Button onClick={closeSidebar}>{t("browseProducts")}</Button>
   </div>
 );
 
 const Summary = ({ t, subtotal, shipping, finalTotal }: any) => (
   <div className="space-y-3">
     <div className="flex justify-between">
-      <span className="text-muted-foreground">{t("المجموع", "Subtotal")}</span>
+      <span className="text-muted-foreground">{t("subtotal")}</span>
       <span className="font-semibold">${subtotal.toFixed(2)}</span>
     </div>
 
     <div className="flex justify-between items-center pt-3 border-t border-white/10">
-      <span className="text-xl font-bold">{t("الإجمالي", "Total")}</span>
+      <span className="text-xl font-bold">{t("total")}</span>
       <span className="text-2xl font-bold bg-gradient-to-r from-my-main to-my-secondary bg-clip-text text-transparent">
         ${finalTotal.toFixed(2)}
       </span>

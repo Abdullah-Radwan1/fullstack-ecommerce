@@ -1,29 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import AddtoCart from "@/zustand/AddtoCart"; // Client Component
 import { selectedprismaProduct } from "@/lib/types";
 
 export default function ProductCard({
   product,
-  lang,
 }: {
   product: selectedprismaProduct;
-  lang: string;
 }) {
-  const ar = lang === "ar";
+  const locale = useLocale();
+  const ar = locale === "ar";
 
   return (
     <div className="w-full my-4 flex flex-col gap-2 cursor-pointer min-h-full rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
       {/* Image Container */}
       <Link
         className="w-full h-52 relative block"
-        href={
-          product.id
-            ? ar
-              ? `/ar/shop/product/${product.id}`
-              : `/en/shop/product/${product.id}`
-            : "/" // fallback to homepage if id is missing
-        }
+        href={product.id ? `/${locale}/shop/product/${product.id}` : "/"}
       >
         <div className="w-full h-full bg-card rounded-lg flex items-center justify-center overflow-hidden relative">
           <Image

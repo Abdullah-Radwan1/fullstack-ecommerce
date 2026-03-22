@@ -29,7 +29,7 @@ export default function NotFound() {
             asChild
             className="bg-my-main hover:bg-my-secondary text-background font-medium transition-all duration-300 hover:scale-105"
           >
-            <Link href="/en">Return Home</Link>
+            <Link href="/">Return Home</Link>
           </Button>
 
           {/* Decorative Elements */}

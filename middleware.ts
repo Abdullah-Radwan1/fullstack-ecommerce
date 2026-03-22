@@ -1,107 +1,35 @@
-import { NextResponse, type NextRequest } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import Negotiator from "negotiator";
-import { match } from "@formatjs/intl-localematcher";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
-const locales = ["en", "ar"];
-const defaultLocale = "en";
+const isAdminRoute = createRouteMatcher(["/:locale/admin(.*)", "/admin(.*)"]);
+const intlMiddleware = createMiddleware(routing);
 
-// Public routes matcher
-const publicRoutesMatcher = createRouteMatcher([
-  "/en",
-  "/ar",
-  "/en/signin",
-  "/ar/signin",
-  "/ar/cart",
-  "/en/cart",
-
-  "/en/signin/(.*)",
-  "/ar/signin/(.*)",
-  "/en/signup",
-  "/ar/signup",
-  "/en/signup/(.*)",
-  "/en/shop",
-  "/en/shop/(.*)",
-  "/ar/shop",
-  "/ar/shop/(.*)",
-]);
-
-export default clerkMiddleware(async (auth, request: NextRequest) => {
-  const { pathname } = request.nextUrl;
-
-  // Skip locale detection for API and static routes
-  const isApiOrStatic =
-    pathname.startsWith("/api/") || pathname.startsWith("/_next/");
-  if (isApiOrStatic) {
-    return NextResponse.next();
+export default clerkMiddleware(async (auth, req) => {
+  // 1. If it's an API route, DON'T run intlMiddleware
+  // This prevents the /en/api/payment 404 error
+  if (req.nextUrl.pathname.startsWith("/api")) {
+    return; // Clerk still processes this, but next-intl is skipped
   }
 
-  // Robots.txt
-  if (pathname.match(/^\/(en|ar)\/robots\.txt$/)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/robots.txt";
-    return NextResponse.redirect(url);
-  }
-
-  // Locale detection
-  let detectedLocale = defaultLocale;
-  try {
-    const negotiator = new Negotiator({
-      headers: Object.fromEntries(request.headers),
+  // 2. Protect Admin Routes
+  if (isAdminRoute(req)) {
+    const locale = req.nextUrl.pathname.split("/")[1] || "en";
+    await auth.protect({
+      unauthenticatedUrl: new URL(`/${locale}/signin`, req.url).toString(),
     });
-    const languages = negotiator.languages() || [];
-    // Filter out invalid locale codes
-    const validLanguages = languages.filter((lang) =>
-      /^[a-z]{2}(-[A-Z]{2})?$/.test(lang),
-    );
-    detectedLocale =
-      validLanguages.length > 0
-        ? match(validLanguages, locales, defaultLocale)
-        : defaultLocale;
-  } catch (error) {
-    console.error("Locale detection error:", error);
-    detectedLocale = defaultLocale;
   }
 
-  const pathSegments = pathname.split("/");
-  const lang = pathSegments[1];
-  const isSupportedLocale = locales.includes(lang);
-  const locale = isSupportedLocale ? lang : detectedLocale;
-
-  // Redirect non-supported locale
-  if (!isSupportedLocale) {
-    request.nextUrl.pathname = `/${locale}${pathname}`;
-    return NextResponse.redirect(request.nextUrl);
-  }
-
-  // Public routes
-  if (publicRoutesMatcher(request)) {
-    return NextResponse.next();
-  }
-
-  // Authenticated routes
-  const { userId, sessionClaims } = await auth();
-
-  if (!userId) {
-    return NextResponse.redirect(new URL(`/${locale}/signin`, request.url));
-  }
-  interface MyPublicMetadata {
-    role?: "USER" | "ADMIN";
-  }
-  // Admin route check
-  if (pathname.startsWith(`/${locale}/admin`)) {
-    const role = sessionClaims?.role as string | undefined;
-
-    if (role !== "ADMIN") {
-      return NextResponse.redirect(new URL(`/${locale}`, request.url));
-    }
-  }
-
-  return NextResponse.next();
+  // 3. Run internationalization for all other routes
+  return intlMiddleware(req);
 });
 
 export const config = {
   matcher: [
-    "/((?!_next/|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|lottie)).*)",
+    // This allows the middleware to run for EVERY route (including API)
+    // so Clerk can detect the session, but our 'if' statement above
+    // stops next-intl from messing with the API URLs.
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
   ],
 };
