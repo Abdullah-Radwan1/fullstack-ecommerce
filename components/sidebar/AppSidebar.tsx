@@ -167,7 +167,7 @@ const SideCart = () => {
                 finalTotal={finalTotal}
               />
             )}
-            <div className="space-y-3">
+            <div className="space-y-3 flex flex-col">
               <Link href={`/${locale}/cart`} onClick={closeSidebar}>
                 <Button
                   variant="outline"
@@ -179,7 +179,7 @@ const SideCart = () => {
               </Link>
 
               <Link href={`/${locale}/checkout`} onClick={closeSidebar}>
-                <Button className="w-full h-12 bg-gradient-to-r from-my-main to-my-secondary text-black font-bold">
+                <Button className="w-full h-12  font-bold">
                   <CreditCard className="mr-2 h-5 w-5" />
                   {t("checkout")}
                 </Button>
@@ -204,11 +204,15 @@ const EmptyState = ({ t, closeSidebar }: any) => (
   <div className="text-center py-16">
     <ShoppingBag className="mx-auto h-12 w-12 text-my-main/40 mb-6" />
     <h3 className="text-xl font-semibold mb-2">{t("emptyCart")}</h3>
-    <Button onClick={closeSidebar}>{t("browseProducts")}</Button>
+    <Link href={"/shop"} onClick={closeSidebar}>
+      <Button variant="outline" className="mt-4" onClick={closeSidebar}>
+        {t("browseProducts")}
+      </Button>
+    </Link>
   </div>
 );
 
-const Summary = ({ t, subtotal, shipping, finalTotal }: any) => (
+const Summary = ({ t, subtotal, finalTotal }: any) => (
   <div className="space-y-3">
     <div className="flex justify-between">
       <span className="text-muted-foreground">{t("subtotal")}</span>
