@@ -76,14 +76,14 @@ const Banner = () => {
       <div className="relative flex items-center justify-center">
         <Image
           className="hidden md:block object-contain brightness-90"
-          src="/products/banner_c.png"
+          src="https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266919/banner_c_owaqhq.png"
           alt="controller_image"
           width={300}
           height={300}
         />
         <Image
           className="md:hidden object-cover brightness-90"
-          src="/products/watch.png"
+          src="https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266922/watch_x7fkwm.png"
           alt="watch"
           width={300}
           height={300}

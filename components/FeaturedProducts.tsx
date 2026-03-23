@@ -6,7 +6,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 const products = [
   {
     id: "cm84m00pp006bvg2knn74n1fc",
-    image: "/products/camera.png",
+    image:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266919/camera_am6h8u.png",
     title: { en: "Capture Every Moment", ar: "التقط كل لحظة" },
     description: {
       en: "Professional cameras capture stunning photos and videos, perfect for both beginners and experts.",
@@ -17,7 +18,8 @@ const products = [
   },
   {
     id: "cm84m00pp006avg2k9ty963ji",
-    image: "/products/jbl.png",
+    image:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266922/jbl_cyoe83.png",
     title: { en: "Quality Quran Sound", ar: "جودة صوت قرآن" },
     description: {
       en: "Experience unmatched sound quality with JBL audio devices, delivering crystal-clear Quran recitations and immersive listening experiences.",
@@ -28,7 +30,8 @@ const products = [
   },
   {
     id: "cm84m00pp006fvg2kbosehphone",
-    image: "/products/bose.png",
+    image:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266921/bose_tn0vn8.png",
     title: { en: "BOSE Headphones Sound", ar: "سماعات Bose الصوتية" },
     description: {
       en: "Immerse yourself in the ultimate sound experience with Bose headphones, offering unparalleled audio quality and comfort for all-day use.",
