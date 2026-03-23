@@ -20,16 +20,17 @@ export const metadata: Metadata = {
   description:
     "Welcome to Vogue Haven Ecommerce, the best online shopping destination.",
   icons: {
-    icon: "/ecommerce.png",
-    shortcut: "/ecommerce.png",
-    apple: "/ecommerce.png",
-    other: [
+    icon: [
       {
-        rel: "icon",
-        url: "/ecommerce.png",
-        media: "(prefers-color-scheme: light)",
+        url: "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774267724/ecommerce_pf7hfk.webp",
       },
     ],
+
+    shortcut:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774267724/ecommerce_pf7hfk.webp",
+
+    apple:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774267724/ecommerce_pf7hfk.webp",
   },
 };
 

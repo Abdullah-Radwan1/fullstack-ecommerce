@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import ProductSkeleton from "@/components/ProductSkeleton";
+import Image from "next/image";
 
 type selectedProducts = Omit<Product, "createdAt" | "updatedAt" | "userId">;
 
@@ -110,11 +111,24 @@ export default function ProductsClient({
     });
   }, []);
 
-  const navigateTo = (pageNum: number = 1) => {
+  const navigateTo = (
+    pageNum: number = 1,
+    overrides?: {
+      search?: string;
+      categories?: string[];
+      priceRange?: number[];
+    },
+  ) => {
+    const finalSearch = overrides?.search ?? search;
+    const finalCategories = overrides?.categories ?? categories;
+    const finalPrice = overrides?.priceRange ?? priceRange;
+
     setIsLoading(true);
+
     router.push(
-      `/${lang}/shop?page=${pageNum}&search=${encodeURIComponent(search)}&category=${categories.join(",")}&min=${priceRange[0]}&max=${priceRange[1]}`,
+      `/${lang}/shop?page=${pageNum}&search=${encodeURIComponent(finalSearch)}&category=${finalCategories.join(",")}&min=${finalPrice[0]}&max=${finalPrice[1]}`,
     );
+
     setTimeout(() => setIsLoading(false), 500);
   };
 
@@ -124,10 +138,20 @@ export default function ProductsClient({
   };
 
   const resetFilters = () => {
-    setSearch("");
-    setCategories(["all"]);
-    setPriceRange([0, 1300]);
-    navigateTo(1);
+    const newSearch = "";
+    const newCategories = ["all"];
+    const newPrice = [0, 1300];
+
+    setSearch(newSearch);
+    setCategories(newCategories);
+    setPriceRange(newPrice);
+
+    navigateTo(1, {
+      search: newSearch,
+      categories: newCategories,
+      priceRange: newPrice,
+    });
+
     setIsSidebarOpen(false);
   };
 
@@ -352,7 +376,15 @@ export default function ProductsClient({
             /* Empty State */
             <div className="text-center py-16 bg-card/30 border border-border/40 rounded-xl">
               <h3 className="text-2xl font-bold mb-3">
-                {t("noProductsFound")}
+                <Image
+                  width={200}
+                  height={200}
+                  alt="no products was found"
+                  className=" mx-auto"
+                  src={
+                    "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774267735/no-product_wl90s8.webp"
+                  }
+                />
               </h3>
               <p className="text-muted-foreground mb-6">
                 {t("tryAdjustingFilters")}

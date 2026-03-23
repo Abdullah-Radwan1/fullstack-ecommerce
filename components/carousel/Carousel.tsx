@@ -32,7 +32,8 @@ const sliderData = [
     },
     offer: { en: "40% Off", ar: "خصم 40%" },
     buttonText: { en: "Order Now", ar: "اطلب الآن" },
-    imgSrc: "/slider-images/3labs.png",
+    imgSrc:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774267374/3labs_a1adch.webp",
     link: "/shop",
     badge: "Exclusive",
     icon: Crown,
@@ -66,7 +67,8 @@ const sliderData = [
     },
     offer: { en: "Limited Stock", ar: "كمية محدودة" },
     buttonText: { en: "Shop Now", ar: "تسوق الآن" },
-    imgSrc: "/slider-images/gaming_monitor2.png",
+    imgSrc:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774267412/gaming_monitor2_rs1qwr.webp",
     link: "/shop",
     badge: "New",
     icon: Zap,
