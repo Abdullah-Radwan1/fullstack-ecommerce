@@ -50,7 +50,8 @@ const sliderData = [
     },
     offer: { en: "30% Off", ar: "خصم 30%" },
     buttonText: { en: "Shop Now", ar: "اشتري الآن" },
-    imgSrc: "/products/bose.png",
+    imgSrc:
+      "https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266921/bose_tn0vn8.png",
     link: "/shop/product/cm84m00pp006fvg2kbosehphone",
     badge: "Hot",
     icon: Flame,

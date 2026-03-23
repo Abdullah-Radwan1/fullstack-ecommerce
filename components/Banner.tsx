@@ -18,7 +18,7 @@ const Banner = () => {
       {/* Left Image */}
       <Image
         className="object-center"
-        src="/products/jbl.png"
+        src="https://res.cloudinary.com/dpyo7pbmo/image/upload/v1774266922/jbl_cyoe83.png"
         alt="jbl_soundbox_image"
         loading="lazy"
         width={250}
