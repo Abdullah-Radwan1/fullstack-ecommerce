@@ -27,6 +27,9 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
   const messages = (await import(`../../messages/${locale}.json`)).default;
   const Footer = dynamic(() => import("@/components/footer"), {
     loading: () => <Loading />,
@@ -56,29 +59,24 @@ export default async function RootLayout({
         }
       : enUS
   ) as DeepPartial<LocalizationResource>;
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
   return (
-    <html
-      className={`${lato.className} antialiased`}
-      suppressHydrationWarning
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      lang={locale}
-    >
-      <ClerkProvider localization={localization}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <body className="flex min-h-screen flex-col">
-            <Sidebar />
-
-            <Navbar />
-            <main className="flex-1 content-center">{children}</main>
-
-            <Footer />
-            <Toaster />
-          </body>
-        </NextIntlClientProvider>
-      </ClerkProvider>
-    </html>
+<html
+  className={`${lato.className} antialiased`}
+  suppressHydrationWarning
+  dir={locale === "ar" ? "rtl" : "ltr"}
+  lang={locale}
+>
+  <body className="flex min-h-screen flex-col">
+    <ClerkProvider localization={localization}>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <Sidebar />
+        <Navbar />
+        <main className="flex-1 content-center">{children}</main>
+        <Footer />
+        <Toaster />
+      </NextIntlClientProvider>
+    </ClerkProvider>
+  </body>
+</html>
   );
 }

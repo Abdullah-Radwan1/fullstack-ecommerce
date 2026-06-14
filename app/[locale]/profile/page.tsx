@@ -20,15 +20,18 @@ export const metadata = {
 
 const Page = async () => {
   // Get Auth info + locale - run in parallel
-  const [{ userId }, locale] = await Promise.all([auth(), getLocale()]);
+  const locale = await getLocale();
   const t = await getServerTranslator("ProfilePage");
   const isArabic = locale === "ar";
-
+  // Fetch all user data in parallel
+  const { userId,sessionId } = await auth();
+  
+  console.log(userId)
   if (!userId) {
-    redirect("/signin");
+    console.log("ddd",sessionId)
+    console.log(userId)
   }
 
-  // Fetch all user data in parallel
   const [clerkUser, dbUser, orders] = await Promise.all([
     currentUser(),
     db.user.findUnique({
