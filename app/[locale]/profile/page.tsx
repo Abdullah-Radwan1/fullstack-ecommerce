@@ -20,25 +20,20 @@ export const metadata = {
 
 const Page = async () => {
   // Get Auth info + locale - run in parallel
-  const locale = await getLocale();
+  const [{ userId }, locale] = await Promise.all([auth(), getLocale()]);
   const t = await getServerTranslator("ProfilePage");
   const isArabic = locale === "ar";
-  // Fetch all user data in parallel
-  const { userId,sessionId } = await auth();
-  
-  console.log(userId)
-  if (!userId) {
-    console.log("ddd",sessionId)
-    console.log(userId)
-  }
 
+
+
+  // Fetch all user data in parallel using the authenticated id string
   const [clerkUser, dbUser, orders] = await Promise.all([
     currentUser(),
     db.user.findUnique({
-      where: { clerkId: userId },
+      where: { clerkId: userId! }, // userId acts exactly as your clerkId matching key
       select: { role: true },
     }),
-    getMyOrders(userId),
+    getMyOrders(userId!),
   ]);
 
   const email = clerkUser?.emailAddresses?.[0]?.emailAddress || "";
@@ -225,7 +220,7 @@ function OrderCard({
 }) {
   const totalItems = order.OrderItem.reduce(
     (sum: number, i: any) => sum + i.quantity,
-    0,
+    0
   );
 
   return (

@@ -36,7 +36,6 @@ export async function updateClerkUserRole(
       return;
     }
 
-    console.log(`Updated Clerk user ${clerkId} with role: ${role}`);
   } catch (err) {
     console.error("Error updating Clerk user metadata:", err);
   }

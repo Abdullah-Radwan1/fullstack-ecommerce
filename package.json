@@ -15,7 +15,7 @@
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/localizations": "^3.35.3",
-    "@clerk/nextjs": "^6.36.10",
+    "@clerk/nextjs": "^6.39.5",
     "@formatjs/intl": "^3.1.8",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.0.0",
@@ -72,7 +72,6 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.0",
     "i": "^0.3.7",
-    "npm": "^11.6.3",
     "postcss": "^8.5.6",
     "prisma": "^7.0.0",
     "tailwindcss": "^4.1.13",

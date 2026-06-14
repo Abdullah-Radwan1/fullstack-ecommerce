@@ -22,11 +22,9 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Invalid webhook", { status: 400 });
   }
 
-  console.log("📦 Clerk webhook event:", JSON.stringify(event, null, 2));
 
   // Only handle user.created
   if (event.type !== "user.created") {
-    console.log("ℹ️ Ignored event type:", event.type);
     return new NextResponse("Ignored event", { status: 200 });
   }
 
@@ -58,11 +56,7 @@ export async function POST(req: NextRequest) {
     // Sync role to Clerk
     await updateClerkUserRole(clerkId, dbUser.role);
 
-    console.log("✅ User synced:", {
-      clerkId: dbUser.clerkId,
-      email: dbUser.email,
-      role: dbUser.role,
-    });
+
 
     return new NextResponse("OK", { status: 200 });
   } catch (err) {

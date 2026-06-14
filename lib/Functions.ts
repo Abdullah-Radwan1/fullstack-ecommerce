@@ -1,6 +1,5 @@
 // lib/data.ts
 import { db } from "@/prisma/db";
-import { randomUUID } from "crypto";
 import { cache } from "react";
 
 // Internal db calls
@@ -59,7 +58,7 @@ export async function getAllOrders() {
 }
 
 export async function getMyOrders(clerkId: string) {
-  console.log(clerkId);
+
   return await db.order.findMany({
     where: { clerkId },
     include: {

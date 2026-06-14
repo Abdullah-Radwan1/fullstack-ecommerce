@@ -46,7 +46,6 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      console.log(`✅ Order ${order.id} created successfully from webhook`);
     }
 
     return new NextResponse("Webhook processed successfully", { status: 200 });
