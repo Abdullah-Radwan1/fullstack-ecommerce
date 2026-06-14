@@ -154,30 +154,7 @@
       "others": "Others"
     }
   },
-  "AdminPage": {
-    "dashboard": "Dashboard",
-    "manageStoreUsers": "Manage your store, orders, and users here.",
-    "adminMode": "Admin Mode",
-    "totalRevenue": "Total Revenue",
-    "avgOrder": "Avg. Order Value",
-    "admins": "System Admins",
-    "users": "Users",
-    "orders": "Orders",
-    "myOrders": "My Orders",
-    "products": "Create Product",
-    "name": "Name",
-    "email": "Email",
-    "role": "Role",
-    "admin": "Admin",
-    "user": "User",
-    "noUsers": "No users found.",
-    "noOrders": "No orders found.",
-    "orderId": "Order ID",
-    "total": "Total",
-    "userEmail": "Customer",
-    "productsLabel": "Products",
-    "more": "more"
-  },
+
   "CreateProductPage": {
     "imageRequired": "Image is required",
     "categoryRequired": "Category is required",

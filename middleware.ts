@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
-const isAdminRoute = createRouteMatcher(["/:locale/admin(.*)", "/admin(.*)"]);
+
 const intlMiddleware = createMiddleware(routing);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -12,13 +12,7 @@ export default clerkMiddleware(async (auth, req) => {
     return; // Clerk still processes this, but next-intl is skipped
   }
 
-  // 2. Protect Admin Routes
-  if (isAdminRoute(req)) {
-    const locale = req.nextUrl.pathname.split("/")[1] || "en";
-    await auth.protect({
-      unauthenticatedUrl: new URL(`/${locale}/signin`, req.url).toString(),
-    });
-  }
+
 
   // 3. Run internationalization for all other routes
   return intlMiddleware(req);
