@@ -102,7 +102,6 @@ export function Navbar() {
             </Link>
 
 
-
             <LanguageToggle />
 
             <Button
@@ -192,6 +191,7 @@ export function Navbar() {
                     {t("shop")}
                   </Link>
                 </DropdownMenuItem>
+
 
 
                 <DropdownMenuSeparator className="bg-border" />
