@@ -17,6 +17,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ClearCart from "./ClearCart";
 
 // 1. Accept params from the Next.js page props
 const SuccessPage = async ({
@@ -37,6 +38,7 @@ const SuccessPage = async ({
       dir={locale === "ar" ? "rtl" : "ltr"}
       className="min-h-screen bg-background flex flex-col items-center justify-center p-4"
     >
+      <ClearCart />
       <div className="fixed inset-0 -z-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-my-main/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-my-secondary/5 rounded-full blur-3xl" />

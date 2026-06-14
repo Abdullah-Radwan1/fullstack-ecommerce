@@ -281,7 +281,7 @@ const Page = () => {
                   asChild
                   className="w-full bg-gradient-to-r from-my-main to-my-secondary text-background"
                 >
-                  <Link href="/checkout">
+                  <Link href={`/${locale}/checkout`}>
                     {t("proceedToCheckout")}
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>

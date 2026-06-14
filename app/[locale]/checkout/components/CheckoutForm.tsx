@@ -1,13 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import {
-  Elements,
-  LinkAuthenticationElement,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+import { FormEvent, useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 import {
@@ -36,48 +29,18 @@ import {
 
 import { useUser } from "@clerk/nextjs";
 import { useTranslations, useLocale } from "next-intl";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string,
 );
 
-export default function CheckoutForm({
-  clientSecret,
-}: {
-  clientSecret: string;
-}) {
-  const locale = useLocale();
-
-  return (
-    <Elements
-      options={{
-        clientSecret,
-        // Passing the locale to Stripe ensures its internal UI (card inputs)
-        // matches the user's language
-        locale: locale as "ar" | "en",
-        appearance: {
-          theme: "night",
-          variables: {
-            colorPrimary: "#ffd700",
-            colorText: "#f9f9f9",
-            colorBackground: "#1c1c1c",
-            fontFamily: "Inter, sans-serif",
-          },
-          labels: "floating",
-        },
-      }}
-      stripe={stripePromise}
-    >
-      <Form />
-    </Elements>
-  );
-}
-
-function Form() {
+export default function CheckoutForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const [email, setEmail] = useState<string>("");
-  const [country_code, setCountryCode] = useState<string>("+20");
+  const [country_code, setCountryCode] = useState<string>("20");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
 
   const [streetAddress, setStreetAddress] = useState<string>("");
 
@@ -85,10 +48,13 @@ function Form() {
   const isArabic = locale === "ar";
   const t = useTranslations("CheckoutPage");
 
-  const { user } = useUser();
-  const stripe = useStripe();
-  const elements = useElements();
-
+  const { user ,isLoaded } = useUser();
+useEffect(() => {
+  if (isLoaded && !user) {
+    toast.info("Please signin to proceed to payment");
+    redirect("/signin");
+  }
+}, [isLoaded, user]);
   const totalPrice = useCartStore((state) => state.getTotalPrice());
   const quantity = useCartStore((state) => state.getQuantity());
   const clearCart = useCartStore((state) => state.clearCart);
@@ -99,26 +65,42 @@ function Form() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!stripe || !elements || !streetAddress) return;
+    if (!streetAddress || !phoneNumber) return;
 
     setIsLoading(true);
     setErrorMessage(undefined);
 
     try {
-      const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/${locale}/checkout/checkout-success`,
-          payment_method_data: {
-            billing_details: {
-              address: { line1: streetAddress },
-            },
-          },
-        },
+      // Create a Checkout Session on the server
+      const response = await fetch("/api/payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          products,
+          totalPrice,
+          locale,
+          streetAddress,
+          phone: `+${country_code}${phoneNumber}`,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.error) {
+        setErrorMessage(data.error);
+        return;
+      }
+
+      // Redirect to Stripe Checkout
+      const stripe = await stripePromise;
+      if (!stripe) {
+        setErrorMessage(t("genericError"));
+        return;
+      }
+
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
       });
 
-      // If confirmPayment returns, it means there was an error (like card declined)
-      // If it succeeds, Stripe redirects the user to the return_url automatically
       if (error) {
         setErrorMessage(error.message ?? t("paymentFailed"));
       }
@@ -182,17 +164,6 @@ function Form() {
                 )}
 
                 <div className="space-y-4">
-                  <PaymentElement />
-                  <LinkAuthenticationElement
-                    onChange={(e) =>
-                      setEmail(
-                        e.value?.email ?? user.emailAddresses[0].emailAddress,
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="space-y-4">
                   <h3
                     className={`font-medium flex items-center gap-2 ${isArabic ? "flex-row-reverse" : ""}`}
                   >
@@ -200,7 +171,7 @@ function Form() {
                     {t("shippingInformation")}
                   </h3>
 
-                  <div>
+                  <div className="space-y-4">
                     <div className="space-y-2">
                       <label
                         className={`block text-sm text-muted-foreground ${isArabic ? "text-right" : "text-left"}`}
@@ -216,6 +187,28 @@ function Form() {
                         className={isArabic ? "text-right" : "text-left"}
                       />
                     </div>
+
+                    <div className="space-y-2">
+                      <label
+                        className={`block text-sm text-muted-foreground ${isArabic ? "text-right" : "text-left"}`}
+                      >
+                        {t("phoneNumber")}
+                      </label>
+                      <div className="flex gap-2" dir="ltr">
+                        <DropdownMenuRadioGroupDemo
+                          country_code={country_code}
+                          setCountryCode={setCountryCode}
+                        />
+                        <Input
+                          type="tel"
+                          placeholder="123456789"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          required
+                          className={isArabic ? "text-right flex-1" : "text-left flex-1"}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -224,7 +217,7 @@ function Form() {
                 <Button
                   type="submit"
                   className="w-full bg-gradient-to-r from-my-main to-my-secondary text-background hover:shadow-xl hover:scale-[1.02] transition-all py-6 text-lg font-semibold"
-                  disabled={!stripe || !elements || isLoading}
+                  disabled={isLoading}
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
