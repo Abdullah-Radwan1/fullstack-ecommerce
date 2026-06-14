@@ -102,16 +102,6 @@ export function Navbar() {
               </Button>
             </Link>
 
-            {role === "ADMIN" && (
-              <Link href={routes.admin}>
-                <Button
-                  variant="ghost"
-                  className="text-foreground hover:bg-accent hover:text-accent-foreground"
-                >
-                  {t("admin")}
-                </Button>
-              </Link>
-            )}
 
             <LanguageToggle />
 
@@ -203,18 +193,7 @@ export function Navbar() {
                   </Link>
                 </DropdownMenuItem>
 
-                {/* Admin */}
-                {role === "ADMIN" && (
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href={routes.admin}
-                      className="flex items-center gap-3 hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                    >
-                      <LayoutDashboard className="size-4" />
-                      {t("admin")}
-                    </Link>
-                  </DropdownMenuItem>
-                )}
+
 
                 <DropdownMenuSeparator className="bg-border" />
 
